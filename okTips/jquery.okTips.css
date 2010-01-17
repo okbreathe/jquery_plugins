@@ -1,0 +1,47 @@
+.ui-tooltip {
+  padding: 2px;
+  background: #000;
+  border: 1px solid #fff;
+  color:#fff;
+  -moz-border-radius: 4px 4px 4px 4px;
+  -webkit-border-radius: 4px 4px 4px 4px;
+  -moz-box-shadow: 0px 0px 8px rgba(255,255,255,0.5);
+  -webkit-box-shadow: 0px 0px 8px rgba(255,255,255,0.5);
+}
+
+  .ui-tooltip p {
+    margin: 1em;
+  }
+
+  .ui-tooltip .panel li span,
+  .ui-tooltip .panel li a {
+    display:block;
+    text-decoration:none;
+    padding:2px 0 4px 12px;
+    font-size:12px;
+  }
+
+  .ui-tooltip li ul {
+    margin:0;
+  }
+
+  .ui-tooltip .ui-tooltip-title { 
+    line-height: 1.8em; 
+  }
+
+  .ui-tooltip .spinner {
+    display:none;
+    float:right;
+    margin:0 6px 0 2px
+  }
+
+.ui-widget-overlay {
+  background: #000;
+  opacity: 0.5;
+  filter: alpha(opacity = 50);
+}
+
+.spacer {
+  position: relative;
+  height: 300px;
+}

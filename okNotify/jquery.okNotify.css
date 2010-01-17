@@ -1,0 +1,56 @@
+.ui-widget-overlay {
+  background:#000;
+  filter: alpha(opacity = 50);
+  opacity:0.5;
+}
+
+.ui-notification {
+  padding:0;
+  z-index:9999;
+  width:300px;
+  text-align:left;
+  margin-bottom:10px;
+  -moz-border-radius: 8px 8px 8px 8px;
+  -webkit-border-radius: 8px 8px 8px 8px;
+  -moz-box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+}
+
+  .ui-notification .ui-notification-content {
+    position:relative;
+    padding:8px;
+  }
+
+    .ui-notification .ui-notification-content p {
+      margin:4px 0;
+    }
+
+  .ui-notification .ui-notification-titlebar {
+    position:relative;
+    margin-top:6px;
+    min-height:15px;
+  }
+
+  .ui-notification .ui-notification-title {
+    position:relative;
+    display:inline-block;
+    margin-bottom:8px;
+    margin-left:4px;
+    font-size:120%;
+  }
+
+  .ui-notification .ui-notification-close {
+    position:absolute;
+    top:8px;
+    right:0;
+    width:15px;
+    height:15px;
+    margin:-10px 0 0;
+    padding:1px;
+    font-size:16px;
+  }
+
+.center .ui-notification {
+	margin-left: 		auto;
+	margin-right:  	auto;
+}

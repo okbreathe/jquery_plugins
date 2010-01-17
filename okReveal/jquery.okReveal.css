@@ -1,0 +1,44 @@
+#items li {
+  position: relative;
+  display: inline-block;
+  float: left;
+  margin-left: 10px;
+  width: 200px;
+  height: 150px;
+  border: 1px solid #999;
+  overflow:hidden;
+}
+
+  #items li .title {
+    position: absolute;
+    display: block;
+    width: 200px;
+    height: 20px;
+    background:#09f;
+    z-index: 200;
+  }
+
+  #fade .title ,
+  #leftright .title {
+    top: 130px; /* Safari doesn't like bottom:0 */
+  }
+
+  #items li#updown .title {
+    bottom: 0px;
+  }
+
+  #items li .content {
+    position: relative;
+    display: block;
+    background: #ddd;
+    width: 200px;
+    height: 150px;
+    z-index: 100;
+  }
+
+  #items li .hidden-content {
+    position: absolute;
+    top: 20px;
+    z-index: 0;
+    padding-left: 10px;
+  }

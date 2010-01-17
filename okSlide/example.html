@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>jQuery.okSlide</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="jquery.okSlide.js"></script>
+<link rel="stylesheet" href="screen.css" type="text/css" />
+<link rel="stylesheet" href="jquery.okSlide.css" type="text/css" />
+<script type='text/javascript'>
+  
+  $(document).ready(function(){
+    var order = [],
+        loc   = [];
+    $("#slider").okSlide({
+      afterNext: function(e) {
+        order.push(this.innerHTML);
+      },
+      afterPrev: function(e) {
+        order.pop();
+      },
+      afterSelect: function(e) {
+        e.preventDefault();
+        order.push(this.innerHTML);
+        alert("Your order: " + order.join(","))
+      }
+    });
+    $("#slider2").okSlide({
+      afterNext: function(e) {
+        loc.push(this.innerHTML);
+      },
+      afterPrev: function(e) {
+        loc.pop();
+      },
+      afterSelect: function(e) {
+        e.preventDefault();
+        loc.push(this.innerHTML);
+        alert("You selected: " + loc.join(","))
+      }
+    });
+  });
+
+</script>
+</head>
+
+<body>
+  <div id='doc'>
+    <h1>okSlide</h1>
+    <p class='large'>UI for linear/branching choices via panels.</p> 
+    <h2>Demonstration</h2>
+    <div class='ct'>
+      <h4>Linear</h4>
+      <p>
+        An example of a linear series. Appropriate choice for selecting options that are independent of previous choices.
+      </p>
+      <div id='slider' class='sliding-menu'>
+        <ul>
+          <li id='main_course' class='panel'>
+            <h4 class='root selected expanded'>Main course</h4>
+            <ul>
+              <li><a href="#" name='side' class='more'>Burger</a></li>
+              <li><a href="#" name="side" class='more'>Steak</a></li>
+              <li><a href="#" name="side" class='more '>Meatloaf</a></li>
+            </ul>
+          </li>
+          <li id='main_course-side' class='panel'>
+            <h4 class='root selected expanded'>Sidedish</h4>
+            <ul>
+              <li><a href="#" name='beverage' class="more">French fries</a></li>
+              <li><a href="#" name='beverage' class="more">Salad</a></li>
+            </ul>
+          </li>
+          <li id='main_course-side-beverage' class='panel'>
+            <h4 class='root selected expanded'>Beverage</h4>
+            <ul>
+              <li><a href="#" name="dessert" class="more">Water</a></li>
+              <li><a href="#" name="dessert" class="more">Iced Tea</a></li>
+              <li><a href="#" name="dessert" class="more">Beer</a></li>
+            </ul>
+          </li>
+          <li id='main_course-side-beverage-dessert' class='panel'>
+            <h4 class='root selected expanded'>Dessert</h4>
+            <ul>
+              <li><a href="#">Cake (it's a lie!)</a></li>
+              <li><a href="#">Icecream</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class='ct'>
+      <h4>Hierarchical</h4>
+      <p>
+        An example of a hierarchical series. Appropriate choice for branching
+        paths or choices that depend on preceeding options.
+      </p>
+      <div id='slider2' class='sliding-menu'>
+        <ul>
+          <li id='continent' class='panel'>
+            <h4 class='root selected expanded'>Continent</h4>
+            <ul>
+              <li><a href="#" name='na' class='more'>North America</a></li>
+              <li><a href="#" name='eu' class='more'>Europe</a></li>
+              <li><a href="#" name='as' class='more'>Asia</a></li>
+            </ul>
+          </li>
+          <li id='continent-na' class='panel'>
+            <h4 class='root selected expanded'>North America</h4>
+            <ul>
+              <li><a href="#" name='us' class='more'>United States</a></li>
+              <li><a href="#" name=''>Canada</a></li>
+            </ul>
+          </li>
+          <li id='continent-na-us' class='panel'>
+            <h4 class='root selected expanded'>United States</h4>
+            <ul>
+              <li><a href="#">Los Angeles</a></li>
+              <li><a href="#">New York</a></li>
+              <li><a href="#">Chicago</a></li>
+            </ul>
+          </li>
+          <li id='continent-eu' class='panel'>
+            <h4 class='root selected expanded'>Europe</h4>
+            <ul>
+              <li><a href="#" name="england" class="more">England</a></li>
+              <li><a href="#">France</a></li>
+              <li><a href="#">Spain</a></li>
+            </ul>
+          </li>
+          <li id='continent-eu-england' class='panel'>
+            <h4 class='root selected expanded'>England</h4>
+            <ul>
+              <li><a href="#" >London</a></li>
+              <li><a href="#" >Birmingham</a></li>
+              <li><a href="#" >Liverpool</a></li>
+            </ul>
+          </li>
+          <li id='continent-as' class='panel'>
+            <h4 class='root selected expanded'>Asia</h4>
+            <ul>
+              <li><a href="#" name="japan" class="more">Japan</a></li>
+              <li><a href="#">China</a></li>
+              <li><a href="#">Thailand</a></li>
+            </ul>
+          </li>
+          <li id='continent-as-japan' class='panel'>
+            <h4 class='root selected expanded'>Japan</h4>
+            <ul>
+              <li><a href="#" >Tokyo</a></li>
+              <li><a href="#" >Kyoto</a></li>
+              <li><a href="#" >Nagoya</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
