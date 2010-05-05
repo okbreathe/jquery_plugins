@@ -17,24 +17,24 @@ ol li{
   font-weight:bold;
 }
 
-.sliding-menu,
-.sliding-menu ul {
+.ui-slide-wrapper,
+.ui-slide-wrapper ul {
 	margin:0;
 	width:170px;
 }
 
-.sliding-menu {
+.ui-slide-wrapper {
 	font-family:Verdana;
 	font-size:8.25pt;
 	position:relative;
   width:400px;
 }
 
-.sliding-menu li.divider {
+.ui-slide-wrapper li.divider {
 	border-top:1px dotted #AAA;
 }
 
-.sliding-menu ul a {
+.ui-slide-wrapper ul a {
   position: relative;
 	color:#38463E;
 	display:block;
@@ -45,41 +45,41 @@ ol li{
 	text-decoration:none;
 }
 
-  .sliding-menu ul a:hover {
+  .ui-slide-wrapper ul a:hover {
     background-color: #e1e1e1;
   }
 
-.sliding-menu a.more {
+.ui-slide-wrapper a.more {
 	background: url(menu.gif) no-repeat 100% 0;
 }
 
-  .sliding-menu .hover,
-  .sliding-menu ul a:hover {
+  .ui-slide-wrapper .hover,
+  .ui-slide-wrapper ul a:hover {
     background-position:right -100px;
   }
 
 
-.sliding-menu a.prev {
+.ui-slide-wrapper a.prev {
 	background: url(menu.gif) no-repeat 0 0;
 }
 
-  .sliding-menu a.prev:hover {
+  .ui-slide-wrapper a.prev:hover {
     background: url(menu.gif) no-repeat 0 -100px;
   }
 
-.sliding-menu .selected {
+.ui-slide-wrapper .selected {
 	background-color:#498091;
 	background-image:none;
 	color:#FFF;
 }
 
-.sliding-menu .active {
+.ui-slide-wrapper .active {
 	background-color:#A7B4A7;
 	background-position:right -200px;
 	cursor:pointer;
 }
 
-.sliding .sliding-menu {
+.sliding .ui-slide-wrapper {
 	height:480px;
 	overflow:hidden;
 }
