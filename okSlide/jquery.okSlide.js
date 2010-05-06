@@ -4,12 +4,12 @@
  * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 05/04/2010
+ * Date: 05/06/2010
  *
  * @projectDescription Simple Hierarchical Menu Slider
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.1
+ * @version 1.1.1
  *
  * @id jQuery.fn.okSlide
  * @param {Object} Hash of settings, none are required.
@@ -99,12 +99,16 @@
       next.data('prevLink', true);
     }
 
+    function getListDimensions(which,items){
+      var i = items.length, total = 0;
+      while(i--) { total += items.eq(i)[which](true); }
+      return total;
+    }
+
     return this.each(function(){
       var list  = $(this),
           items = list.children(), 
-          ct    = $("<div class='ui-slide-wrapper'></div>"),
-          w     = items.outerWidth(true),
-          h     = items.outerHeight(true);
+          ct    = $("<div class='ui-slide-wrapper'></div>");
       ct
       .css("overflow","hidden")
       .insertBefore(list)
@@ -112,10 +116,10 @@
 
       if (opts.vertical) {
         ct.height(items.height())
-        list.height(h);
+        list.height(getListDimensions('outerHeight',items));
       } else {
         ct.width(items.width())
-        list.width(w);
+        list.width(getListDimensions('outerWidth',items));
         items.css('float','left');
       }
 
@@ -126,7 +130,7 @@
         e.preventDefault();
         var t = $(e.currentTarget);
         if (animating) { return false; }
-        animate.call(t,opts.backtrack && t.hasClass(opts.prevClass) ? "+=" : "-=");
+        animate.call(t.blur(),opts.backtrack && t.hasClass(opts.prevClass) ? "+=" : "-=");
       });
 
     });
