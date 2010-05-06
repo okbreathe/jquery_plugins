@@ -56,12 +56,13 @@
       var next, params, resizeOn, 
           trigger  = this,
           cur      = this.closest(opts.panelSelector),
+          id       = this.attr('href').split("#")[1],
           callback = opts[dir == '+=' ?  'afterPrev' : 'afterNext'],
           list     = cur.closest("ul");
 
-      if (this.attr('href').length > 1) {
+      if (id) {
         animating = true;
-        next      = $(this.attr('href'));
+        next      = $("#"+id);
         resizeOn  = dir == "-=" ? cur : next;
 
         if (dir == '-=' && opts.backtrack) { 
