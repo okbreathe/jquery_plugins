@@ -7,4 +7,5 @@
  * okSlide:: UI for linear/branching choices via panels.
  * okTips:: Flexible tooltips and more
  * okTreemap:: a framework for creating a treemap-like UI components
- * okValidate:: A lightweight, customizable form validation plugin for jQuery 1.3 that just works
+ * okValidate:: A lightweight, customizable form validation plugin that just works
+ * okColorPicker:: Simplified Colour Picker (<3kb minified)
