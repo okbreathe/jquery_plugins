@@ -245,8 +245,9 @@
     }, 
     numeric: function() { return !isNaN(this.val());},
     zip:/^\d{5}(-\d{4})?$/,
-    "length\\[(\\d+),?(\\d+)?\\]": function(min,max) {
-      var len = this.val().length; return len > min && len < max;
+    "length\\[(\\d+),?(\\d+)?\\]": function(b1,b2) { // If we only have one bound, assume its the upper bound
+      var len = this.val().length; 
+      return b1 && b2 ? (len >= b1 && len <= b2) : (len <= b1); 
     },
     phone:/^[2-9]\d{2}-\d{3}-\d{4}$/,
     time24:/^(20|21|22|23|[01]\d|\d)(([:][0-5]\d){1,2})$/,
@@ -257,11 +258,11 @@
     email:    "#{field} is not a valid address",
     url:      "#{field} is not a valid url",
     required: "#{field} is required",
-    numeric:   "#{field} is not a number",
+    numeric:  "#{field} is not a number",
     usd:      "#{field} must be a US Dollar amount.",
     zip:      "#{field} must be a zipcode in the format xxxxx or xxxxx-xxxx.",
-    "length\\[(\\d+),?(\\d+)?\\]": function(name,min,max){
-      return name + (min && max ? " must be between "+min+" and "+max+" characters" : " must at least "+min+" characters");
+    "length\\[(\\d+),?(\\d+)?\\]": function(name,b1,b2){ // If we only have one bound, assume its the upper bound
+      return name + (b1 && b2 ? " must be between "+b1+" and "+b2+" characters" : " must at less than "+b1+" characters");
     },
     phone:    "#{field} must be in the format xxx-xxx-xxxx.",
     time24:   "#{field} must be a 24 hour time: 23:00.",
