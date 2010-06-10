@@ -9,3 +9,4 @@
  * okTreemap:: a framework for creating a treemap-like UI components
  * okValidate:: A lightweight, customizable form validation plugin that just works
  * okColorPicker:: Simplified Colour Picker (<3kb minified)
+ * okCollapse:: Small plugin for hiding/showing list nodes
