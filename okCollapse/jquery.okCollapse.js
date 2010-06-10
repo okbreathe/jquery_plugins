@@ -16,7 +16,7 @@
 
 	$.fn.okCollapse = function(opts){
 
-    opts = $.extend(opts, {
+    opts = $.extend({
       toggleSelector : "a",         // What element will trigger collapsing/expanding of the content
       toggleEvent    : "click",     // Delegated event that will trigger toggling
       collapsedClass : "collapsed", // Class added to collapsed elements
@@ -24,8 +24,9 @@
       expansionSpeed : 5,           // Higher = faster (proportional to the expanded height of the container)
       fadeSpeed      : 3,           // Higher = faster
       maxDuration    : 200,         // If the calculated (__Speed * containerHeight) duration is over this amount it will be used in its stead
-      collapseOthers : true         // If true, other visible elements will be collapsed when another is expanded
-    });
+      collapseOthers : true,        // If true, other visible elements will be collapsed when another is expanded
+      callback       : null         // Called when a node without children is reached (receives the clicked element)
+    },opts);
 
     var animating = false;
 
@@ -33,12 +34,16 @@
       e.preventDefault();
       var target = $(e.currentTarget),
             list = target.siblings("ul:first");
-      if ( animating || list.length<1) { return false; } else { animating = true; }
+      if ( animating || list.length<1 ) { 
+        if ( opts.callback ) { opts.callback.call(list,target); }
+        return false; 
+      } else { animating = true; }
       if (opts.collapseOthers) {
         target.parent().siblings().find("ul:first").each(function(){ hide($(this)); });
       }
       return list.hasClass(opts.collapsedClass) ?  show(list) : hide(list);
     }
+
 
     function show(list) {
       if (!list.hasClass(opts.collapsedClass)) { return (animating = false); }

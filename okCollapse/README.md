@@ -8,8 +8,7 @@ See the example for markup
 
 ## Usage
 
-    $("some list").okCollapse();
-
+    $("some list").okCollapse({ ... options ... });
 
 options        | default       | description
 -------------  | ------------- | -------------
@@ -21,3 +20,4 @@ expansionSpeed | 5,            | Higher = faster (proportional to the expanded h
 fadeSpeed      | 3,            | Higher = faster
 maxDuration    | 200,          | If the calculated (__Speed * containerHeight) duration is over this amount it will be used in its stead
 collapseOthers | true          | If true, other visible elements will be collapsed when another is expanded
+callback       | null          | Called when a node without children is reached (receives the clicked element)

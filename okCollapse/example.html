@@ -10,7 +10,11 @@
 <script type='text/javascript'>
   
   $(document).ready(function(){
-    $("#collapsible").okCollapse();
+    $("#collapsible").okCollapse({
+      callback: function(list){
+          alert("You clicked: "+this.html());
+      }
+    });
   });
 
 </script>
