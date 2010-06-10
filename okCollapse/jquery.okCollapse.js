@@ -35,7 +35,7 @@
       var target = $(e.currentTarget),
             list = target.siblings("ul:first");
       if ( animating || list.length<1 ) { 
-        if ( opts.callback ) { opts.callback.call(list,target); }
+        if ( opts.callback ) { opts.callback(target); }
         return false; 
       } else { animating = true; }
       if (opts.collapseOthers) {
