@@ -1,3 +1,18 @@
+/*
+ * jquery.okColorPicker.js
+ *
+ * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
+ * Dual licensed under the MIT (MIT-LICENSE.txt)
+ * and GPL (GPL-LICENSE.txt) licenses.
+ * Date: 05/12/2010
+ *
+ * @projectDescription Simplified Colour Picker
+ * @author Asher Van Brunt
+ * @mailto asher@okbreathe.com
+ * @version 1.0
+ *
+ */
+
 (function($){
 
   $.fn.colorPicker = function(opts){
@@ -28,7 +43,7 @@
         for (var j=0,len=colors[i].length;j<len;j++) {
           _table += "<td style='background:"+colors[i][j]+"'></td>";
         }
-        _table += "</tr>"
+        _table += "</tr>";
       }
       _table += "<tr class='selected'><td colspan=16 style='background:#fff'>";
       if (opts.displayColor) {_table += "<span class='hex'>#ffffff</span>";}
@@ -50,16 +65,16 @@
       e.preventDefault();
       var target   = $(e.currentTarget),
           selected = target.closest("table").find("tr.selected td"),
-          color    = target.css("backgroundColor")
+          color    = target.css("backgroundColor");
 
-      if (opts.displayColor) { selected.children().html(opts.displayHex ? rgbToHex(color) : color)}
+      if (opts.displayColor) { selected.children().html(opts.displayHex ? rgbToHex(color) : color);}
       if (opts.afterChange)  { opts.afterChange.call(target,color); }
       return selected.css("backgroundColor", color);
     }
 
     function selectColor(e) {
       var selected  = $(e.currentTarget),
-          color    = selected.css("backgroundColor")
+          color    = selected.css("backgroundColor");
       if (opts.afterSelect) { opts.afterSelect.call(selected,opts.displayHex ? rgbToHex(color) : color); }
     }
 
@@ -70,6 +85,6 @@
         .delegate("td", opts.changeEvent, changeColor)
         .delegate("td", opts.selectEvent, selectColor);
     });
-  }
+  };
 
-})(jQuery)
+})(jQuery);
