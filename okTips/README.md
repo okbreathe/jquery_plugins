@@ -32,23 +32,28 @@ To remove a popup, use the 'destroy' event:
 
 options       | default                          | description
 ------------- | -------------                    | -------------
-id            | "tooltip"                        | The id of the tooltip - there can only ever be one visible tooltip
-popup         | "&lt;div class='ui-tooltip'&gt;&lt;/div&gt;" | The wrapper for the tooltip
+template      | "&lt;div class='ui-tooltip'&gt;&lt;/div&gt;" | The wrapper for the tooltip
 live          | false                            | Whether to use 'live' instead of a normal event handler
 triggerEvent  | 'mouseenter'                     | The event that triggers the tooltip
 closeTrigger  | null                             | Selector of element that will close the popup if clicked
 triggerCloses | true                             | If non-modal and true, moving outside the trigger closes the popup, otherwise moving outside the popup closes
 beforeShow    | null                             | Called right before the popup is made visible
+afterShow     | null                             | Called right after the popup is made visible
 beforeDestroy | null                             | Called right before tooltip is removed
 afterDestroy  | null                             | Called right after tooltip is removed
-body           | function(){ return "&lt;p&gt;"+this.title+"&lt;/p&gt;"  }  | Can be text, or a function. If it is a function and returns text, the text will be used for the body of the popup.
-top            | -20                             | The y offset to display the popup at
-left           | 20                              | The x offset to display the popup at
-hideDelay      | 500                             | Delay before hiding the tooltip
-effectTime     | 250                             | Used by the togglePuff effect
-distance       | 10                              | Used by the togglePuff effect
-modal          | false                           | If true popup is closed by clicking anywhere else, otherwise it is closed via mouseout
-overlayClass   | 'ui-widget-overlay'             | The class of the overlay used for modal tooltips
+body          | function                         | Can be text, or a function. If it is a function and returns text, the text will be used for the body of the popup.
+top           | -20                              | The y offset to display the popup at
+left          | 20                               | The x offset to display the popup at
+hideDelay     | 500                              | Delay before hiding the tooltip
+effectTime    | 250                              | Used by the togglePuff effect
+distance      | 10                               | Used by the togglePuff effect
+modal         | false                            | If true popup is closed by clicking anywhere else, otherwise it is closed via mouseout
+overlayClass  | 'ui-widget-overlay'              | The class of the overlay used for modal tooltips
+
+#### Note
+
+All callback functions except for 'body' receive the trigger as the first
+argument, and inside this function 'this' will be the popup
 
 ## Help
 

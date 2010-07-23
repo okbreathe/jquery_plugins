@@ -4,12 +4,12 @@
  * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 06/09/10
+ * Date: 07/05/10 
  *
  * @projectDescription Small plugin for hiding/showing list nodes
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0
+ * @version 1.1
  *
  */
 (function($){
@@ -24,8 +24,8 @@
       expansionSpeed : 5,           // Higher = faster (proportional to the expanded height of the container)
       fadeSpeed      : 3,           // Higher = faster
       maxDuration    : 200,         // If the calculated (__Speed * containerHeight) duration is over this amount it will be used in its stead
-      collapseOthers : true,        // If true, other visible elements will be collapsed when another is expanded
-      callback       : null         // Called when a node without children is reached (receives the clicked element)
+      collapseOthers : false,        // If true, other visible elements will be collapsed when another is expanded
+      callback       : null         // Called when a node without children is reached (receives the clicked element as 'this')
     },opts);
 
     var animating = false;
@@ -33,22 +33,33 @@
     function dispatch(e) {
       e.preventDefault();
       var target = $(e.currentTarget),
-            list = target.siblings("ul:first");
-      if ( animating || list.length<1 ) { 
-        if ( opts.callback ) { opts.callback(target); }
+            list = target.closest("li").find("> ul:first");
+      if ( animating || list.length<1) { 
+        if ( opts.callback ) { opts.callback.call(list,target); }
         return false; 
-      } else { animating = true; }
+      } else { 
+        animating = true; 
+      }
       if (opts.collapseOthers) {
-        target.parent().siblings().find("ul:first").each(function(){ hide($(this)); });
+        target.parent().siblings().find("ul:first").each(function(){ 
+          if ($(this).siblings("a:first").is(":visible")) {
+            hide($(this)); 
+          }
+        });
       }
       return list.hasClass(opts.collapsedClass) ?  show(list) : hide(list);
     }
 
-
     function show(list) {
       if (!list.hasClass(opts.collapsedClass)) { return (animating = false); }
       list.css({ display:'block' });
-      return animate(list,list.data("maxHeight"),1,opts.expansionSpeed);
+      // Calculate height for newly appended items
+      if (!list.data("maxHeight")) {
+        list
+          .data("maxHeight", list.height())
+          .css({height:0,opacity:0});
+      }
+      return animate(list,list.data('maxHeight'),1,opts.expansionSpeed);
     }
 
     function hide(list) {
@@ -58,7 +69,7 @@
     }
 
     function animate(list,finalHeight,finalOpacity,movementSpeed) {
-      var movementDuration = movementSpeed * list.data("maxHeight"),
+      var movementDuration = movementSpeed  * list.data("maxHeight"),
           fadeDuration     = opts.fadeSpeed * list.data("maxHeight");
       return list
         .animate(
@@ -74,14 +85,20 @@
 
     return this.each(function(){
       var self;
+      $(opts.toggleSelector).live(opts.toggleEvent,dispatch);
       $(this)
-      .delegate(opts.toggleSelector, opts.toggleEvent, dispatch)
+      // This probably  doesn't work because it doesn't have the maxHeight thing going on
       .find("ul")
         .each(function(){
-          (self = $(this))
-            .data("maxHeight", self.height())
-            .css({height:0,opacity:0})
-            .addClass(opts.collapsedClass);
+          self = $(this);
+          if (self.children().length <= 1) {
+            self.siblings(opts.toggleSelector+":first").hide();
+          } else {
+            self 
+              .data("maxHeight", self.height())
+              .css({height:0,opacity:0})
+              .addClass(opts.collapsedClass);
+          }
         });
     });
 	};
