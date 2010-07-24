@@ -43,7 +43,7 @@ messages **must** have the same key.
     });
 
 'Validations' and 'Validation Messages' live in separate objects to allow
-redefining of of validations separately from the messages.
+redefining of validations separately from the messages.
 
 Validators can be either a function or a regexp. If a function, it
 should return true if the input is valid, and false if it is not. Regexps should
@@ -78,12 +78,12 @@ class(es) to one input in the group.
 
 options             | default          | description
 -------------       | -------------    | -------------
-inlineErrors        | true             | If errors inline appear after inputs with errors or at the top of the form
-liveValidation      | true             | If validation occurs after the liveEvent is fired within the field or on submit
-liveEvent           | 'blur'           | Should be 'blur' or 'keyup'
-errorClass          | 'error'          | Class added to inputs with errors and the error label appended to input fields
-errorContainerClass | 'error-messages' | If not using inline errors, this is the class that the error list will have
-showErrorFunction   | null             | If you want a custom function for showing the errorlist
-hideErrorFunction   | null             | If you want a custom function for hiding the errorlist
+inlineErrors        | true             | If errors appear inline after inputs or collected at the top of the form
+liveEvent           | 'blur'           | Should be either 'blur' or 'keyup'
+liveValidation      | true             | If validation occurs after the liveEvent is fired (within the field or on submit)
+errorClass          | 'error'          | Class added to inputs with errors as well as the error label appended to input fields
+errorContainerClass | 'error-messages' | If NOT using inline errors, the error list will be given this class
+showErrorFunction   | null             | Custom function for showing the errorlist
+hideErrorFunction   | null             | Custom function for hiding the errorlist
 onSubmit            | null             | Callback on submit
-fieldName           | function(input)  | The result of this function will be substituted into the error message for #{field}
+fieldName           | function         | Result of this function will be substituted into the error message as `#{field}`

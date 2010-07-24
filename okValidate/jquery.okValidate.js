@@ -19,7 +19,7 @@
  *	- The plugin has only been tested with jQuery v 1.3.1, v 1.4.2 
  */
 
-;(function($){
+(function($){
 
   // Check if an object has any properties
   function isEmpty(ob){
@@ -30,15 +30,15 @@
   $.fn.okValidate = function(opts){
   
     opts = $.extend({
-      inlineErrors: true,                           // If true errors will be appended after the offending inputs, if false will appear at the top of the form
-      liveValidation: true,                         // If true errors will appear after the field loses focus, if false only after submit is clicked
-      liveEvent: 'blur',                            // Should be 'blur' or 'keyup'
-      errorClass: "error",                          // The class that will be added to inputs with errors (note: only for inlineErrors)
-      errorContainerClass: "error-messages",        // When not using inline errors, errors will be wrapped in a label with this class
+      inlineErrors: true,                           // If errors appear inline after inputs or collected at the top of the form
+      liveValidation: true,                         // Should be either 'blur' or 'keyup'
+      liveEvent: 'blur',                            // If validation occurs after the liveEvent is fired (within the field or on submit)
+      errorClass: "error",                          // Class added to inputs with errors as well as the error label appended to input fields
+      errorContainerClass: "error-messages",        // If NOT using inline errors, the error list will be given this class
       showErrorFunction: null,                      // Custom function for showing the errorlist
       hideErrorFunction: null,                      // Custom function for hiding the errorlist
-      onSubmit: null,                               // Alternate function to call instead of default action
-      fieldName: function(input){                   // The result of this function will be substituted into the error message for #{field}
+      onSubmit: null,                               // Callback on submit
+      fieldName: function(input){                   // Result of this function will be substituted into the error message as `#{field}`
         return input.attr('name').replace(/[\[\]_-]+/g,' ');
       }
     }, opts);
@@ -48,7 +48,7 @@
         messages       = $.fn.okValidate.messages;
 
     // We don't necessarily want to append directly to the input because they
-    // are commonly wrapped in labels
+    // might be wrapped in labels
     function getErrorElement(input){
       return  input.parent()[0].tagName == "LABEL" ? input.parent() : input;
     }
@@ -57,7 +57,7 @@
       if (typeof(msg) == "function") {
         msg = msg.apply(this,[opts.fieldName(this)].concat(matches));
       } else {
-        msg = msg.replace("#{field}", opts.fieldName(this))
+        msg = msg.replace("#{field}", opts.fieldName(this));
         for (var i=0;i<matches.length;i++) {
           msg = msg.replace("#{"+(i+1)+"}", matches[i]);
         }
@@ -209,7 +209,7 @@
             var input = /(checkbox|radio)/.test(this.type) ?  $("input[type='"+RegExp.$1+"'][name='"+this.name+"']:last", form) : $(this);
             validateInput(input, form);
             maybeDisplayErrors.call(input, form, e);
-          }
+          };
 
       form.data('errors', {});
 
