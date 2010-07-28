@@ -9,7 +9,7 @@
  * @projectDescription Simple Validation for forms
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.6
+ * @version 0.7
  *
  * @id jQuery.fn.okValidate
  * @param {Object} Hash of settings, none are required.
@@ -105,9 +105,9 @@
     }
 
     // Errors appended to individual fields
-    function appendErrorsTo(input) {
-      var label = $("<label/>"),
-          msg    = input.data('messages').join(", ");
+    function appendErrorsTo(input,msg) {
+      var label = $("<label/>");
+          msg   = msg ? msg : input.data('messages').join(", ");
       if (opts.showErrorFunction) {
         opts.showErrorFunction.call(this); 
       } else {
@@ -165,7 +165,7 @@
      * error field list otherwise remove it from the list
      */
     function validateInput(input,form) {
-      var validatorName, validator, matches,
+      var validatorName, validator, matches, validationResult,
           compiled         = compileValidators(),
           i                = compiled.length,
           assign_or_get_id = function(i) { if(!i.attr('id')){i.attr('id', "input_" + parseInt(new Date().getTime()+Math.random(), 10));} };
@@ -175,10 +175,11 @@
       while(i--) {
         matches = input[0].className.match(compiled[i][0]);
         if (matches) {
-          validatorName = compiled[i][2];
-          validator     = compiled[i][1];
-          if (!(typeof(validator) == 'function' ? validator.apply(input,matches.slice(1)) : validator.test(input.val()))) {
-            if (validatorName == 'required' || (input.val() != "")) { // Prevent empty inputs from triggering validation errors
+          validatorName    = compiled[i][2];
+          validator        = compiled[i][1];
+          validationResult = typeof(validator) == 'function' ? validator.apply(input,matches.slice(1)) : validator.test(input.val());
+          if (validationResult === false) {
+            if (validatorName == 'required' || (input.val() !== "")) { // Prevent empty inputs from triggering validation errors
               assign_or_get_id(input);
               input.data('messages').push(generateMessage.call(input, messages[validatorName], matches.slice(1)));
               form.data('errors')[input.attr('id')] = input;
@@ -192,7 +193,7 @@
       }
     }
 
-    // Returns [RegExp,Validator,Validator Name]
+    // @return [RegExp,Validator,Validator Name]
     function compileValidators(){
       var arr=[]; 
       for(var key in $.fn.okValidate.validators) { 
@@ -211,7 +212,10 @@
             maybeDisplayErrors.call(input, form, e);
           };
 
-      form.data('errors', {});
+      form
+        .data('errors', {})
+        .bind('ok'   , function(e){ removeErrorsFrom($(e.target)); })
+        .bind('error', function(e,msg){ appendErrorsTo($(e.target),msg); });
 
       if (opts.liveValidation) {
         inputs[opts.liveEvent](function(){ onEvent.call(this); });
@@ -227,21 +231,21 @@
   };
 
   /*
-   * Extend these objects to add additional validators and messages Validators
-   * should have the same key as the message that they apply to Validators can
-   * be RegExp or a function - if a function returns true the input is
-   * considered valid.
+   * Extend these objects to add additional validators and messages. Validators
+   * must have the same key as the message that they correspond to. Validators
+   * can either be a RegExp or a Function. If using a function, it must return
+   * true (valid) or false (invalid). Functions without return values will not
+   * cause the input to fail validation.
    * 
-   * If you don't want an validator to validate, just extend the validators 
-   * object with a function that returns true.
-   * Inside the validators 'this' is set to the input currently being validated against
+   * Inside validators 'this' is set to the input currently being validated
+   * against.
    */
   $.fn.okValidate.validators = {
     email:/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i,
     usd:/^\$?(\d{1,3},?(\d{3},?)*\d{3}(\.\d{0,2})?|\d{1,3}(\.\d{0,2})?|\.\d{1,2}?)$/,
     url:/^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i,
     required: function(){ 
-      return (/(checkbox|radio)/.test(this[0].type) ? $("input[type='"+RegExp.$1+"'][name='"+this[0].name+"']").is(':checked') : ( this.val() != '' || this.val() != this.attr('title') )); 
+      return (/(checkbox|radio)/.test(this[0].type) ? $("input[type='"+RegExp.$1+"'][name='"+this[0].name+"']").is(':checked') : ( this.val() !== '' || this.val() != this.attr('title') )); 
     }, 
     numeric: function() { return !isNaN(this.val());},
     zip:/^\d{5}(-\d{4})?$/,

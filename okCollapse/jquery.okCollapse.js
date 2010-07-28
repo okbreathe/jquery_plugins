@@ -4,12 +4,12 @@
  * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 07/05/10 
+ * Date: 07/23/10
  *
  * @projectDescription Small plugin for hiding/showing list nodes
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.1
+ * @version 1.11
  *
  */
 (function($){
@@ -24,8 +24,8 @@
       expansionSpeed : 5,           // Higher = faster (proportional to the expanded height of the container)
       fadeSpeed      : 3,           // Higher = faster
       maxDuration    : 200,         // If the calculated (__Speed * containerHeight) duration is over this amount it will be used in its stead
-      collapseOthers : false,        // If true, other visible elements will be collapsed when another is expanded
-      callback       : null         // Called when a node without children is reached (receives the clicked element as 'this')
+      collapseOthers : false,       // If true, other visible elements will be collapsed when another is expanded
+      callback       : null         // Called when a node without children is reached (receives the clicked element)
     },opts);
 
     var animating = false;
@@ -87,7 +87,6 @@
       var self;
       $(opts.toggleSelector).live(opts.toggleEvent,dispatch);
       $(this)
-      // This probably  doesn't work because it doesn't have the maxHeight thing going on
       .find("ul")
         .each(function(){
           self = $(this);

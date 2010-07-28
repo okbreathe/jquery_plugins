@@ -42,6 +42,20 @@ messages **must** have the same key.
       my_validator: "#{field} answer was not 'foo'"
     });
 
+## Manually Adding/Removing Errors
+
+You can manually add and remove errors from particular inputs by triggering the
+'error' and 'ok' events.
+
+    $(input).trigger("error",["Message to Add"]); // Add "Message to Add" as an error message to the input
+    $(input).trigger("ok"); // Remove errors from input
+
+These events can be used for Ajax validation (see example.html). As standard validation
+of an input only depends on the current state of the input, any validation that
+depends on other sources must be performed in an alternate way.
+
+## Details
+
 'Validations' and 'Validation Messages' live in separate objects to allow
 redefining of validations separately from the messages.
 
@@ -52,7 +66,7 @@ attempt to match a valid input.
 Validation messages can either be a string or a function that returns a string.
 If the message is a string, `#{field}` will be replaced with the results of the
 `fieldName` function. If the corresponding validator returns 1 or more matches,
-they can be substitued into the message using the format `#{n}` where
+they can be substituted into the message using the format `#{n}` where
 'n' is the position of the match.  For example, the length message could be defined as:
 
     "#{field} must be between #{1} and #{2} characters",

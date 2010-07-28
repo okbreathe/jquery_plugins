@@ -14,6 +14,22 @@
             between: function(){
               var l = $("input[type='checkbox'][name="+ this[0].name +"]:checked").length;
               return l >= 2 && 1 <= 4;
+            },
+            /*
+             * For ajax validation return nothing initially.  In the callback
+             * trigger one of two events, 'ok' or 'error' on the input (which
+             * will be 'this').  The 'error' should be passed an message to
+             * append to the offending input.
+             */
+            ajax: function(){
+              var self = $(this);
+              $.get("example.html",function(){
+                if (self.val() == "ok") {
+                  self.trigger("ok");
+                } else {
+                  self.trigger("error",["Ajax Error"]);
+                }
+              });
             }
           });
 
@@ -32,7 +48,7 @@
   <body>
     <div id='doc'>
       <h1>okValidate</h1>
-      <p class='large'>A lightweight, customizable form validation plugin for jQuery 1.3 that just works</p>
+      <p class='large'>A lightweight, customizable form validation plugin for jQuery 1.3/1.4 that just works</p>
       <h2>Example</h2>
       <form accept-charset='utf-8' action='' id='contact-form' method='post'>
         <fieldset>
@@ -56,6 +72,12 @@
               phone
             </label>
             <input class='phone' id='phone' name='phone' type='text' />
+          </div>
+          <div class='form-item'>
+            <label for='ajax'>
+              ajax request (type 'ok' to pass validation)
+            </label>
+            <input class='ajax' name='ajax' type='text' />
           </div>
           <div class='form-item'>
             <label>

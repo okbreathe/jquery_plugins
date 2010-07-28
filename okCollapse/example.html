@@ -11,8 +11,8 @@
   
   $(document).ready(function(){
     $("#collapsible").okCollapse({
-      callback: function(list){
-          alert("You clicked: "+this.html());
+      callback: function(target){
+          alert("You clicked: "+target.html());
       }
     });
   });
@@ -73,6 +73,8 @@
         <a href="#">Australia</a>
         <ul>
           <li><a href="#">Sydney</a></li>
+          <li><a href="#">Adelaide</a></li>
+          <li><a href='#'>Melbourne</a></li>
         </ul>
       </li>
     </ul>
