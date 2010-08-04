@@ -51,14 +51,19 @@
     show: function(content,location, opts) {
 			this.options = $.extend($.basicWindow.defaults,opts);
 			create.call(this,this.options);
-			this.content = this.container.find(this.options.contentSelector).html(typeof(content) == "string" ? content : (content instanceof jQuery ? content.html() : content.innerHTML));
+			this.content = this.container.find(this.options.contentSelector).html(
+        typeof(content) == "string" ? content : (
+          content instanceof jQuery ? 
+             content.html() : 
+               content.innerHTML
+        )
+      );
       setPosition.call(this,location);
 			this.options.show.call(this);
 			return this;
     },
     hide: function() {
 			create.call(this);
-      this.container.find(this.options.contentSelector).html('');
 			this.options.hide.call(this);
 			return this;
     }
@@ -74,8 +79,8 @@
       return {
         position: $.browser.msie && $.browser.version.substr(0,1)<7 ? "absolute" : "fixed", // IE6 doesn't do position:fixed
         margin:0, 
-        top:  (top  > 0 ? top  : 0) + 'px', 
-        left: (left > 0 ? left : 0) + 'px'
+        top:  (top  > 0 ? top  : 0), 
+        left: (left > 0 ? left : 0)
       };
     }
   };
