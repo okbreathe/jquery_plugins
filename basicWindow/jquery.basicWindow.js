@@ -52,16 +52,14 @@
 			this.options = $.extend($.basicWindow.defaults,opts);
 			create.call(this,this.options);
 			this.content = this.container.find(this.options.contentSelector).html(typeof(content) == "string" ? content : (content instanceof jQuery ? content.html() : content.innerHTML));
-      if (this.options.modal){ this.overlay.show(); }
       setPosition.call(this,location);
-			this.options.show.call(this.container);
+			this.options.show.call(this);
 			return this;
     },
     hide: function() {
 			create.call(this);
       this.container.find(this.options.contentSelector).html('');
-      if (this.options.modal){ this.overlay.hide(); }
-			this.options.hide.call(this.container);
+			this.options.hide.call(this);
 			return this;
     }
 	};
@@ -83,13 +81,13 @@
   };
 
   $.basicWindow.defaults = {
-      contentSelector: "#ui-basicWindow-content",          // The content will be appended to the element specified by this selector.
-      template: "<div id='ui-basicWindow-content'></div>", // The content inside the basicWindow
-			offsetTop: 10,                                       // Used when location is an Event or DOM-element. 
-      offsetLeft: 10,
-      show: function(){ return this.show();},              // Overwrite. 'this' is the container with appended content
-      hide: function(){ return this.hide();},              // Overwrite. 'this' is the container with appended content
-      modal : true // Whether or not to show a modal window when displaying the content window
+      contentSelector: "#ui-basicWindow-content",                           // The content will be appended to the element specified by this selector.
+      template: "<div id='ui-basicWindow-content'></div>",                  // The content inside the basicWindow
+			offsetTop: 10,                                                        // Used when location is an Event or DOM-element. 
+      offsetLeft: 10,                                                       // Used when location is an Event or DOM-element. 
+      show: function(){ this.overlay.show();return this.container.show();}, // Overwrite. 'this' is $.basicWindow
+      hide: function(){ this.overlay.hide();return this.container.hide();}, // Overwrite. 'this' is $.basicWindow
+      modal : true                                                          // Whether or not to CREATE a modal overlay in addition to a window
   };
 
 })(jQuery);
