@@ -4,12 +4,12 @@
  * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 07/23/10
+ * Date: 08/04/10
  *
  * @projectDescription Small plugin for hiding/showing list nodes
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.11
+ * @version 1.12
  *
  */
 (function($){
@@ -85,8 +85,8 @@
 
     return this.each(function(){
       var self;
-      $(opts.toggleSelector).live(opts.toggleEvent,dispatch);
       $(this)
+      .delegate(opts.toggleSelector, opts.toggleEvent,dispatch)
       .find("ul")
         .each(function(){
           self = $(this);
