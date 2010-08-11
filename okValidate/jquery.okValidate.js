@@ -4,12 +4,12 @@
  * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under MIT and GPL.
  * http://www.opensource.org/licenses/mit-license.php
- * Date: 05/11/10
+ * Date: 08/07/10
  *
  * @projectDescription Simple Validation for forms
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.7
+ * @version 0.72
  *
  * @id jQuery.fn.okValidate
  * @param {Object} Hash of settings, none are required.
@@ -33,7 +33,8 @@
       inlineErrors: true,                           // If errors appear inline after inputs or collected at the top of the form
       liveValidation: true,                         // Should be either 'blur' or 'keyup'
       liveEvent: 'blur',                            // If validation occurs after the liveEvent is fired (within the field or on submit)
-      errorClass: "error",                          // Class added to inputs with errors as well as the error label appended to input fields
+      errorClass: "error",                          // Class added to inputs/label with errors as well as the error label appended to input fields
+      messageClass: "message",                      // Class added to inputs/label when the 'message' event is triggered.
       errorContainerClass: "error-messages",        // If NOT using inline errors, the error list will be given this class
       showErrorFunction: null,                      // Custom function for showing the errorlist
       hideErrorFunction: null,                      // Custom function for hiding the errorlist
@@ -45,7 +46,8 @@
 
     // Deep extending the object causes regexps to turn into objects
     var validators     = $.fn.okValidate.validators,
-        messages       = $.fn.okValidate.messages;
+        messages       = $.fn.okValidate.messages,
+        labelClasses   = opts.messageClass + ' ' + opts.errorClass;
 
     // We don't necessarily want to append directly to the input because they
     // might be wrapped in labels
@@ -102,25 +104,25 @@
         this.find('.error').removeClass('error');
         $("."+opts.errorContainerClass, this).remove();
       }
-    }
+    } 
 
     // Errors appended to individual fields
-    function appendErrorsTo(input,msg) {
+    function appendMessagesTo(input,msg,labelClass) {
       var label = $("<label/>");
-          msg   = msg ? msg : input.data('messages').join(", ");
+      msg = msg ? msg : input.data('messages').join(", ");
       if (opts.showErrorFunction) {
         opts.showErrorFunction.call(this); 
       } else {
         if (input.data('label')) {
           input.data('label').html(msg);
         } else {
-          input.addClass(opts.errorClass);
           label
-            .addClass(opts.errorClass)
             .text(msg)
             .insertAfter(getErrorElement(input));
           input.data('label', label);
         }
+        input.removeClass(labelClasses).addClass(labelClass);
+        label.removeClass(labelClasses).addClass(labelClass);
       }
     }
 
@@ -131,7 +133,7 @@
         if (input.data('label')) {
           input.data('label').remove();
           input
-            .data('label',null)
+            .removeData('label')
             .removeClass(opts.errorClass);
         }
       }
@@ -147,7 +149,7 @@
       } 
 
       opts.inlineErrors ?  
-        $.each( form.data('errors'),function(k,v){ appendErrorsTo($(v)); }) :
+        $.each( form.data('errors'),function(k,v){ appendMessagesTo($(v),null,opts.errorClass); }) :
         displayErrorList.call(form);
 
       if (event) {
@@ -214,8 +216,9 @@
 
       form
         .data('errors', {})
-        .bind('ok'   , function(e){ removeErrorsFrom($(e.target)); })
-        .bind('error', function(e,msg){ appendErrorsTo($(e.target),msg); });
+        .bind('ok'     , function(e){ removeErrorsFrom($(e.target)); })
+        .bind('message', function(e,msg){ appendMessagesTo($(e.target),msg,opts.messageClass); })
+        .bind('error'  , function(e,msg){ appendMessagesTo($(e.target),msg,opts.errorClass); });
 
       if (opts.liveValidation) {
         inputs[opts.liveEvent](function(){ onEvent.call(this); });

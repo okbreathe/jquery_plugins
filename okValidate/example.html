@@ -18,15 +18,18 @@
             /*
              * For ajax validation return nothing initially.  In the callback
              * trigger one of two events, 'ok' or 'error' on the input (which
-             * will be 'this').  The 'error' should be passed an message to
-             * append to the offending input.
+             * will be 'this' inside the validator ).  The 'error' should 
+             * be passed an message to append to the offending input. 
+             * Alternatively, you can trigger the 'message' event, which is 
+             * identical to the 'error' event except the class of the 
+             * label will be `messageClass` rather than `errorClass`.
              */
             ajax: function(){
               var self = $(this);
               $.get("example.html",function(){
                 if (self.val() == "ok") {
-                  self.trigger("ok");
-                } else {
+                  self.trigger("message", ["Looks Ok"]);
+                } else if (self.val() != "") {
                   self.trigger("error",["Ajax Error"]);
                 }
               });
@@ -38,7 +41,7 @@
             between: "You must select between 2-4 toppings"
           });
 
-          $('#contact-form').okValidate();
+          $('#contact-form').okValidate({messageClass:"success"});
         });
 
        })(jQuery)
@@ -77,7 +80,7 @@
             <label for='ajax'>
               ajax request (type 'ok' to pass validation)
             </label>
-            <input class='ajax' name='ajax' type='text' />
+            <input class='ajax required' name='ajax' type='text' />
           </div>
           <div class='form-item'>
             <label>

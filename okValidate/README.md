@@ -4,7 +4,7 @@
 
 ## Explanation
 
-A reasonably sized (13kb uncompressed, 7.4kb minified) form-validation plugin.
+A reasonably sized (13kb uncompressed, 7.6kb minified) form-validation plugin.
 It would only be 7 kb uncompressed, and 4kb minified, if not for the email
 address and url validator regexps which are *ginormous*.
 
@@ -54,6 +54,12 @@ These events can be used for Ajax validation (see example.html). As standard val
 of an input only depends on the current state of the input, any validation that
 depends on other sources must be performed in an alternate way.
 
+You can also use the generic 'message' event to append non-error messages to an
+input (Note: that this is identical to the behavior of the 'error' event except
+that the class of the label will be `messageClass` rather than `errorClass`).
+
+    $(input).trigger("message",["DOUBLE RAINBOW"]);
+
 ## Details
 
 'Validations' and 'Validation Messages' live in separate objects to allow
@@ -96,6 +102,7 @@ inlineErrors        | true             | If errors appear inline after inputs or
 liveEvent           | 'blur'           | Should be either 'blur' or 'keyup'
 liveValidation      | true             | If validation occurs after the liveEvent is fired (within the field or on submit)
 errorClass          | 'error'          | Class added to inputs with errors as well as the error label appended to input fields
+messageClass        | 'message'        | Class added to inputs when the 'message' event is triggered.
 errorContainerClass | 'error-messages' | If NOT using inline errors, the error list will be given this class
 showErrorFunction   | null             | Custom function for showing the errorlist
 hideErrorFunction   | null             | Custom function for hiding the errorlist
