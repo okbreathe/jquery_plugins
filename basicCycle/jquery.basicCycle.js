@@ -3,9 +3,9 @@
   $.fn.basicCycle = function(opts){
     opts = $.extend({
       effect     : 'shift', // Either 'all', a specific animation, or an array of animations to use
-      duration   : 2000, // Time to wait between animations IN ADDITION to the duration of of 2x the speed
-      speed      : 500, // Higher is longer
-      cycle      : true // Whether to start cycling immediately
+      duration   : 2000,    // Time to wait between animations IN ADDITION to the duration of of 2x the speed
+      speed      : 500,     // Higher is longer
+      cycle      : true     // Whether to start cycling immediately
     },opts);
 
     function pause(){
@@ -99,7 +99,7 @@
   /*
    * Some effects may require some pre-processing in order
    * to run effectively. Add a key corresponding to the effect
-   * that needs setup.
+   * that needs setup (otherwise 'default' will be run).
    */
   $.fn.basicCycle.setup = {
     'default': function(){

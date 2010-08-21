@@ -4,7 +4,7 @@
 
 ## Usage
 
-		$(container).basicCycle();
+		$(slideContainer).basicCycle();
 
 options       | default       | description
 ------------- | ------------- | -------------
