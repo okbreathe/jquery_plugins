@@ -2,7 +2,7 @@
 
   /*
    * jQuery.fn.positionAt     
-   * Assiting in positioining DOM elements
+   * Assists positioning DOM elements relative to body
    * @param location   - A String of a named location, DOM Element, Dom Event, or [x,y] array of coordinates
    * @param offsetLeft - added to the calculated x position
    * @param offsetTop  - added to the calculated y position
@@ -28,13 +28,17 @@
           left = location.left;
           top  = location.top;
         }
-        // Ensure we don't go move the screen
+
+        // Ensure we don't clip the screen
+        
         if (left + self.outerWidth() + (offsetLeft*2) >= screenWidth){
           left = screenWidth - self.width() - offsetLeft;
         }
+
         if (top + (offsetTop*2) <= scrollTop) {
           top = scrollTop - (offsetTop*2);
         }
+
         params = {
           top:  top  + offsetTop,
           left: left + offsetLeft
@@ -52,6 +56,7 @@
     center: function(){
       var top  = ($(window).height() - this.outerHeight()) / 2,
           left = ($(window).width()  - this.outerWidth())  / 2;
+          console.log(this.outerHeight(),this.outerWidth());
       return {
         position: $.browser.msie && $.browser.version.substr(0,1)<7 ? "absolute" : "fixed", // IE6 doesn't do position:fixed
         margin:0, 
@@ -62,3 +67,4 @@
   };
 
 })(jQuery);
+
