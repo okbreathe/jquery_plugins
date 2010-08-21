@@ -84,6 +84,6 @@ form.inline p {margin-bottom:0;}
 
 /*=================== Layout ======================== */
 
-#doc { width: 920px; background: #fff; margin:0 auto; padding: 20px; height:100%;}
+#doc { width: 920px; background: #fff; margin:0 auto; padding: 20px; min-height:100%;}
 .box {padding:1.5em;margin-bottom:1.5em;background:#E5ECF9;}
 .ct {padding:1em;}

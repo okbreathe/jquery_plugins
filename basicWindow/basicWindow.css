@@ -4,10 +4,6 @@ html,body{
   height:100%;
 }
 
-.ui-window {
-  z-index:9999;
-}
-
 .ui-overlay {
  position:absolute; 
  top: 0; 
@@ -27,4 +23,5 @@ html,body{
   -webkit-box-shadow: 10px 10px 5px #888;
   -moz-box-shadow: 10px 10px 5px #888;
   padding: 5px;
+  z-index:9999;
 }

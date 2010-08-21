@@ -12,10 +12,10 @@ Two types of Windows:
 
 ## Dependencies
 
-jquery.basicElement
-jquery.basicPosition
+`jquery.basicElement`
 
-Note that multiWindow depends on singleWindow.
+Note: Although basicWindow itself does not depend on it, the examples depend on
+`jquery.basicPosition` which is also included in this repository.
 
 ## Usage
 
@@ -34,7 +34,7 @@ hide.
 
 Note that calling `hide` without any arguments will destroy all existing windows.
 
-See the examples for more detailed usage
+See the examples for more detailed usage. 
 
 ## ProTip
 

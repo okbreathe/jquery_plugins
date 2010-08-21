@@ -2,13 +2,12 @@
 
 	function MultiWindow(){
 		this._collection = $();
-		this._settings   = { show:[], hide:[], offsetX:[], offsetY:[] };
+		this._settings   = { show:[], hide:[] };
 
 		this.show = function(content,location,opts){
 			this._init(opts);
-			var el = this._settings.show[this._settings.show.length-1].call(this,content);
+			var el = this._settings.show[this._settings.show.length-1].call(this,content,location,opts);
 			this._collection = this._collection.add(el);
-			if (el instanceof jQuery) { el.positionAt(location,this.offset(0),this.offset(1)); } // only position it if the show function returns a jQuery object
 			this._restore();
 			return el;
 		};
@@ -27,7 +26,7 @@
 		};
 	}
 
-	MultiWindow.prototype = $.singleWindow;
+	MultiWindow.prototype = $.basicElement;
 
 	$.multiWindow = new MultiWindow();
 

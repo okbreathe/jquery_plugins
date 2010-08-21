@@ -14,16 +14,19 @@
 <style type='text/css'>
 </style>
 <script type='text/javascript'>
+  $(document).ready(function(){
+                    
   $.singleWindow.setup({
 		init: function(){
 			this.container  = $("<div id='ui-window' class='ui-window'></div>" ).appendTo("body").hide();
 			this.overlay    = $("<div id='ui-overlay' class='ui-overlay'></div>" ).appendTo("body").hide();
 		},
-    show: function(content) {
+    show: function(content,location,opts) {
 		 this.overlay.show(); 
 		 return this.container
 			 .html(content)
-			 .show();     
+       .positionAt(location)
+			 .show();
 		},                  
 		hide: function(){
 		 	this.overlay.hide();	
@@ -33,6 +36,7 @@
   $("#ui-overlay").live("click",function(){
     $.singleWindow.hide();
   });
+  })
 </script>
 </head>
 <body>

@@ -13,14 +13,14 @@
 <link rel="stylesheet" href="basicWindow.css" type="text/css" />
 <script type='text/javascript'>
   $.multiWindow.setup({
-    show: function(content) {
-      return $("<div id='ui-window' class='ui-window'></div>")
+    show: function(content,location,opts) {
+      return $("<div class='ui-window'></div>")
          .html(content)
          .appendTo("body")
-         .show();     
+         .positionAt(location);
 		},                  
 		hide: function(el){
-		 	el.hide().remove();	
+		 	el.remove();	
 		}
   });
   $("#clear-all").live("click",function(){
