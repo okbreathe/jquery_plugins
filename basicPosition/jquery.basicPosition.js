@@ -56,7 +56,6 @@
     center: function(){
       var top  = ($(window).height() - this.outerHeight()) / 2,
           left = ($(window).width()  - this.outerWidth())  / 2;
-          console.log(this.outerHeight(),this.outerWidth());
       return {
         position: $.browser.msie && $.browser.version.substr(0,1)<7 ? "absolute" : "fixed", // IE6 doesn't do position:fixed
         margin:0, 
