@@ -1,0 +1,73 @@
+(function($){
+  var lastValue,eventsBound;
+
+  function keyUpHandler(e,liveSearch,fn){
+    var t = $(e.target);
+    if (e.which != 13 && t.is("div.tagList input")) {
+      if (t.val().length >= okTagList.autosuggest.opts().minLength && t.val() !== lastValue) {
+        liveSearch.filter(t.val(), fn); 
+      }
+      lastValue = t.val();
+    }
+  }
+
+  function clickHandler(e){
+    var t= $(e.currentTarget).addClass("focus");
+    okTagList.insertResult(e,t.prev().find(".entry input"));
+    return false;
+  }
+
+  $.extend(okTagList, {
+    autosuggest: {
+      init: function(list,opts){
+        var self = this;
+        opts = $.extend({
+          minLength     : 1,
+          maxResults    : 10,
+          filter        : function(col,str){
+            var arr    = [], 
+                regexp = new RegExp('\\b' + escapeRegExp(str), 'i');
+            for (var i = 0; i < col.length; i++){
+              if (arr.length === this.maxResults) { break; }
+              if (regexp.test(col[i])) { arr.push(col[i]); }
+            }
+            return arr;
+          }
+        }, opts);
+
+        self.liveSearch = $.liveSearch.create(opts.data);
+        self.list       = list.after(self.liveSearch.contents());
+        if (!eventsBound) {
+          $("div.tagList.autosuggest .entry input")
+            .live("keyup",function(e){keyUpHandler(e,self.liveSearch,opts.filter);});
+          $(".tagList-autosuggest")
+            .live('click',function(e){clickHandler(e,liveSearch);});
+          eventsBound = true;
+        }
+      }
+    },
+    insertResult: function(e,t){
+      var bubble = true;
+      // Prevent commas from adding events
+      if ( e.which != 188 && result.length ) {
+        this.newTag(result.html().replace(/<strong>([^<]+)<\/strong>/ig,'$1'));
+        t.val('');
+        bubble = false;
+      }
+      return bubble;
+    },
+    prevResult: function(e,t){
+      return selectResult(this.autosuggest.list,0);
+    },
+    nextResult: function(e,t){
+      return selectResult(this.autosuggest.list,1);
+    },
+    search: function(e,t){
+      // var ret = "", self = this;
+      // $.each(self.autosuggest.filter(this.list,t.val()), function(){ ret += "<li>"+self.autosuggest.highlight(this,t.val())+"</li>"; });
+      // return this.autosuggest.list.children().show().html(ret.replace(/^<li>/, "<li class='focus'>"));
+    }
+  });
+})(jQuery);
+
+
