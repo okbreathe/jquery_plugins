@@ -6,6 +6,7 @@
 		this.setup = function(opts){
 			var self = this;
 			$(document).ready(function(){ self._init(opts); });
+      return this;
 		};
 
     // Private
@@ -16,6 +17,7 @@
 			$.each(self._settings,function(k,v){
 			 	if (self._settings[k] instanceof Array)	 { self._settings[k].length = 1; }
 			});
+      return this;
 		};
 
     // Set initial context or append temporary context
@@ -34,6 +36,7 @@
 					}
 				});
 			}
+      return this;
 		};
 	}
 
