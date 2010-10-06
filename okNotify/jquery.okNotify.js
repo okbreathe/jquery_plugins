@@ -4,12 +4,12 @@
  * Copyright (c) 2009 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 08/13/2009
+ * Date: 10/06/10
  *
  * @projectDescription Create a Growl-like notifications simply
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0
+ * @version 1.1
  *
  * @id jQuery.noticeAdd
  * @param {Object} Hash of settings, none are required.
@@ -31,6 +31,7 @@
       'center'       : { top: 0,  width: "50%", left: "25%"},
       'top-center'   : { top: 0,  width: "50%", left: "25%"}
     };
+
     if ($container.length === 0 ) {
       $container = $('<div></div>')
         .addClass(opts.containerClass)
@@ -104,7 +105,7 @@
 
         // Append the title 
         $('.ui-notification-title', $notice).append(opts.title);
-        // Append the text, wrap it in a <p> if it doesn't look like markup
+        // Append the text, wrap it in a <p/> if it doesn't look like markup
         $('.ui-notification-content', $notice).append(text[0] == "<" ? text : '<p>'+text+'</p>');
 
         // Append the notice
@@ -134,7 +135,7 @@
           obj.animate({ opacity: '0' }, 600, function() {
             obj.animate({ height: '0px' }, 300, function() {
               $.noticeAdd.notices.splice($.noticeAdd.notices.index(obj),1); 
-              obj.parent().children().length <= 0 ? obj.parent().remove() : obj.remove();
+              obj.siblings().length <= 0 ? obj.parent().remove() : obj.remove();
             });
           });
         } else {

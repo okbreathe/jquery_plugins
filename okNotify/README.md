@@ -8,7 +8,8 @@ opinionated (takes care of common use-cases out of the box).
 Additionally, as stated above, this plugin allows you to create multiple, 
 simultaneous message queues in different areas of the screen.
 
-Tested in all major browsers (Firefox 3/3.5, Opera 9, IE 6/7/8, Safari 4).
+Tested in all major browsers (Firefox 3/3.5, Opera 9, IE 6/7/8, Safari 4)
+with jQuery >= 1.3.2.
 
 ## Usage
 
