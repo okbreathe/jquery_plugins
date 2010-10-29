@@ -6,17 +6,13 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../basicPosition/jquery.basicPosition.js"></script>
-<script type="text/javascript" src="../basicElement/jquery.basicElement.js"></script>
 <script type="text/javascript" src="jquery.basicWindow.js"></script>
-<script type="text/javascript" src="jquery.basicWindow.single.js"></script>
 <link rel="stylesheet" href="screen.css" type="text/css" />
 <link rel="stylesheet" href="basicWindow.css" type="text/css" />
 <style type='text/css'>
 </style>
 <script type='text/javascript'>
-  $(document).ready(function(){
-                    
-  $.singleWindow.setup({
+  var modal = $.basicWindow({
 		init: function(){
 			this.container  = $("<div id='ui-window' class='ui-window'></div>" ).appendTo("body").hide();
 			this.overlay    = $("<div id='ui-overlay' class='ui-overlay'></div>" ).appendTo("body").hide();
@@ -34,26 +30,25 @@
 		}
   });
   $("#ui-overlay").live("click",function(){
-    $.singleWindow.hide();
+    modal.hide();
   });
-  })
 </script>
 </head>
 <body>
   <div id='doc'>
-    <h1>singleWindow</h1>
+    <h1>basicWindow</h1>
     <p class='large'></p>
     <h2>Centered</h2>
     <a id='test-1-trigger' href='#'>Click Me</a>
     <script type='text/javascript'>
       $("#test-1-trigger").click(function(e){
-        $.singleWindow.show("positioned in center", "center");
+        modal.show("positioned in center", "center");
       });
     </script>
     <pre>
       <code>
         $("#test-1-trigger").click(function(e){
-          $.singleWindow.show("positioned in center", "center");
+          modal.show("positioned in center", "center");
         });
       </code>
     </pre>
@@ -62,13 +57,13 @@
     <a id='test-2-trigger' href='#'>Click Me</a>
     <script type='text/javascript'>
       $("#test-2-trigger").click(function(e){
-        $.singleWindow.show("positioned from content", $("#test-2-content") );
+        modal.show("positioned from content", $("#test-2-content") );
       });
     </script>
     <pre>
       <code>
         $("#test-2-trigger").click(function(e){
-          $.singleWindow.show("positioned from content", $("#test-2-content") );
+          modal.show("positioned from content", $("#test-2-content") );
         });
       </code>
     </pre>
@@ -76,13 +71,13 @@
     <a id='test-3-trigger' href='#'>Click Me</a>
     <script type='text/javascript'>
       $("#test-3-trigger").click(function(e){
-        $.singleWindow.show("positioned from event",e);
+        modal.show("positioned from event",e);
       });
     </script>
     <pre>
       <code>
         $("#test-3-trigger").click(function(e){
-          $.singleWindow.show("positioned from event",e);
+          modal.show("positioned from event",e);
         });
       </code>
     </pre>
@@ -90,13 +85,13 @@
     <a id='test-4-trigger' href='#'>Click Me</a>
     <script type='text/javascript'>
       $("#test-4-trigger").click(function(e){
-        $.singleWindow.show("positioned using coordinates 100,100",[100,100])
+        modal.show("positioned using coordinates 100,100",[100,100])
       });
     </script>
     <pre>
       <code>
         $("#test-4-trigger").click(function(e){
-          $.singleWindow.show("positioned using coordinates 100,100",[100,100])
+          modal.show("positioned using coordinates 100,100",[100,100])
         });
       </code>
     </pre>

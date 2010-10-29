@@ -6,13 +6,11 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../basicPosition/jquery.basicPosition.js"></script>
-<script type="text/javascript" src="../basicElement/jquery.basicElement.js"></script>
-<script type="text/javascript" src="jquery.basicWindow.single.js"></script>
-<script type="text/javascript" src="jquery.basicWindow.multi.js"></script>
+<script type="text/javascript" src="jquery.basicWindow.js"></script>
 <link rel="stylesheet" href="screen.css" type="text/css" />
 <link rel="stylesheet" href="basicWindow.css" type="text/css" />
 <script type='text/javascript'>
-  $.multiWindow.setup({
+  var basicWindow = $.basicWindow({
     show: function(content,location,opts) {
       return $("<div class='ui-window'></div>")
          .html(content)
@@ -24,13 +22,13 @@
 		}
   });
   $("#clear-all").live("click",function(){
-    $.multiWindow.hide();  // Calling it without arguments closes all windows
+    basicWindow.hide();  // Calling it without arguments closes all windows
   });
 </script>
 </head>
 <body>
   <div id='doc'>
-    <h1>multiWindow</h1>
+    <h1>basicWindow</h1>
     <p class='large'>Click links to popups</p>
     <a id='clear-all' href='#'>Clear All</a>
     <h2>Centered</h2>
@@ -38,16 +36,16 @@
     <script type='text/javascript'>
       $("#test-1-trigger").click(function(e){
         if ($('#test-1-window').length) {
-          $.multiWindow.hide($('#test-1-window'));
+          basicWindow.hide($('#test-1-window'));
         } else {
-          $.multiWindow.show("positioned in center", "center").attr('id', 'test-1-window');
+          basicWindow.show("positioned in center", "center").attr('id', 'test-1-window');
         }
       });
     </script>
     <pre>
       <code>
         $("#test-1-trigger").click(function(e){
-          $.multiWindow.show("positioned in center", "center");
+          basicWindow.show("positioned in center", "center");
         });
       </code>
     </pre>
@@ -58,16 +56,16 @@
       $("#test-2-trigger").click(function(e){
         e.preventDefault();
         if ($('#test-2-window').length) {
-          $.multiWindow.hide($('#test-2-window'));
+          basicWindow.hide($('#test-2-window'));
         } else {
-          $.multiWindow.show("positioned from content", $("#test-2-content") ).attr('id', 'test-2-window');
+          basicWindow.show("positioned from content", $("#test-2-content") ).attr('id', 'test-2-window');
         }
       });
     </script>
     <pre>
       <code>
         $("#test-2-trigger").click(function(e){
-          $.multiWindow.show("positioned from content", $("#test-2-content") );
+          basicWindow.show("positioned from content", $("#test-2-content") );
         });
       </code>
     </pre>
@@ -77,16 +75,16 @@
       $("#test-3-trigger").click(function(e){
         e.preventDefault();
         if ($('#test-3-window').length) {
-          $.multiWindow.hide($('#test-3-window'));
+          basicWindow.hide($('#test-3-window'));
         } else {
-          $.multiWindow.show("positioned from event",e,15,15).attr('id', 'test-3-window');
+          basicWindow.show("positioned from event",e,15,15).attr('id', 'test-3-window');
         }
       });
     </script>
     <pre>
       <code>
         $("#test-3-trigger").click(function(e){
-          $.multiWindow.show("positioned from event",e);
+          basicWindow.show("positioned from event",e);
         });
       </code>
     </pre>
@@ -95,16 +93,16 @@
     <script type='text/javascript'>
       $("#test-4-trigger").click(function(e){
         if ($('#test-4-window').length) {
-          $.multiWindow.hide($('#test-4-window'));
+          basicWindow.hide($('#test-4-window'));
         } else {
-          $.multiWindow.show("positioned using coordinates 100,100",[100,100]).attr('id', 'test-4-window')
+          basicWindow.show("positioned using coordinates 100,100",[100,100]).attr('id', 'test-4-window')
         }
       });
     </script>
     <pre>
       <code>
         $("#test-4-trigger").click(function(e){
-          $.multiWindow.show("positioned using coordinates 100,100",[100,100])
+          basicWindow.show("positioned using coordinates 100,100",[100,100])
         });
       </code>
     </pre>
