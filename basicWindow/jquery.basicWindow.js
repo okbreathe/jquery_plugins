@@ -39,7 +39,7 @@
 			} else {
 				objOrIndex = this._collection;
 			}
-      args.unshift(objOrIndex);
+      args[0] = objOrIndex;
       return this._internal.hide.apply(this,args);
 		};
 	}
