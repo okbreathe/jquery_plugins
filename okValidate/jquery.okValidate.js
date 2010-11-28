@@ -269,7 +269,7 @@
     usd:      "#{field} must be a US Dollar amount.",
     zip:      "#{field} must be a zipcode in the format xxxxx or xxxxx-xxxx.",
     "length\\[(\\d+),?(\\d+)?\\]": function(name,b1,b2){ // If we only have one bound, assume its the upper bound
-      return name + (b1 && b2 ? " must be between "+b1+" and "+b2+" characters" : " must at less than "+b1+" characters");
+      return name + (b1 && b2 ? " must be between "+b1+" and "+b2+" characters" : " must be less than "+b1+" characters");
     },
     phone:    "#{field} must be in the format xxx-xxx-xxxx.",
     time24:   "#{field} must be a 24 hour time: 23:00.",
