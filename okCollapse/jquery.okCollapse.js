@@ -72,6 +72,7 @@
       var movementDuration = movementSpeed  * list.data("maxHeight"),
           fadeDuration     = opts.fadeSpeed * list.data("maxHeight");
       return list
+        .stop(true,true)
         .animate(
           { height: finalHeight },
           (movementDuration > opts.maxDuration ? opts.maxDuration : movementDuration),
