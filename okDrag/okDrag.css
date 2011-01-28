@@ -1,0 +1,52 @@
+ul {
+	margin:0;
+	padding:0;
+	margin-left:20px;
+}
+
+#list0 {
+  list-style: circle;
+  cursor: move;
+}
+
+.list2d {
+	width:350px;
+	list-style-type:none;
+	margin:0;
+}
+
+  .list2d li {
+    float:left;
+    padding:5px;
+    width:100px;
+    height:100px;
+    cursor: move;
+  }
+
+    .list2d div {
+      width:90px;
+      height:50px;
+      border:solid 1px #000;
+      background:#E0E0E0;
+      text-align:center;
+      padding-top:40px;
+    }
+
+#list1 {
+	float:left;
+}
+
+#list2 {
+	float:right;
+}
+
+#list3 {
+  float: left;
+  min-height: 10px;
+  border: 1px dotted #ccc;
+}
+
+.placeHolder div {
+	background-color:#FFF !important;
+	border:dashed 1px gray !important;
+}

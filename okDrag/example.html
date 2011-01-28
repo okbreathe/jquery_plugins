@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>jQuery.okDrag</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.okDrag.js"></script>
+    <script type="text/javascript" src="jquery.okDrag.scroll.js"></script>
+    <link rel="stylesheet" href="screen.css" type="text/css" />
+    <link rel="stylesheet" href="okDrag.css" type="text/css" />
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#list0").okDrag();
+        $("#list1, #list2,#list3").okDrag({ 
+          dragBetween: true, 
+          placeHolderTemplate: "<li class='placeHolder'><div></div></li>",
+          handleSelector: "div"
+        });
+      });
+    </script>
+</head>
+<body>
+  <div id='doc'>
+
+    <h1>jQuery.okDrag</h1>
+
+    <p>Simple Drag and Drop List Sorting</p>
+    
+    <h2>Examples</h2>
+
+    <h3>Simple list:</h3>
+
+    <ul id='list0'>
+      <li>red</li>
+      <li>orange</li>
+      <li>yellow</li>
+      <li>green</li>
+      <li>blue</li>
+      <li>indigo</li>
+      <li>violet</li>
+    </ul>
+
+    <h3>2D list with drag and drop between lists:</h3>
+
+    <ul id="list1" class='list2d'>
+      <li><div>1</div></li>
+      <li><div>2</div></li>
+      <li><div>3</div></li>
+      <li><div>4</div></li>
+      <li><div>5</div></li>
+      <li><div>6</div></li>
+      <li><div>7</div></li>
+      <li><div>8</div></li>
+      <li><div>9</div></li>
+    </ul>
+
+    <ul id="list2" class='list2d'>
+      <li><div>10</div></li>
+      <li><div>11</div></li>
+      <li><div>12</div></li>
+      <li><div>13</div></li>
+      <li><div>14</div></li>
+      <li><div>15</div></li>
+      <li><div>16</div></li>
+      <li><div>17</div></li>
+      <li><div>18</div></li>
+    </ul>
+
+    <div class='clear'>
+    </div>
+    <h4>Empty List</h4>
+    <ul id='list3' class='list2d'>
+    </ul>
+    <div class='clear'></div>
+    <h2>Just some extra space to test screen scrolling</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum 
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum 
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum 
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum 
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum 
+    </p>
+
+</div>
+</body>
+</html>
