@@ -13,15 +13,17 @@ configuration and bloat.
  * okTips:: Flexible tooltips and more
  * okTreemap:: a framework for creating a treemap-like UI components
  * okValidate:: A lightweight, customizable form validation plugin that just works
- * okColorPicker:: Simplified Colour Picker (<3kb minified)
+ * okColorPicker:: Simplified Colour Picker
  * okCollapse:: Small plugin for hiding/showing list nodes
+ * okDrag:: Simple, lightweight drag and drop list sorting
 
 ### Basics
 
-Simple composable plugins. The "basic" series is all about doing more by doing less.
-These plugins offer minimal amount of functionality to maximize their
-composability and reuse. The scripts aren't going to wow anyone, but instead 
-allow building off of them easily. 
+Simple composable plugins. The "basic" series is all about doing more by doing
+less. These plugins offer minimal amount of functionality to maximize their
+composability and reuse. This is the wrong place to look if you're looking for
+a drop-in solution.
  
  * basicWindow:: Displays content in the specified position (think lightbox).
  * basicCycle:: Cycle through content (think slideshow).
+ * basicPosition:: Easy element positioning.
