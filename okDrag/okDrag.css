@@ -32,21 +32,55 @@ ul {
       padding-top:40px;
     }
 
-#list1 {
+#list2 {
 	float:left;
 }
 
-#list2 {
+#list3 {
 	float:right;
 }
 
-#list3 {
+#list4 {
   float: left;
   min-height: 10px;
   border: 1px dotted #ccc;
 }
 
-.placeHolder div {
+.placeHolder {
+  background-color: #cfcfcf;
+}
+
+.placeHolder-2d div {
 	background-color:#FFF !important;
 	border:dashed 1px gray !important;
+}
+
+ol.nested,ul.nested {
+  margin: 0;
+  padding: 0;
+  padding-left: 30px;
+}
+
+ul.nested, ul.nested ul ,
+ol.nested, ol.nested ol {
+  margin: 0 0 0 25px;
+  padding: 0;
+  list-style-type: none;
+}
+
+ul.nested ,
+ol.nested {
+  margin: 4em 0;
+}
+
+.nested li {
+  margin: 7px 0 0 0;
+  padding: 0;
+}
+
+.nested li div  {
+  border: 1px solid black;
+  padding: 3px;
+  margin: 0;
+  cursor: move;
 }

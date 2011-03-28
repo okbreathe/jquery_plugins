@@ -4,12 +4,12 @@
  * Copyright (c) 2011 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 03/11/11
+ * Date: 03/28/11
  *
  * @projectDescription Simple Drag and Drop Sorting
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.1.1
+ * @version 0.2.0
  *
  */
 (function($){
@@ -30,7 +30,11 @@
         return false;
       }
 
-      lists   = $(D.opts.listSelector);
+      lists = $(D.opts.listSelector);
+      if (D.opts.allowNested) {
+        lists = lists.add(lists.find(D.opts.listType));
+      }
+
       dragged = $(e.target).closest(D.opts.itemSelector);
 
       var pOffset = dragged.offsetParent().offset(),
@@ -72,8 +76,13 @@
       if ( isect &&  (!D.opts.dragBetween ? list.item[0] == originalList : true)) {
         item = list.dropTargets[isect[1]];
         if ( item && item.item[0] != placeHolder[0] ) {
-          if (lastPosition === null || lastPosition.top > dragged.offset().top || lastPosition.left > dragged.offset().left) {
-            item.item.before(placeHolder);
+          if (lastPosition !== null && lastPosition.left > $(item.item[0]).offset().left + D.opts.tabSize) {
+            if (item.item.children(D.opts.listType).length === 0) {
+              item.item.append(document.createElement(D.opts.listType));    
+            }
+            item.item.children(D.opts.listType).append(placeHolder);
+          } else if (lastPosition === null || lastPosition.top > dragged.offset().top || lastPosition.left > dragged.offset().left) {
+            item.item.before(placeHolder); // Just started dragging or we're over the first node in the list
           } else { 
             item.item.after(placeHolder); 
           }
@@ -89,20 +98,21 @@
       placeHolder.before(dragged);
       dragged.css({ position: "", top: "", left: "", opacity: "", "z-index": "" });
       placeHolder.remove();
-      D.opts.dragEnd.call(dragged, originalIndex != dragged.siblings().andSelf().index(dragged), originalList != dragged.parent()[0]);
-      dragged.trigger("dragStop");
+      D.cleanup(originalList);
+      dragged.trigger("dragStop", [originalIndex != dragged.siblings().andSelf().index(dragged), originalList != dragged.parent()[0]]);
       $(document)
         .unbind('mouseup',   D.dragStop)
         .unbind('mousemove', D.dragStart);
     },
     /*
      * Two layers of caching. First we cache the coordinates of the list, and
-     * then the coordinates of the children. This confers two benefits: 
+     * then the coordinates of the children. This confers three benefits: 
      * 1) We can drop on empty lists 
      * 2) Speeds up intersection lookups with multiple lists
+     * 3) Allows easy nested lists
      */
     cachedropTargets: function() {
-      var list, item, listLoc, itemLoc;
+      var list,item, listLoc, itemLoc;
       function buildLoc(el) {
         var ret    = el.offset();
         ret.right  = ret.left + el.width();
@@ -112,8 +122,8 @@
       }
       dropTargets.length = 0;
       lists.each(function(i){
-        list                = $(this);
-        listLoc             = buildLoc(list);
+        list = $(this);
+        listLoc = buildLoc(list);
         listLoc.dropTargets = [];
         list.children(D.opts.itemSelector).not(dragged).each(function(i) {
           listLoc.dropTargets.push(buildLoc($(this)));
@@ -133,6 +143,15 @@
       originalList  = dragged.parent()[0];
     },
     /*
+     * Remove empty lists
+     */
+		cleanup: function(list) {
+			if (list && list.children.length === 0 ) {
+        list.parentNode.removeChild(list);
+      } 
+      list = null;
+		},
+    /*
      * Returns false if the item is not currently intersecting any known items
      * Otherwise it will return a tuple of (listLocationIndex,[itemLocationIndex])
      */
@@ -141,13 +160,16 @@
       function isIntersecting(el) {
         return el.left<mousex && el.right>mousex && el.top<mousey && el.bottom>mousey;
       }
-      for (var i = 0, len1 = dropTargets.length; i < len1; i++) {
+      for (var i = dropTargets.length - 1; i >= 0; i--) {
         list = dropTargets[i];
         if (isIntersecting(list)) { 
           ret.push(i); 
-          for (var j = 0, len2 = list.dropTargets.length; j < len2; j++) {
+          for (var j = list.dropTargets.length - 1; j >= 0; j--) {
             item = list.dropTargets[j];
-            if (isIntersecting(item)) { ret.push(j); return ret; }
+            if (isIntersecting(item)) { 
+              ret.push(j); 
+              return ret; 
+            }
           }
           return ret;
         } 
@@ -166,7 +188,11 @@
       dragEnd: function(positionChanged,listChanged){}, // Callback executed when dragging ends
       dragBetween: false,                               // Allow dragging between lists.
       enableDrag: function(){ return true; },           // If returns true, then dragging is enabled
-      placeHolderTemplate: "<li>&nbsp;</li>",           // HTML for the placeholder of the dragged item.
+      placeHolderTemplate: "<li class='placeHolder'>&nbsp;</li>", // HTML for the placeholder of the dragged item.
+      // Only applicable for nested lists
+      allowNested: true,                                // Allow nested lists to be sortable
+			tabSize: 20,                                      // Horizontal space user must move mouse before a sub list will be created
+			listType: 'ul',                                   // What type of sublist to create (either 'ul' or 'ol')
       // Only available if using the okDrag.scroll plugin
       scrollSensitivity: 20,                            // Distance in pixels from the edge of the viewport after which the viewport should scroll. 
       scrollSpeed: 20,                                  // Speed at which the window should scroll
