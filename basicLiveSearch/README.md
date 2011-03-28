@@ -2,6 +2,9 @@
 
 *Simple live search UI*
 
+Utilizes an in page data source to provide live search capability. Data are just
+an array of strings to search through.
+
 ## Features
 
 * Use any scoring algorithm
