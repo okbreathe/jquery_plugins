@@ -204,8 +204,8 @@
     $(this.selector).live('mousedown',function(e){
       if ($(e.target).is(opts.handleSelector)) {
         $.okDrag.mouseDown(e,opts);
+        return false;
       }
-      return false;
     });
     return this;
   };
