@@ -16,6 +16,7 @@ configuration and bloat.
  * okColorPicker:: Simplified Colour Picker
  * okCollapse:: Small plugin for hiding/showing list nodes
  * okDrag:: Simple, lightweight drag and drop list sorting
+ * okShortcut:: Easy keybinding
 
 ### Basics
 
