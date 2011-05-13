@@ -10,8 +10,7 @@
  * @mailto asher@okbreathe.com
  * @version 0.2.0
  *
- * Based on original script by Binny V A
- * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Originally inspired by http://www.openjs.com/scripts/events/keyboard_shortcuts/
  *
  */
 

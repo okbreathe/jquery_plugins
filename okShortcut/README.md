@@ -4,7 +4,21 @@
 
 The two methods `jQuery.shortcut.add` and `jQuery.shortcut.remove` are used to
 add and remove key bindings, respectively. Both take a key-combination and a
-callback and `jQuery.shortcut.add` can receive an optional options hash.
+callback. `jQuery.shortcut.add` can optionally receive an options (listed below) hash.
+
+A key combination can include all alphanumeric keys, special keys and function keys.
+
+Key combinations are specified by either combining the literal (in the 
+case of an alphanumeric key) or the key name with a series of pluses
+
+    shift+ctrl+f
+
+**Key Names**
+
+    tab, space, enter, backspace, scroll, capslock, numlock, pause, insert,
+    home, delete, end, pageup, pagedown, left, up, right, down, 
+
+    f1,f2..f12
 
 ## Usage
 
@@ -18,7 +32,7 @@ callback and `jQuery.shortcut.add` can receive an optional options hash.
 
 ## Note
 
- * Original based on original script by Binny V A http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Originally inspired by http://www.openjs.com/scripts/events/keyboard_shortcuts/
 
 ## Options
 
