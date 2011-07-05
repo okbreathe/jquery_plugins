@@ -1,0 +1,108 @@
+.tagList {
+	font-size:11px;
+	cursor:text;
+}
+
+  .tagList ul {
+    overflow:hidden;
+    margin:0;
+    padding:5px;
+    border:1px solid #999;
+    padding-bottom:3px;
+  }
+
+    .tagList li {
+      position:relative;
+      list-style-type:none;
+      float:left;
+      display:block;
+      cursor:default;
+    }
+
+      .tagList li.tag {
+        background:#DEE7F8;
+        line-height:18px;
+        margin:0 5px 0 0;
+        padding:0 15px 0 5px;
+        border:1px solid #CAD8F3;
+        border-radius:6px;
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+      }
+
+        .tagList li.tag:hover {
+          background:#BBCEF1;
+          border:1px solid #6D95E0;
+        }
+
+        .tagList li.tag a.close {
+          position:absolute;
+          display:block;
+          background:url("images/close.gif") repeat scroll 0 0 transparent;
+          font-size:1px;
+          height:7px;
+          width:7px;
+          right:4px;
+          top:7px;
+        }
+          .tagList li.tag a.close:hover {
+            background-position: 0 -7px;
+          }
+
+    .tagList ul li input[type=text] {
+      background:transparent;
+      border:medium none;
+      margin:0;
+      outline:0 none;
+      padding:3px 0 2px;
+      width:150px;
+    }
+
+
+  .tagList li.tag.ui-focus {
+    border-color:#598BEC;
+    background:#598BEC;
+    color:#fff;
+  }
+
+
+.tagList-autosuggest {
+	position:absolute;
+}
+
+.tagList-help,
+.tagList-autosuggest ul {
+	background:#eee;
+	-webkit-box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	-moz-box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	border:1px solid #999;
+	border-top:none;
+}
+
+.tagList-autosuggest ul {
+  margin:0;
+  padding:0;
+}
+
+  .tagList-autosuggest li {
+    margin:0;
+    cursor:pointer;
+    border:1px solid #ccc;
+    padding:5px 12px;
+    list-style-type:none;
+    z-index:1000;
+    background:#eee;
+    display: block;
+    float: none;
+  }
+
+    .tagList-autosuggest li.ui-selected {
+      background: #4173CC;
+      color:#FFFFFF;
+    }
+
+.tagList-help {
+  position:absolute;
+  padding:5px;
+}

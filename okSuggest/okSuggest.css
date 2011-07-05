@@ -1,0 +1,14 @@
+input.okSuggest-input {
+  margin-bottom:0;
+}
+.okSuggest-help {
+	background:#eee;
+	-webkit-box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	-moz-box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	box-shadow:3px 3px 3px rgba(0,0,0,0.2);
+	border:1px solid #999;
+	border-top:none;
+  position:absolute;
+  padding:5px;
+}
+
