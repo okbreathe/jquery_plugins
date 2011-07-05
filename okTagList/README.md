@@ -2,20 +2,32 @@
 
 *Simple TextBoxList UI* 
 
-## Usage
+Allows users to enter a series of tags which are saved as a comma separated list
+in the value attribute of the original text input that it was called on.
 
-Call `okTagList` on the inputs that you wish to use a tagLists.
-
-    $("input selector").okTagList({...options...});
+OkTagList optionally can use an autosuggest plugin which pulls existing tags
+(to present to the user as choices) from an in page array. See the example for
+details.
 
 The example uses the Quicksilver sorting algorithm (the default for
 basicLiveSearch), but is not required.
+
+## Usage
+
+Call `okTagList` on the inputs that you wish to use as tag-lists.
+
+    $("input selector").okTagList({...options...});
 
 ## Notes
 
 * When using the autosuggest plugin, the data must already exist in the page (or be passed in)
 * Requires jQuery 1.4.3 or higher.
 * Should work on IE6, but you'll need to modify the CSS.
+
+## Dependencies
+
+* jquery.basicLiveSearch (included)
+* jquery.okTagList.suggest (included, but optional)
 
 ## Options
 
@@ -36,6 +48,16 @@ filter           | Function (see plugin)                  | Run for each data po
 
 ## Changing the keys
 
-To change the keys extend the the `$.fn.okTagList.keys` object. Each action
+To change the keys extend the `$.fn.okTagList.keys` object. Each action
 must be an array of keycodes for the particular keys you want to use. See the
 plugin for examples
+
+## Notes
+
+If the user doesn't actually insert the tag (by pressing 'comma' or 'enter'
+after typing) it won't be inserted to the actual tag list ( okTagList works 
+in an unobtrusive way by adding tags as a comma separated list to the original 
+input it was called on ). So if you want to ensure that tags that aren't actually 
+added by the user (e.g.  user just types something and doesn't hit enter/comma 
+before moving to the next field) you'll need to handle this scenario by intercepting
+the form submission process.

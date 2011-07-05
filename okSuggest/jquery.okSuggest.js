@@ -13,21 +13,15 @@
  *
  */
 
-// TODO - bind keys dynamically
 (function($){
   var eventsBound;
 
   $.fn.okSuggest = function(opts){
 
     opts = $.extend({
-      data       : [],     // Data used in the liveSearch
-      selected   : null,   // String - which datum should start out in the input
-      minLength  : 1,      // Minimum number of keystrokes to start the search
-      keys       : {       // Controls
-        select : [13],     // Enter
-        next   : [40],     // Down
-        prev   : [38]      // Up
-      },
+      data       : [],   // Data used in the liveSearch
+      selected   : null, // String - which datum should start out in the input
+      minLength  : 1,    // Minimum number of keystrokes to start the search
       onInsert   : function(textInput,str) { // Called when a new value is inserted into the original input
         return textInput.val(str);
       },                                 // (`this` is set to the original input. Receives the visible text input as an argument)
@@ -123,7 +117,7 @@
         }  
         val  = $("option:selected", self).html();
         self = $("<input type='text' />").insertAfter(self.hide());
-      } 
+      }
       if (opts.selected) { val = opts.selected; }
       liveSearch = $.liveSearch.create(opts.data, { className: "okSuggest-list" });
       list       = liveSearch.contents().width(self.outerWidth(true));
