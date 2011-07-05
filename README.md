@@ -17,6 +17,8 @@ configuration and bloat.
  * okCollapse:: Small plugin for hiding/showing list nodes
  * okDrag:: Simple, lightweight drag and drop list sorting
  * okShortcut:: Easy keybinding
+ * okSuggest:: Suggestion for text inputs and selects
+ * okTagList:: Simple TextBoxList UI
 
 ### Basics
 
@@ -28,3 +30,4 @@ a drop-in solution.
  * basicWindow:: Displays content in the specified position (think lightbox).
  * basicCycle:: Cycle through content (think slideshow).
  * basicPosition:: Easy element positioning.
+ * basicLiveSearch:: Simple live search UI
