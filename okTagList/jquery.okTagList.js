@@ -9,7 +9,7 @@
  * @projectDescription Simple TextBoxList UI
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 (function($){
@@ -101,7 +101,7 @@
     }
   };
 
-  function bindEvents() {
+  function bindEvents(opts) {
     var keyDownHandler, clickHandler;
 
     if (!eventsBound) {
@@ -148,7 +148,13 @@
       .live('focus',function(){ focusedList = $(this).closest(".tagList").addClass('focus'); 
         if ($("li.entry input", focusedList).val() === "") { focusedList.find("div.tagList-help").show(); }
       })
-      .live('blur', function(){ focusedList.removeClass('focus'); focusedList = null; });
+      .live('blur', function(e){ 
+        if (opts.insertOnBlur) {
+          window.okTagList.addTag.call(focusedList,e,$(this));
+        }  
+        focusedList.removeClass('focus'); 
+        focusedList = null; 
+      });
 
       eventsBound = true;
     }
@@ -157,7 +163,8 @@
   $.fn.okTagList = function(opts){
 
     opts = $.extend({
-      helpText : "Type the name of a tag you'd like to use. Use commas to separate multiple tags." // Text displayed to user when focusing the input
+      helpText     : "Type the name of a tag you'd like to use. Use commas to separate multiple tags.", // Text displayed to user when focusing the input
+      insertOnBlur : false // Whether or not tags should be inserted when the field loses focus
     },opts);
 
     function init() {
@@ -174,7 +181,7 @@
       return ret;
     }
 
-    bindEvents();
+    bindEvents(opts);
 
     return this.each(init);
   };

@@ -36,6 +36,7 @@ Call `okTagList` on the inputs that you wish to use as tag-lists.
 option           | default       | description
 ---------------- | ------------- | -------------
 helpText         | See plugin    | Text displayed to user when focusing the input
+insertOnBlur     | false         | Whether or not tags should be inserted when the field loses focus
 
 ### okTagList.suggest Options
 
@@ -51,13 +52,3 @@ filter           | Function (see plugin)                  | Run for each data po
 To change the keys extend the `$.fn.okTagList.keys` object. Each action
 must be an array of keycodes for the particular keys you want to use. See the
 plugin for examples
-
-## Notes
-
-If the user doesn't actually insert the tag (by pressing 'comma' or 'enter'
-after typing) it won't be inserted to the actual tag list ( okTagList works 
-in an unobtrusive way by adding tags as a comma separated list to the original 
-input it was called on ). So if you want to ensure that tags that aren't actually 
-added by the user (e.g.  user just types something and doesn't hit enter/comma 
-before moving to the next field) you'll need to handle this scenario by intercepting
-the form submission process.
