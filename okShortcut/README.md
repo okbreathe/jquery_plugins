@@ -41,5 +41,5 @@ options                 | default           | description
 type                    | 'keydown'         | What event to bind to (can be keydown,keyup or keypress)
 propagate               | false             | Whether events propagate
 disableInInput          | false             | Whether or not key bindings are disabled when an input has focus
-target                  | document          | What element event are bound to
+target                  | document          | What element events should be bound to
 keycode                 | false             | Give an explicit keycode to test for

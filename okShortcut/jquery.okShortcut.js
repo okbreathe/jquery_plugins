@@ -124,6 +124,7 @@ jQuery.shortcut = (function(){
   }
 
   return {
+    // Add a shortcut
     add: function(combination, callback, options) {
       options = options || {};
 
@@ -133,27 +134,19 @@ jQuery.shortcut = (function(){
         }
       }
 
-      var target = options.target;
-
-      if (typeof target === 'string') {
-        target = document.getElementById(target);
-      }
-
-      var func = makeKeypressedFun( combination, callback, options );
+      var fn = makeKeypressedFun( combination, callback, options );
 
       bindings[combination.toLowerCase()] = {
-        'callback' : func,
-        'target'	 : target,
+        'callback' : fn,
+        'target'	 : options.target,
         'event'    : options.type
       };
 
-      // Attach the function with the event
-      // jQuery normalizes event handling
-      jQuery(target).bind(options.type, func);
+      jQuery(options.target).bind(options.type, fn);
       return this;
     },
 
-    //Remove the shortcut - just specify the shortcut and I will remove the binding
+    // Remove a shortcut - you only need to pass the shortcut
     remove: function(combination) {
       var binding = bindings[combination.toLowerCase()];
 

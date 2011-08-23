@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>jQuery.okSlide</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="jquery.okShortcut.js"></script>
+<link rel="stylesheet" href="screen.css" type="text/css" />
+</head>
+
+<body>
+  <div id='doc'>
+    <h1>okShortcut</h1>
+    <p class='large'>Easy keybinding</p> 
+    <h2>Demonstration</h2>
+    <div class='ct'>
+      <h4 id='result-0'>Press 'enter' without any input focused to update this text</h4>
+    </div>
+    <p>
+      Events can also be bound to specific elements. Remember to pass the
+      <code>'propagate:false'</code> option otherwise the event will bubble to
+      any shortcut bound to containing elements.
+    </p>
+    <div id='group-1' class='ct'>
+      <h4 id='result-1'>Type in the text the input and press 'enter' to replace this text</h4>
+      <input id='input-1' type='text'/>
+    </div>
+
+    <div id='group-2' class='ct'>
+      <h4 id='result-2'>Type in the text the input and press 'enter' to replace this text</h4>
+      <input id='input-2' type='text'/>
+    </div>
+  </div>
+  <script type='text/javascript'>
+    var i=0;
+    $.shortcut.add("enter", function(){ $("#result-1").html("Typed '" + $("#input-1").val() + "' in input 1"); }, { target: $("#group-1"), propagate: false});
+    $.shortcut.add("enter", function(){ $("#result-2").html("Typed '" + $("#input-2").val() + "' in input 2"); }, { target: $("#group-2"), propagate: false});
+    $.shortcut.add("enter", function(){ i++; $("#result-0").html("Pressed enter without focusing an input <span style='color:#f00'>" + i + "</span> times."); });
+  </script>
+</body>
+</html>
