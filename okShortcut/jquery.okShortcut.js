@@ -1,16 +1,14 @@
 /*
- * jquery.okDrag.js
+ * jquery.okShortcut.js
  *
  * Copyright (c) 2011 Asher Van Brunt | http://www.okbreathe.com
  * Licensed under the BSD LICENSE
  * Date: 03/28/11
  *
- * @projectDescription Simple Drag and Drop Sorting
+ * @projectDescription Easy Keybinding
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
  * @version 0.2.0
- *
- * Originally inspired by http://www.openjs.com/scripts/events/keyboard_shortcuts/
  *
  */
 
