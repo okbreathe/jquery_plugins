@@ -1,15 +1,15 @@
 /*
  * jquery.okValidate 
  *
- * Copyright (c) 2010 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2011 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under MIT and GPL.
  * http://www.opensource.org/licenses/mit-license.php
- * Date: 08/07/10
+ * Date: 10/21/11
  *
  * @projectDescription Simple Validation for forms
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.72
+ * @version 0.73
  *
  * @id jQuery.fn.okValidate
  * @param {Object} Hash of settings, none are required.
@@ -206,7 +206,7 @@
 
     return this.each(function(){
       var form   = $(this),
-          inputs = $("input[type='checkbox'], input[type='password'], input[type='radio'].required, input[type='text'], select, textarea", form),
+          inputs = $("input[type=checkbox], input[type=password], input[type=email],input[type=url],input[type=number],input[type=search], input[type=radio].required, input[type=text], select, textarea", form),
           onEvent = function(e){
             // Only test the last item of a checkbox or radio group
             var input = /(checkbox|radio)/.test(this.type) ?  $("input[type='"+RegExp.$1+"'][name='"+this.name+"']:last", form) : $(this);
@@ -248,7 +248,7 @@
     usd:/^\$?(\d{1,3},?(\d{3},?)*\d{3}(\.\d{0,2})?|\d{1,3}(\.\d{0,2})?|\.\d{1,2}?)$/,
     url:/^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i,
     required: function(){ 
-      return (/(checkbox|radio)/.test(this[0].type) ? $("input[type='"+RegExp.$1+"'][name='"+this[0].name+"']").is(':checked') : ( this.val() !== '' || this.val() != this.attr('title') )); 
+      return (/(checkbox|radio)/.test(this[0].type) ? $("input[type='"+RegExp.$1+"'][name='"+this[0].name+"']").is(':checked') : ( this.val() !== '' )); 
     }, 
     numeric: function() { return !isNaN(this.val());},
     zip:/^\d{5}(-\d{4})?$/,
@@ -256,7 +256,7 @@
       var len = this.val().length; 
       return b1 && b2 ? (len >= b1 && len <= b2) : (len <= b1); 
     },
-    phone:/^[2-9]\d{2}-\d{3}-\d{4}$/,
+    phone: /^1?\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/,
     time24:/^(20|21|22|23|[01]\d|\d)(([:][0-5]\d){1,2})$/,
     time12:/^[01]?\d:[0-5]\d?\s?[aApP]\.?[mM]\.?$/
   };
