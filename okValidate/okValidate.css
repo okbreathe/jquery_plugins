@@ -1,0 +1,13 @@
+input[type=text].error, input[type=password].error, input.error, input.error, textarea.error, select.error{
+  color:#8a1f11;
+  border-color:#8a1f11;
+}
+
+.error, .notice, .success {margin-bottom:1em;border:1px solid #ddd;}
+label.error, label.notice, label.success {padding:.8em;}
+.error {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+.notice {background:#FFF6BF;color:#514721;border-color:#FFD324;}
+.success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
+.error a {color:#8a1f11;}
+.notice a {color:#514721;}
+.success a {color:#264409;}

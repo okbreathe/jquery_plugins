@@ -45,31 +45,31 @@ ol li{
 	text-decoration:none;
 }
 
-  .ui-slide-wrapper ul a:hover {
-    background-color: #e1e1e1;
-  }
+.ui-slide-wrapper ul a:hover {
+  background-color: #e1e1e1;
+}
 
 .ui-slide-wrapper a.more {
 	background: url(menu.gif) no-repeat 100% 0;
 }
 
-  .ui-slide-wrapper .hover,
-  .ui-slide-wrapper ul a:hover {
-    background-position:right -100px;
-  }
-
+.ui-slide-wrapper .hover,
+.ui-slide-wrapper ul a:hover {
+  background-position:right -100px;
+}
 
 .ui-slide-wrapper a.prev {
 	background: url(menu.gif) no-repeat 0 0;
 }
 
-  .ui-slide-wrapper a.prev:hover {
-    background: url(menu.gif) no-repeat 0 -100px;
-  }
+.ui-slide-wrapper a.prev:hover {
+  background: url(menu.gif) no-repeat 0 -100px;
+}
 
 .ui-slide-wrapper .selected {
-	background-color:#498091;
+	background-color:#489dd4;
 	background-image:none;
+  padding:5px;
 	color:#FFF;
 }
 
@@ -82,4 +82,8 @@ ol li{
 .sliding .ui-slide-wrapper {
 	height:480px;
 	overflow:hidden;
+}
+
+.sliding-menu {
+  margin:1em 0;
 }

@@ -60,7 +60,7 @@
       beforeDestroy  : null,                                         // Called right before tooltip is removed
       afterDestroy   : null,                                         // Called right after tooltip is removed
       body           : function(trigger){                            // Can be text, or a function. If it is a function and returns text, 
-        return "<p>"+trigger.title+"</p>";                              // the text will be used for the body of the popup.
+        return "<p>"+trigger.title+"</p>";                           // the text will be used for the body of the popup.
       },
       top            : -20,                                          // The y offset to display the popup at
       left           : 20,                                           // The x offset to display the popup at
@@ -71,7 +71,6 @@
       overlayClass   : 'ui-widget-overlay'                           // The class of the overlay used for modal tooltips
     }, opts);
 
-
     function appendHtml(){
       var html;
       if (popup.length === 0) { 
@@ -80,7 +79,7 @@
           cover = $("<div id='ui-oktip-overlay'></div>");
           cover
             .addClass(opts.overlayClass)
-            .css({ position:'absolute', top: 0, left: 0, width:"100%", height:$("body").height()+'px', zIndex:"1000" })
+            .css({ position:'absolute', top: 0, left: 0, width:"100%", height:$(document).height(), zIndex:"1000" })
             .appendTo(document.body)
             .hide();
         }

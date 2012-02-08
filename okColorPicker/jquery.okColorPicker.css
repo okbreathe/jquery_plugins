@@ -1,3 +1,13 @@
+table {border-collapse:separate;border-spacing:0;}
+caption, th, td {text-align:left;font-weight:normal;}
+table, td, th {vertical-align:middle;}
+table {margin-bottom:1.4em;width:100%;}
+th {background:#c3d9ff;font-weight:bold;}
+thead th {background:#c3d9ff;}
+th, td, caption {padding:4px 10px 4px 5px;}
+tr.even td {background:#e5ecf9;}
+tfoot { font-style:italic; }
+
 table.ui-colorPicker {
   width:100%;
   height:100%;
@@ -11,3 +21,5 @@ table.ui-colorPicker .hex{
   -webkit-border-radius: 2px;
   padding:4px;
 }
+
+

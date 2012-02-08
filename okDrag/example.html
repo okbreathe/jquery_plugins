@@ -1,155 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>jQuery.okDrag</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-    <script type="text/javascript" src="jquery.okDrag.js"></script>
-    <script type="text/javascript" src="jquery.okDrag.scroll.js"></script>
-    <link rel="stylesheet" href="screen.css" type="text/css" />
-    <link rel="stylesheet" href="okDrag.css" type="text/css" />
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $("#list0").okDrag();
-        $("#list1").okDrag({
-          dragBetween: true, 
-          handleSelector: "div"
-        });
-        $("#list2, #list3,#list4").okDrag({ 
-          placeHolderTemplate: "<li class='placeHolder-2d'><div></div></li>",
-          dragBetween: true, 
-          handleSelector: "div",
-          allowNested: false
-        });
-      });
-    </script>
+<!doctype html>
+<!--[if lt IE 7]><html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>okDrag</title>
+  <meta name="description" content="okDrag">
+  <meta name="author" content="okbreathe">
+  <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
+  <link rel="stylesheet" href="okDrag.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->  
 </head>
 <body>
-  <div id='doc'>
 
-    <h1>jQuery.okDrag</h1>
+  <div id="doc">
+    <header>
+      <h1>okDrag</h1>
+    </header>
 
-    <p>Simple Drag and Drop List Sorting</p>
-    
-    <h2>Examples</h2>
+    <article id="main" class='container'>
+      <div class='twelve'>
 
-    <h3>Simple list:</h3>
+        <h1>jQuery.okDrag</h1>
 
-    <ul id='list0'>
-      <li>red</li>
-      <li>orange</li>
-      <li>yellow</li>
-      <li>green</li>
-      <li>blue</li>
-      <li>indigo</li>
-      <li>violet</li>
-    </ul>
+        <p>Simple Drag and Drop List Sorting</p>
+        
+        <h2>Demonstration</h2>
 
-    <h3>Nested Lists</h3>
+        <h3>Simple 1D list</h3>
 
-    <ul id='list1' class="nested">
-      <li id="list_1"><div>Item 1</div>
-      <li id="list_2"><div>Item 2</div>
-        <ul>
-          <li id="list_3"><div>Sub Item 1.1</div>
-          <li id="list_4"><div>Sub Item 1.2</div>
-          <li id="list_5"><div>Sub Item 1.3</div>
-          <li id="list_6"><div>Sub Item 1.4</div>
+        <ul id='list0'>
+          <li>red</li>
+          <li>orange</li>
+          <li>yellow</li>
+          <li>green</li>
+          <li>blue</li>
+          <li>indigo</li>
+          <li>violet</li>
         </ul>
-      <li id="list_7" ><div>Item 3</div>
-      <li id="list_8" ><div>Item 4</div>
-      <li id="list_9"><div>Item 5</div>
-      <li id="list_10"><div>Item 6</div>
-        <ul>
-          <li id="list_11"><div>Sub Item 1</div>
-          <li id="list_12"><div>Sub Item 2</div>
-          <li id="list_13"><div>Sub Item 3</div>
-          <li id="list_14"><div>Sub Item 4</div>
+
+        <h3>Nested Lists</h3>
+
+        <ul id='list1' class="nested">
+          <li id="list_1"><div>Item 1</div>
+          <li id="list_2"><div>Item 2</div>
+            <ul>
+              <li id="list_3"><div>Sub Item 1.1</div>
+              <li id="list_4"><div>Sub Item 1.2</div>
+              <li id="list_5"><div>Sub Item 1.3</div>
+              <li id="list_6"><div>Sub Item 1.4</div>
+            </ul>
+          <li id="list_7" ><div>Item 3</div>
+          <li id="list_8" ><div>Item 4</div>
+          <li id="list_9"><div>Item 5</div>
+          <li id="list_10"><div>Item 6</div>
+            <ul>
+              <li id="list_11"><div>Sub Item 1</div>
+              <li id="list_12"><div>Sub Item 2</div>
+              <li id="list_13"><div>Sub Item 3</div>
+              <li id="list_14"><div>Sub Item 4</div>
+            </ul>
+          <li id="list_15"><div>Item 7</div>
+          <li id="list_16"><div>Item 8</div>
         </ul>
-      <li id="list_15"><div>Item 7</div>
-      <li id="list_16"><div>Item 8</div>
-    </ul>
 
-    <div class='clear'></div>
+        <div class='clear'></div>
 
-    <h3>2D list with drag and drop between lists:</h3>
+        <h3>2D list with drag and drop between lists:</h3>
 
-    <ul id="list2" class='list2d'>
-      <li><div>1</div></li>
-      <li><div>2</div></li>
-      <li><div>3</div></li>
-      <li><div>4</div></li>
-      <li><div>5</div></li>
-      <li><div>6</div></li>
-      <li><div>7</div></li>
-      <li><div>8</div></li>
-      <li><div>9</div></li>
-    </ul>
+        <ul id="list2" class='list2d'>
+          <li><div>1</div></li>
+          <li><div>2</div></li>
+          <li><div>3</div></li>
+          <li><div>4</div></li>
+          <li><div>5</div></li>
+          <li><div>6</div></li>
+          <li><div>7</div></li>
+          <li><div>8</div></li>
+          <li><div>9</div></li>
+        </ul>
 
-    <ul id="list3" class='list2d'>
-      <li><div>10</div></li>
-      <li><div>11</div></li>
-      <li><div>12</div></li>
-      <li><div>13</div></li>
-      <li><div>14</div></li>
-      <li><div>15</div></li>
-      <li><div>16</div></li>
-      <li><div>17</div></li>
-      <li><div>18</div></li>
-    </ul>
+        <ul id="list3" class='list2d'>
+          <li><div>10</div></li>
+          <li><div>11</div></li>
+          <li><div>12</div></li>
+          <li><div>13</div></li>
+          <li><div>14</div></li>
+          <li><div>15</div></li>
+          <li><div>16</div></li>
+          <li><div>17</div></li>
+          <li><div>18</div></li>
+        </ul>
 
-    <div class='clear'>
+        <div class='clear'>
+        </div>
+        <h4>Empty List</h4>
+        <ul id='list4' class='list2d'>
+        </ul>
+        <div class='clear'></div>
+        <h2>Just some extra space to test screen scrolling</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum 
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum 
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum 
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum 
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum 
+        </p>
+
     </div>
-    <h4>Empty List</h4>
-    <ul id='list4' class='list2d'>
-    </ul>
-    <div class='clear'></div>
-    <h2>Just some extra space to test screen scrolling</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum 
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum 
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum 
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum 
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum 
-    </p>
+    </article>
 
-</div>
+    <footer>
+      <h1><a href='http://okbreathe.com'>okbreathe</a></h1>
+    </footer>
+  </div> <!-- #doc -->
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script type="text/javascript" src="jquery.okDrag.js"></script>
+  <script type="text/javascript" src="jquery.okDrag.scroll.js"></script>
+  <link rel="stylesheet" href="screen.css" type="text/css" />
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("#list0").okDrag();
+      $("#list1").okDrag({
+        dragBetween: true, 
+        handleSelector: "div"
+      });
+      $("#list2, #list3,#list4").okDrag({ 
+        placeHolderTemplate: "<li class='placeHolder-2d'><div></div></li>",
+        dragBetween: true, 
+        handleSelector: "div",
+        allowNested: false
+      });
+    });
+  </script>
 </body>
 </html>

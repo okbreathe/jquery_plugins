@@ -1,0 +1,141 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>okCycle</title>
+  <meta name="description" content="okcycle - jquery slideshow plugin">
+  <meta name="author" content="okbreathe">
+  <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
+  <link href="okCycle.css" rel="stylesheet" type="text/css" media="screen">
+  <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->  
+</head>
+<body>
+
+  <div id="doc">
+    <header>
+      <h1>okCycle</h1>
+    </header>
+
+    <article id="main" class='container'>
+      <div class='twelve'>
+        <p class='box'>Tiny, modular, flexible slideshow</p>
+        <h2>Demonstration</h2>
+      </div>
+      <section class='eight'>
+        <h3>Fading</h3>
+        <ul id='example_one' class='slideshow'>
+          <li title='caption for one'><img src='images/one.png' alt='' /></li>
+          <li title='caption for two'><img src='images/two.png' alt='' /></li>
+          <li><img src='images/three.png' alt='' /></li>
+          <li title='caption for four'><img src='images/four.png' alt='' /></li>
+          <li><img src='images/five.png' alt='' /></li>
+          <li title='caption for six'><img src='images/six.png' alt='' /></li>
+          <li title=''><img src='images/seven.png' alt='' /></li>
+        </ul>
+        <pre>
+          <code>
+$("#example_one").okCycle({
+  autoplay: true,
+  effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
+  afterSetup:function(){
+    var slideshow = this;
+    this.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
+  }
+});</code>
+        </pre>
+      </section>
+
+      <section class='twelve'>
+        <h3>Scrolling</h3>
+        <div class='eight alpha'>
+          <ul id='example_two' class='slideshow'>
+            <li title='#html-caption-1'><img src='images/one.png' alt='' /></li>
+            <li title='#html-caption-2'><img src='images/two.png' alt='' /></li>
+            <li title='#html-caption-3'><img src='images/three.png' alt='' /></li>
+            <li title='#html-caption-4'><img src='images/four.png' alt='' /></li>
+            <li title='#html-caption-5'><img src='images/five.png' alt='' /></li>
+            <li title='#html-caption-6'><img src='images/six.png' alt='' /></li>
+            <li title='#html-caption-7'><img src='images/seven.png' alt='' /></li>
+          </ul>
+          <pre>
+            <code>
+$("#example_two").okCycle({
+  effect:'scroll',
+  ui: ['caption','navigation','pagination','currentPage']
+});</code>
+          </pre>
+        </div>
+        <div class='four omega'>
+          <p class='box'>
+            The normal behavior is to use the elements title attribute to
+            provide captions. However, If you give your slide a title prefixed
+            with an octothorpe, it will use the innerHTML from an element with
+            an id of the same value.
+          </p>
+          <div id='html-caption-1'>HTML Caption for Slide One <a href='#'>Link to Nowhere</a></div>
+          <div id='html-caption-2'>HTML Caption for Slide Two </div>
+          <div id='html-caption-3'>HTML Caption for Slide Three</div>
+          <div id='html-caption-4'>HTML Caption for Slide Four <a href='#'>Link to Nowhere</a></div>
+          <div id='html-caption-5'>HTML Caption for Slide Five</div>
+          <div id='html-caption-6'>HTML Caption for Slide Six</div>
+          <div id='html-caption-7'>HTML Caption for Slide Seven <a href='#'>Link to Nowhere</a></div>
+        </div>
+      </section>
+
+      <section class='eight'>
+        <h3>Sliding</h3>
+        <ul id='example_three' class='slideshow'>
+          <li title='one'><img src='images/one.png' alt='' /></li>
+          <li title='two'><img src='images/two.png' alt='' /></li>
+          <li title='three'><img src='images/three.png' alt='' /></li>
+          <li title='four'><img src='images/four.png' alt='' /></li>
+          <li title='five'><img src='images/five.png' alt='' /></li>
+          <li title='six'><img src='images/six.png' alt='' /></li>
+          <li title='seven'><img src='images/seven.png' alt='' /></li>
+        </ul>
+        <pre>
+          <code>
+$("#example_three").okCycle({
+  effect:'slide', 
+  ui: ['caption','navigation','pagination','currentPage']
+});</code>
+        </pre>
+      </section>
+
+      <div id='html-caption' style='display:none;'>
+        <p>I am an html caption</p>
+      </div>
+    </article>
+
+    <footer>
+      <h1><a href='http://okbreathe.com'>okbreathe</a></h1>
+    </footer>
+  </div> <!-- #doc -->
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="jquery.okCycle.core.js"></script>
+  <script src="jquery.okCycle.transitions.js"></script>
+  <script src="jquery.okCycle.ui.js"></script>
+  <script>
+    // ui elements are appended in the order that they are defined
+  $("#example_one").okCycle({
+      autoplay: true,
+      effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
+      afterSetup:function(){
+        var slideshow = this;
+        this.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
+      }
+    });
+    $("#example_two").okCycle({effect:'scroll', ui: ['caption','navigation','pagination','currentPage']});
+    $("#example_three").okCycle({effect:'slide', ui: ['caption','navigation','pagination','currentPage']});
+  </script>
+
+</body>
+</html>

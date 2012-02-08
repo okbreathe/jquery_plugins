@@ -9,36 +9,41 @@
   overflow:hidden;
 }
 
-  #items li .title {
-    position: absolute;
-    display: block;
-    width: 200px;
-    height: 20px;
-    background:#09f;
-    z-index: 200;
-  }
+#items li .title {
+  position: absolute;
+  display: block;
+  width: 200px;
+  height: 20px;
+  background:#333;
+  color:#fff;
+  z-index: 200;
+}
 
-  #fade .title ,
-  #leftright .title {
-    top: 130px; /* Safari doesn't like bottom:0 */
-  }
+#items li a {
+  color:#222;
+}
 
-  #items li#updown .title {
-    bottom: 0px;
-  }
+#fade .title ,
+#leftright .title {
+  top: 130px; /* Old Safari didn't like bottom:0 */
+}
 
-  #items li .content {
-    position: relative;
-    display: block;
-    background: #ddd;
-    width: 200px;
-    height: 150px;
-    z-index: 100;
-  }
+#items li#updown .title {
+  bottom: 0px;
+}
 
-  #items li .hidden-content {
-    position: absolute;
-    top: 20px;
-    z-index: 0;
-    padding-left: 10px;
-  }
+#items li .content {
+  position: relative;
+  display: block;
+  background: #ddd;
+  width: 200px;
+  height: 150px;
+  z-index: 100;
+}
+
+#items li .hidden-content {
+  position: absolute;
+  top: 20px;
+  z-index: 0;
+  padding-left: 10px;
+}

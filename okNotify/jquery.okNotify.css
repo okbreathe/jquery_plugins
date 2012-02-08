@@ -16,41 +16,55 @@
   -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
 }
 
-  .ui-notification .ui-notification-content {
-    position:relative;
-    padding:8px;
-  }
+.ui-notification .ui-notification-content {
+  position:relative;
+  padding:8px;
+}
 
-    .ui-notification .ui-notification-content p {
-      margin:4px 0;
-    }
+.ui-notification .ui-notification-content p {
+  margin:4px 0;
+  padding:0;
+}
 
-  .ui-notification .ui-notification-titlebar {
-    position:relative;
-    margin-top:6px;
-    min-height:15px;
-  }
+.ui-notification .ui-notification-titlebar {
+  position:relative;
+  margin-top:6px;
+  min-height:15px;
+}
 
-  .ui-notification .ui-notification-title {
-    position:relative;
-    display:inline-block;
-    margin-bottom:8px;
-    margin-left:4px;
-    font-size:120%;
-  }
+.ui-notification .ui-notification-title {
+  position:relative;
+  display:inline-block;
+  margin-bottom:8px;
+  margin-left:4px;
+  font-size:120%;
+}
 
-  .ui-notification .ui-notification-close {
-    position:absolute;
-    top:8px;
-    right:0;
-    width:15px;
-    height:15px;
-    margin:-10px 0 0;
-    padding:1px;
-    font-size:16px;
-  }
+.ui-notification .ui-notification-close {
+  position:absolute;
+  top:8px;
+  right:0;
+  width:15px;
+  height:15px;
+  margin:-10px 0 0;
+  padding:1px;
+  font-size:16px;
+}
 
 .center .ui-notification {
 	margin-left: 		auto;
 	margin-right:  	auto;
 }
+
+
+a.remove {
+    color: #f00;
+}
+
+.error, .notice, .success {padding:.8em;margin-bottom:1em;border:2px solid #ddd;}
+.error {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+.notice {background:#FFF6BF;color:#514721;border-color:#FFD324;}
+.success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
+.error a {color:#8a1f11;}
+.notice a {color:#514721;}
+.success a {color:#264409;}

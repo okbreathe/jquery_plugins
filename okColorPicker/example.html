@@ -1,31 +1,52 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!doctype html>
+<!--[if lt IE 7]><html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"><!--<![endif]-->
 <head>
-<title>jQuery.okSlide</title>
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="jquery.okColorPicker.js"></script>
-<link rel="stylesheet" href="screen.css" type="text/css" />
-<link rel="stylesheet" href="jquery.okColorPicker.css" type="text/css" />
-<script type='text/javascript'>
-  
-  $(document).ready(function(){
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>okColorPicker</title>
+  <meta name="description" content="okColorPicker">
+  <meta name="author" content="okbreathe">
+  <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
+  <link rel="stylesheet" href="jquery.okColorPicker.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->  
+</head>
+<body>
+
+  <div id="doc">
+    <header>
+      <h1>
+        okColorPicker
+      </h1>
+    </header>
+
+    <article id="main" class='container'>
+      <div class ='twelve'>
+        <p class='box'>Simplified Color Picker. A typical use-case would be to show the color picker in a popup and close it on selection</p>
+        <h2>Demonstration</h2>
+        <pre id='result'><code>Select a color</code></pre>
+        <div id='colorPicker' style='width:500px; height:200px;'></div>
+      </div>
+    </article>
+
+    <footer>
+      <h1><a href='http://okbreathe.com'>okbreathe</a></h1>
+    </footer>
+  </div> <!-- #doc -->
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="jquery.okColorPicker.js"></script>
+  <script type='text/javascript'>
     $("#colorPicker").colorPicker({
       afterSelect:function(color){
         $("#result").html("You selected:"+color)
       }                              
     });
-  });
-
-</script>
-</head>
-
-<body>
-  <div id='doc'>
-    <div id='colorPicker' style='width:500px; height:200px;'></div>
-    <p id='result'></p>
-    <div id='colorPicker2' style='width:500px; height:200px;'></div>
-  </div>
+  </script>
 </body>
 </html>

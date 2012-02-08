@@ -1,0 +1,67 @@
+li {
+  margin:0;
+  float:left;
+}
+
+ul {
+  padding:0;
+  margin:0;
+}
+
+section {
+  display: block;
+  margin-bottom:4em;
+}
+
+.pagination {
+  float:right;
+}
+
+.navigation li,
+.pagination li {
+  margin:0 5px 5px 5px;
+}
+
+.navigation li a,
+.pagination li a{
+  padding:0 5px 5px 5px;
+}
+
+.pagination li.active a {
+  background:#222;
+  color:#fff;
+}
+
+.current-page .current:after {
+  content:'/';
+}
+
+.current-page {
+  float:left;
+  margin-left:20px;
+  font-size:1.2em;
+}
+
+.slideshow {
+  position: relative;
+  z-index:1;
+}
+
+.okCycle-ui {
+  position: relative;
+  margin-bottom:3em;
+  width:620px;
+}
+
+.okCycle-ui .caption{
+  position: absolute;
+  bottom:0;
+  left:0;
+  background: rgba(0,0,0,0.5);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)"; /* ie8 */
+  color:#fff;
+  width:100%;
+  padding:10px 0;
+  z-index:2;
+  text-indent:10px;
+}
