@@ -41,15 +41,14 @@ afterMove        | function(transition){} | Called after we move to another slid
 ## Notes
 
 * Has been tested on jQuery 1.6.2 and higher
+
 * Although okCycle implements an autoplaying feature, it does not by default
   pause on hover. This is easy to implement and therefore not included by
-  default. 
+  default. Instead, just add the behavior for the hover event inside the 'afterSetup' callback
 
 
-          // Just add the behavior for the hover event inside the 'afterSetup' callback
-          // Note that you shouldn't call pause/play directly as our reference to the slideshow as 'this'
-          // will be lost
-
+          // Note that you shouldn't call pause/play directly as our reference 
+          // to the slideshow as 'this' will be lost
           var slideshow = $("my_slides_show").okCycle({
             autoplay: true, 
             afterSetup:function(){
