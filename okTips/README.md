@@ -69,3 +69,7 @@ use it later.
 
 This isn't the default because not everyone wants this behavior, and it's very
 easy to add if you do.
+
+Alternately, you since you have full control over the tooltip's content, you
+can add the text as a `data-title` attribute and simply use that in the
+template function.

@@ -25,16 +25,14 @@
 
     <article id="main" class='container'>
       <div class='twelve'>
-        <h1>okTips</h1>
-        <p class='large'>Flexible tooltips and more</p> 
+        <p class='box'>Flexible tooltips and more</p> 
 
         <h2>Demonstration</h2>
-        <p><strong>Click the clicks to trigger a popup:</strong></p>
         <p>
-          <a class='basic' title= 'You did a thing!' href='#'>Here's your classic tooltip</a>
+          <a class='basic' title= 'You did a thing!' href='#'>Hover over me to see a classic tooltip in action</a>
         </p>
         <p>
-          <a class='modal' title='Click on the overlay to close' href='#'>This is a modal tooltip</a>
+          <a class='modal' title='Click on the overlay to close' href='#'>Click me to open a modal tooltip</a>
         </p>
         <p>
           <a class='iframe' href='#'>Click me to load some content into an iframe!</a>
@@ -52,7 +50,7 @@
   <script type="text/javascript" src="jquery.okTips.js"></script>
   <script type='text/javascript'>
     
-      $("a.basic").okTips();
+      $("a.basic").okTips({ triggerEvent:'mouseover' });
       $("a.modal").okTips({ modal:true });
       $("a.iframe").okTips({ 
         modal: true,

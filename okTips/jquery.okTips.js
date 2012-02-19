@@ -1,19 +1,19 @@
-/*
+/**
  * jquery.okTips.js
  *
  * Copyright (c) 2009 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 07/23/10
+ * Date: 02/18/12
  *
- * @projectDescription Yet another simple tooltip plugin
+ * @description Yet another simple tooltip plugin
  * @author Asher Van Brunt
- * @mailto asher@okbreathe.com
- * @version 1.01
+ * @email asher@okbreathe.com
+ * @version 1.02
  *
  * @id jQuery.fn.okTips
- * @param {Object} Hash of settings, none are required.
- * @return {jQuery} Returns the same jQuery object, for chaining.
+ * @param {Object} settings none are required.
+ * @return {jQuery} The same jQuery object
  *
  */
 
@@ -22,20 +22,27 @@
   // Bubble Puff effect
   // Also known as the Coda Bubble effect
   $.fn.togglePuff = function(settings, callback) {
-    settings = jQuery.extend({
-        distance   : 10,
-        effectTime : 250
+    settings = $.extend({
+      distance   : 10,
+      effectTime : 250
     }, settings);
 
     return this.each(function() {
-      var isHidden = $(this).is(":hidden");
-      if (isHidden) { $(this).show(); }
-      $(this)
+      var self   = $(this),
+          hidden = self.is(":hidden");
+
+      if (hidden) { 
+        self.show(); 
+      }
+
+      self
         .animate({
           top: '-=' + settings.distance + 'px',
-          opacity: isHidden ? 1 : 0 
+          opacity: hidden ? 1 : 0 
         }, settings.effectTime,  function() {
-          if (callback) { callback(this); } 
+          if (callback) { 
+            callback(this); 
+          } 
         });    
     });
 
@@ -44,50 +51,52 @@
   $.fn.okTips = function(opts) {
 
     var popup,
-        cover,
+        overlay,
         trigger;
 
     // All callback functions except for 'body' receive the trigger as the first
-    // argument, and inside this function 'this' will be the popup
-    opts       = $.extend({
+    // argument. Inside this function 'this' will be the popup
+    opts = $.extend({
       template       : "<div id='ui-oktip' class='ui-tooltip'></div>", // The wrapper for the tooltip
-      live           : false,                                        // Whether to use 'live' instead of a normal event handler
-      triggerEvent   : 'click',                                      // The event that triggers the tooltip
-      closeTrigger   : null,                                         // Selector of element that will close the popup if clicked
-      triggerCloses  : true,                                         // If non-modal and true, moving outside the trigger closes the popup, otherwise moving outside the popup closes
-      beforeShow     : null,                                         // Called right before the popup is made visible
-      afterShow      : null,                                         // Called right after the popup is made visible
-      beforeDestroy  : null,                                         // Called right before tooltip is removed
-      afterDestroy   : null,                                         // Called right after tooltip is removed
-      body           : function(trigger){                            // Can be text, or a function. If it is a function and returns text, 
-        return "<p>"+trigger.title+"</p>";                           // the text will be used for the body of the popup.
+      live           : false,              // Whether to use 'live' instead of a normal event handler
+      triggerEvent   : 'click',            // The event that triggers the tooltip
+      closeTrigger   : null,               // Selector of element that will close the popup if clicked
+      triggerCloses  : true,               // If non-modal and true, moving outside the trigger closes the tooltip, otherwise moving outside the tooltip closes
+      beforeShow     : null,               // Called right before the tooltip is made visible
+      afterShow      : null,               // Called right after the tooltip is made visible
+      beforeDestroy  : null,               // Called right before tooltip is removed
+      afterDestroy   : null,               // Called right after tooltip is removed
+      body           : function(trigger){  // Can be text, or a function. If it is a function and returns text, 
+        return "<p>"+trigger.title+"</p>"; // the text will be used for the body of the tooltip.
       },
-      top            : -20,                                          // The y offset to display the popup at
-      left           : 20,                                           // The x offset to display the popup at
-      hideDelay      : 500,                                          // Delay before hiding the tooltip
-      effectTime     : 250,                                          // Used by the togglePuff effect
-      distance       : 10,                                           // Used by the togglePuff effect
-      modal          : true,                                         // If true popup is closed by clicking anywhere else, otherwise it is closed via mouseout
-      overlayClass   : 'ui-widget-overlay'                           // The class of the overlay used for modal tooltips
+      top            : -20,                // The y offset to display the tooltip at
+      left           : 20,                 // The x offset to display the tooltip at
+      hideDelay      : 500,                // Delay before hiding the tooltip
+      effectTime     : 250,                // Used by the togglePuff effect
+      distance       : 10,                 // Used by the togglePuff effect
+      modal          : false,              // If true popup is closed by clicking anywhere else, otherwise it is closed via mouseout
+      overlayClass   : 'ui-widget-overlay' // The class of the overlay used for modal tooltips
     }, opts);
 
     function appendHtml(){
       var html;
       if (popup.length === 0) { 
         popup = $(opts.template).appendTo(document.body).hide(); 
-        if (opts.modal) {
-          cover = $("<div id='ui-oktip-overlay'></div>");
-          cover
-            .addClass(opts.overlayClass)
-            .css({ position:'absolute', top: 0, left: 0, width:"100%", height:$(document).height(), zIndex:"1000" })
-            .appendTo(document.body)
-            .hide();
-        }
       } 
       
+      // If we have modal and non-modal tooltips on the same page, we'll still need to generate an overlay
+      if (opts.modal && overlay.length === 0) {
+        overlay = $("<div id='ui-oktip-overlay'></div>")
+          .addClass(opts.overlayClass)
+          .css({ position:'absolute', top: 0, left: 0, width:"100%", height: $(document).height(), zIndex:"1000" })
+          .appendTo(document.body)
+          .hide();
+      }
+
       popup.bind('destroy', destroy);
 
       html = typeof(opts.body) == 'function' ? opts.body.call(popup,trigger) : opts.body;
+
       if (typeof(html) === "string") { popup.html(html); }
     }
 
@@ -114,31 +123,38 @@
 
     function create(e) {
       var visible, pos, html;
+
       appendHtml();
+
       visible = popup.is(":visible");
       pos     = getPosition(e);
 
       popup
         .stop(true)
-        .css({
-          position: 'absolute',
-          zIndex: '9999',
-          left: pos.left,
-          top: pos.top
-        });
+        .css({ position: 'absolute', zIndex: '9999', left: pos.left, top: pos.top });
 
       bindDestroyEvent();
-      if (opts.beforeShow) { opts.beforeShow.call(popup,trigger); }
-      // Don't animate if it's already on screen
-      visible ? popup.show() : popup.togglePuff(opts,function(e){$(e).show();});
-      if (opts.modal) {cover.show();}
-      if (opts.afterShow) { opts.afterShow.call(popup,trigger); }
+
+      if (opts.beforeShow) { 
+        opts.beforeShow.call(popup,trigger); 
+      }
+
+      visible ? popup.show() : popup.togglePuff(opts,function(e){$(e).show();}); // Don't animate if it's already on screen
+
+      if (opts.modal) {
+        overlay.show();
+      }
+
+      if (opts.afterShow) { 
+        opts.afterShow.call(popup,trigger); 
+      }
+
       return popup;
     }
 
     function bindDestroyEvent(){
       if (opts.modal) {
-        cover.bind('click', function(e){
+        overlay.bind('click', function(e){
           e.preventDefault();
           destroy(e);
         });
@@ -172,7 +188,7 @@
 
       if (opts.modal) {
         popup.unbind('mouseleave');
-        cover
+        overlay
           .hide()
           .unbind('click');
       }
@@ -181,9 +197,9 @@
     }
 
     return $(this.selector)[opts.live ? 'live' : 'bind'](opts.triggerEvent, function(e){
-      popup = $("#ui-oktip");
-      cover = $("#ui-oktip-overlay");
       e.preventDefault();
+      popup   = $("#ui-oktip");
+      overlay = $("#ui-oktip-overlay");
       trigger = this;
       create(e);
     });
