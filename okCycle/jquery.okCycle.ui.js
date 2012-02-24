@@ -102,12 +102,12 @@
 
         var self = this, touch = {};
         
-        self.ontouchstart = function(e) {
+        self[0].ontouchstart = function(e) {
           touch.x = e.touches[0].clientX;
           touch.y = e.touches[0].clientY;
         };
         
-        self.ontouchmove = function(e) {
+        self[0].ontouchmove = function(e) {
           
           // only deal with one finger
           if (e.touches.length == 1) {			
@@ -125,8 +125,8 @@
             }
 
             if (op) { 
-              self[op](); 
               e.preventDefault(); 
+              self[op](); 
             }
           }
         };
