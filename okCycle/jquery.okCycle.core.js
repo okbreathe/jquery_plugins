@@ -121,7 +121,7 @@
 
       // Initialize UI
       if (opts.ui.length) {
-        $.each(opts.ui, function(){ plugins.push($.okCycle.ui[this].init); });
+        $.each(opts.ui, function(i,v){ plugins.push($.okCycle.ui[v].init); });
         // Ensure that the UI is contained
         self.data('ui',self.wrap("<div class='okCycle-ui'/>").parent());
       }
@@ -131,7 +131,7 @@
       self.data(active, 0);
 
       // Setup plugins
-      $.each(plugins, function(){ if(this){this.call(self,self.data('ui'),opts);} });
+      $.each(plugins, function(i,v){ if(v){v.call(self,self.data('ui'),opts);} });
 
       // Initialize transition effect after all images have loaded
       if (imgs.length) {
