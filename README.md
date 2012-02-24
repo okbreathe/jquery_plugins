@@ -28,7 +28,7 @@ less. These plugins offer minimal amount of functionality to maximize their
 composability and reuse. This is the wrong place to look if you're looking for
 a drop-in solution.
  
- * <strike>basicWindow:: Displays content in the specified position (think lightbox).</strike> Replaced by okCycle
+ * ~~basicWindow:: Displays content in the specified position (think lightbox).~~ Replaced by okCycle
  * basicCycle:: Cycle through content (think slideshow).
  * basicPosition:: Easy element positioning.
  * basicLiveSearch:: Simple live search UI
