@@ -1,0 +1,115 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>okOpen</title>
+  <meta name="description" content="okOpen - jquery content display plugin">
+  <meta name="author" content="okbreathe">
+  <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
+  <link href="okOpen.css" rel="stylesheet" type="text/css" media="screen">
+  <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="jquery.basicPosition.js"></script>
+  <script src="jquery.okOpen.core.js"></script>
+  <script src="jquery.okOpen.effects.js"></script>
+</head>
+<body>
+
+  <div id="doc">
+    <header>
+      <h1>okOpen</h1>
+    </header>
+
+    <div id='notification-queue'></div>
+
+    <article id="main" class='container'>
+      <section class='twelve'>
+        <h3>Tooltips</h3>
+        <a id='example-1' href='#' data-content="I'm a tooltip">Hover Me</a>
+        <script>
+          var tooltip = $.okOpen({effect:'togglePuff'}).addClass('tooltip');
+
+          $("#example-1").on('mouseenter mouseleave',function(e){
+            e.type == 'mouseenter' ? tooltip.open($(this).data('content'),{where:[this,0,-35]}) : tooltip.close();
+          });
+        </script>
+        <pre>
+          <code>
+$("#example-1").on('mouseenter mouseleave',function(e){
+  var tooltip = $.okOpen({effect:'togglePuff'});
+
+  $("#example-1").on('mouseenter mouseleave',function(e){
+    e.type == 'mouseenter' ? tooltip.open($(this).data('content'),{where:[this,0,-35]}) : tooltip.close();
+  });
+});</code>
+        </pre>
+
+        <h3>Modal Windows</h3>
+        <a id='example-2' href='#' data-content="I'm a modal window!">Click Me</a>
+        <script>
+          var modal = $.okOpen({ effect:'fadeIn', modal: true}).addClass('modal');
+
+          $("#example-2").on('click',function(e){
+            e.preventDefault();
+            modal.open($(this).data('content'),{ where: 'center' });
+          });
+
+          $('.'+modal.options.overlayClass).click(function(e){ modal.close(); });
+        </script>
+        <pre>
+          <code>
+var modal = $.okOpen({ effect:'fadeIn', modal: true}).addClass('modal');
+
+$("#example-2").on('click',function(e){
+  e.preventDefault();
+  modal.open($(this).data('content'),{ where: 'center' });
+});
+
+$('.'+modal.options.overlayClass).click(function(e){ modal.close(); });</code>
+        </pre>
+        <h3>Notifications</h3>
+        <a id='example-3' href='#' data-content="I'm a notification!">Add a regular notification</a>
+        <!-- <a id='example-4' href='#' data-content="I'm a notification!">Add a sticky notification</a> -->
+        <script>
+
+          $("#example-3").on('click',function(e){
+            e.preventDefault();
+            $.okOpen({ 
+              effect:'fadeIn',  
+              where: 'none', 
+              parent: "#notification-queue", 
+              destroyAfter: 2000 
+            })
+            .addClass('notification')
+            .open($(this).data('content'));
+          });
+
+        </script>
+        <pre>
+          <code>
+var modal = $.okOpen({ effect:'fadeIn', modal: true}).addClass('modal');
+
+$("#example-2").on('click',function(e){
+  e.preventDefault();
+  modal.open($(this).data('content'),{ where: 'center' });
+});
+
+$('.'+modal.options.overlayClass).click(function(e){ modal.close(); });</code>
+        </pre>
+      </section>
+    </article>
+
+    <footer>
+      <h1><a href='http://okbreathe.com'>okbreathe</a></h1>
+    </footer>
+  </div> <!-- #doc -->
+
+</body>
+</html>
