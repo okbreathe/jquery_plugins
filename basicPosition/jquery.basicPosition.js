@@ -17,6 +17,8 @@
         params = $.fn.positionAt.locations[location].call(self);
       } else if (location instanceof Array) {
         params = {top:location[1]||0+offsetTop,left:location[0]||0+offsetLeft};
+      } else if ($.isPlainObject(location)) {
+        params = location;
       } else { // Event or DOM Element
         scrollTop   = $(window).scrollTop(); 
         screenWidth = $(window).width();
@@ -44,7 +46,11 @@
           left: left + offsetLeft
         };
       }
-      if (!params.position){ params.position = "absolute"; }
+
+      if (!params.position){ 
+        params.position = "absolute"; 
+      }
+
       self.css(params);
     });
   };
@@ -53,13 +59,26 @@
    * Named locations for use with jQuery.fn.positionAt
    */
   $.fn.positionAt.locations = {
-    none        : function(){ return {position:'relative'};  },
     topLeft     : function(){ return { left:  0, top:0 };    },
     topRight    : function(){ return { right: 0, top:0 };    },
     bottomRight : function(){ return { right: 0, bottom:0 }; },
     bottomLeft  : function(){ return { left:  0, bottom:0 }; },
     topCenter   : function(){ return { top:   0, width: "50%", left: "25%"}; },
-    center      : function(){
+    center      : function(absolute){
+      // var css = {
+        // position :	absolute ? 'absolute' : 'fixed', 
+        // left     :  '50%', 
+        // top      :  '50%',
+        // marginLeft:	'-' + (this.outerWidth() / 2), 
+        // marginTop:	'-' + (this.outerHeight() / 2)
+      // };
+
+      // if (absolute) {
+        // css.marginTop =	parseInt(this.css('marginTop'),  10) + $(window).scrollTop();
+        // css.marginLeft =	parseInt(this.css('marginLeft'), 10) + $(window).scrollLeft();
+      // }
+      // return css;
+
       var top  = ($(window).height() - this.outerHeight()) / 2,
           left = ($(window).width()  - this.outerWidth())  / 2;
       return {
@@ -72,25 +91,3 @@
   };
 
 })(jQuery);
-
-  // $.fn.center = function (absolute) {
-    // return this.each(function () {
-      // var self = $(this);
-      // self.css({
-        // position:	absolute ? 'absolute' : 'fixed', 
-        // left:		'50%', 
-        // top:		'50%', 
-        // zIndex:	'99'
-      // }).css({
-        // marginLeft:	'-' + (self.outerWidth() / 2) + 'px', 
-        // marginTop:	'-' + (self.outerHeight() / 2) + 'px'
-      // });
-
-      // if (absolute) {
-        // self.css({
-          // marginTop:	parseInt(self.css('marginTop'), 10) + $(window).scrollTop(), 
-          // marginLeft:	parseInt(self.css('marginLeft'), 10) + $(window).scrollLeft()
-        // });
-      // }
-    // });
-  // };

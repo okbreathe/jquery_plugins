@@ -33,8 +33,7 @@
 
 
 .ui-opened.notification {
-  padding:0;
-  z-index:9999;
+  padding:10px;
   width:300px;
   text-align:left;
   margin-bottom:10px;

@@ -17,7 +17,8 @@
 
     options = $.extend({
       where        : ['center'],
-      effect       : 'show',
+      inEffect     : 'show',
+      outEffect    : 'hide',
       modal        : false, // Whether we should create a modal overlay
       parent       : "body", // selector of the parent element 
       template     : "<div id='ui-opened' class='ui-opened'></div>", // Content container
@@ -36,37 +37,42 @@
 
     }
 
-    opened = $(options.template).appendTo(options.parent).hide();
-
-    return opened.extend({ 
-      open  : function(content,opts){$.okOpen.ui.open(this, content, $.extend(options,opts)); }, 
-      close : function(opts){ $.okOpen.ui.close(this, $.extend(options,opts)); } ,
-      options: options
-    });
-
+    return $(options.template)
+      .appendTo(options.parent)
+      .hide()
+      .extend({ 
+        open      : function(content,effectOptions){ return $.okOpen.ui.open(this, content, options, effectOptions); }, 
+        close     : function(effectOptions){ return $.okOpen.ui.close(this, options, effectOptions); } ,
+        overlay   : overlay,
+        options   : options,
+        opened    : false
+      });
   };
 
   $.okOpen.ui = {
-    open: function(opened, content, opts){
+    open: function(opened, content, opts, effectOptions){
+      if (opened.opened) {
+        return opened;
+      }
+
+      opened.opened = true;
+
       if (opts.modal) {
-        $('.'+opts.overlayClass).show();
+        opened.overlay.show();
       }
 
-      if (opts.destroyAfter) {
-        setTimeout(function() {
-          $.okOpen.ui.close(opened,opts);
-        }, opts.destroyAfter);
-      }
+      return opened
+        .html(content)
+        .positionAt.apply(opened, $.isArray(opts.where) ? opts.where : [opts.where])[opts.inEffect]
+        .apply(opened, Array.prototype.slice.call(arguments,3));
+    },
+    close: function(opened, opts, effectOptions){
 
-      return opened.html(content).positionAt.apply(opened, $.isArray(opts.where) ? opts.where : [opts.where])[opts.effect]();
-    },
-    // Not sure about this or even what it does yet
-    queue: function(){
-    
-    },
-    close: function(opened, opts){
+      opened.opened = false;
+
       $('.'+opts.overlayClass).hide();
-      opened.hide();
+
+      opened[opts.outEffect].apply(opened, Array.prototype.slice.call(arguments, 2));
     }
   }
 
