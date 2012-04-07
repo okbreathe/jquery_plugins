@@ -1,5 +1,5 @@
 /**
- * jquery.okOpen.js
+ * jquery.okPopup.js
  *
  * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -10,70 +10,109 @@
 
 (function($) {
 
-  var defaults = {
-  };
-
-  $.okOpen = function(options){
-
-    options = $.extend({
-      where        : ['center'],
-      inEffect     : 'show',
-      outEffect    : 'hide',
-      modal        : false, // Whether we should create a modal overlay
-      parent       : "body", // selector of the parent element 
-      template     : "<div id='ui-opened' class='ui-opened'></div>", // Content container
-      overlayClass : 'ui-widget-overlay', // The overlay class
-      destroyAfter : 0 // Automatically remove after N milliseconds
-    },options);
-
-    var overlay;
-
-    if (options.modal) {
-      overlay = $(options.overlayClass);
-
-      if ( overlay.length === 0 ) {
-        overlay = $("<div class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
+  function expandOptions(options) {
+    function expand(dir,effect) {
+      if ($.isArray(effect)) {
+        options[dir+'Effect'] = effect.shift();
+        options[dir+'EffectOptions'] = effect;
+      } else {
+        options[dir+'Effect'] = effect;
+        options[dir+'EffectOptions'] = [];
       }
-
     }
-
-    return $(options.template)
-      .appendTo(options.parent)
-      .hide()
-      .extend({ 
-        open      : function(content,effectOptions){ return $.okOpen.ui.open(this, content, options, effectOptions); }, 
-        close     : function(effectOptions){ return $.okOpen.ui.close(this, options, effectOptions); } ,
-        overlay   : overlay,
-        options   : options,
-        opened    : false
-      });
-  };
-
-  $.okOpen.ui = {
-    open: function(opened, content, opts, effectOptions){
-      if (opened.opened) {
-        return opened;
-      }
-
-      opened.opened = true;
-
-      if (opts.modal) {
-        opened.overlay.show();
-      }
-
-      return opened
-        .html(content)
-        .positionAt.apply(opened, $.isArray(opts.where) ? opts.where : [opts.where])[opts.inEffect]
-        .apply(opened, Array.prototype.slice.call(arguments,3));
-    },
-    close: function(opened, opts, effectOptions){
-
-      opened.opened = false;
-
-      $('.'+opts.overlayClass).hide();
-
-      opened[opts.outEffect].apply(opened, Array.prototype.slice.call(arguments, 2));
-    }
+    expand('in',options.inEffect);
+    expand('out',options.outEffect);
+    return options;
   }
+
+  $.fn.okPopup = function(options) {
+    return $.okPopup.create(this,options);
+  };
+
+  $.okPopup = {
+    create: function(self,options){
+      options = $.extend({
+        inEffect     : 'show', // If your effect takes options, pass an array here
+        outEffect    : 'hide', // If your effect takes options, pass an array here
+        modal        : false,  // Whether we should create a modal overlay, if you pass a string of an event, 
+                               // it will be closed when the event is triggered on the modal. 
+                               // If you pass a string it will be bound as an event on the overlay that 
+        parent       : "body", // element or selector of the parent element 
+        template     : "<div class='ui-popup'></div>", // Content container
+        overlayClass : 'ui-widget-overlay' // The overlay class
+      },options);
+
+      var popup, overlay;
+
+      if (options.modal) {
+        overlay = $(options.overlayClass);
+
+        if ( overlay.length === 0 ) {
+          overlay = $("<div class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
+        }
+
+      }
+
+      popup = $(options.template)
+        .appendTo(options.parent)
+        .hide()
+        .extend({ 
+          open    : function(){ return $.okPopup.open.call(this, self); }, 
+          close   : function(){ return $.okPopup.close.call(this, self); } ,
+          overlay : overlay,
+          options : expandOptions(options)
+        });
+
+      // Bind events if given
+      if (options.show) {
+        $(self.selector).on(options.show,function(e){
+          e.preventDefault();
+          popup.open(e.target);
+        });
+      }
+
+      if (options.hide) {
+        $(self.selector).on(options.hide,function(e){
+          e.preventDefault();
+          popup.close(e.target);
+        });
+      }
+
+      return popup;
+    },
+    open: function(el){
+      var self    = this, 
+          content = this.options.content.call(el),
+          where   = $.isArray(this.options.where) ? this.options.where : [this.options.where];
+
+      where.unshift(el);
+
+      if (this.overlay) {
+        this.overlay.show();
+        if (typeof(this.options.modal) == "string") {
+          this.overlay.one(this.options.modal,function(e){
+            self.close();
+          });
+        }
+      }
+
+      this.stop(true,true).hide();
+
+      if (typeof(content) == "string" ) {
+        this.html(content);
+      }
+
+      return this[this.options.inEffect].apply(this, this.options.inEffectOptions).positionAt.apply(this, where);
+    },
+    close: function(el){
+      var effect, effectOptions;
+
+      if (this.overlay) {
+        this.overlay.hide();
+      }
+
+      this[this.options.outEffect].apply(this, this.options.outEffectOptions);
+    }
+  };
 
 })(jQuery);

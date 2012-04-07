@@ -1,17 +1,19 @@
-.ui-opened {
+.ui-popup {
   z-index:1001;
 }
 
-.ui-opened.tooltip {
+.ui-popup.tooltip {
   padding: 5px;
   background: rgba(0,0,0,0.5);
+  position: relative;
+  display: inline;
   border: 1px solid #fff;
   color:#fff;
   -moz-border-radius: 4px 4px 4px 4px;
   -webkit-border-radius: 4px 4px 4px 4px;
 }
 
-.ui-opened.modal {
+.ui-popup.modal {
   padding: 5px;
   background: #fff;
   border: 1px solid #666;
@@ -31,8 +33,7 @@
   z-index:1000;
 }
 
-
-.ui-opened.notification {
+.ui-popup.notification {
   padding:10px;
   width:300px;
   text-align:left;

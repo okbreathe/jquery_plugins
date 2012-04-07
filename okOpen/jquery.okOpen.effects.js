@@ -27,8 +27,11 @@ $.fn.extend({
 
     });
 
-  },
+   },
 
+  // basically we need the originating event to position it
+  // The plugin itself is better this way because it doesn't depend on anything else other
+  // than the element
   zoomIn: function(opts){
 
     opts = $.extend({
@@ -42,10 +45,10 @@ $.fn.extend({
       margin        :	15		   // If using setToViewPort the margin from image to window (if the image would otherwise be larger than the screen)
     }, opts);
 
-    var w    = $(window), 
-        d    = $(document),
-        finalWidth   = this.width(),
-        finalHeight   = this.height(),
+    var w           = $(window), 
+        d           = $(document),
+        finalWidth  = this.width(),
+        finalHeight = this.height(),
         adjusted,
         top, 
         left;
@@ -93,6 +96,8 @@ $.fn.extend({
       opacity : "hide",
       width   : 1,
       height  : 1
-    }, opts.duration, opts.easing);
+    }, opts.duration, opts.easing, function(){
+      $(this).css({width:'',height:''}).hide();
+    });
   }
 });

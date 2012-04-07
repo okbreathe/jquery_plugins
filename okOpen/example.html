@@ -32,49 +32,55 @@
     <article id="main" class='container'>
       <section class='twelve'>
         <h3>Tooltips</h3>
-        <a id='example-1' href='#' data-content="I'm a tooltip">Hover Me</a>
+        <a class='tip' href='#' data-content="Tooltip One">Hover Me</a>
+        <br/>
+        <br/>
+        <a class='tip' href='#' data-content="Tooltip Two">Hover Me</a>
+        <br/>
+        <br/>
+        <a class='tip' href='#' data-content="Tooltip Three">Hover Me</a>
         <script>
-          var tooltip = $.okOpen({inEffect:'togglePuff', outEffect: 'togglePuff', where:[$("#example-1"),0,-35]}).addClass('tooltip');
-
-          $("#example-1").on('mouseenter mouseleave',function(e){
-            e.type == 'mouseenter' ? tooltip.open($(this).data('content')) : tooltip.close();
-          });
+          $(".tip").okPopup({
+            show      : 'mouseenter',
+            hide      : 'mouseleave',
+            inEffect  : 'fadeIn',
+            outEffect : 'fadeOut' ,
+            where     : 'elementTop',
+            content   : function(){ return $(this).data('content'); }
+          }).addClass('tooltip');
         </script>
-        <pre>
-          <code>
-          </code>
-        </pre>
 
         <h3>Modal Windows</h3>
         <a id='example-2' href='#' data-content="I'm a modal window!">Click Me</a>
         <script>
-          var modal = $.okOpen({ inEffect:'fadeIn', outEffect: 'fadeOut', modal: true, where: 'center' }).addClass('modal');
 
-          $("#example-2").on('click',function(e){
-            e.preventDefault();
-            modal.open($(this).data('content'));
-          });
+          $("#example-2").okPopup({
+            show      : 'click',
+            where     : 'center',
+            inEffect  : 'fadeIn',
+            outEffect : 'fadeOut',
+            modal     : 'click',
+            content   : function(){ return $(this).data('content'); }
+          }).addClass('modal');
 
-          modal.overlay.click(function(e){ modal.close(); });
         </script>
-        <pre>
-          <code>
-          </code>
-        </pre>
+
         <h3>Notifications</h3>
         <a id='example-3' href='#' data-content="I'm a notification!">Add a regular notification</a>
         <script>
 
           $("#example-3").on('click',function(e){
             e.preventDefault();
-            var notification = $.okOpen({ 
-              inEffect:'fadeIn',  
-              outEffect:'fadeIn',  
-              where: { position:'relative' }, 
-              parent: "#notification-queue"
+            var notification = $.okPopup.create($(this),{ 
+              // show    : 'click', By ommitting the show property, we won't bind any events
+              inEffect  : 'fadeIn',
+              outEffect : 'fadeIn',
+              parent    : "#notification-queue",
+              where     : {}, // No positioning
+              content   : function(){ return $(this).data('content'); }
             })
             .addClass('notification')
-            .open($(this).data('content'));
+            .open();
 
             setTimeout(function() {
               notification.fadeOut(function(){
@@ -84,35 +90,22 @@
 
           });
         </script>
-        <pre>
-          <code>
-          </code>
-        </pre>
 
         <h3>Images</h3>
         <a id='example-4' href='../shared/images/one.png' ><img src='../shared/images/thumbs/one.png' alt='' /></a>
         <script>
-
-          $("#example-4").on('click',function(e){
-            e.preventDefault();
-
-            var self = $(this),
-                pos  = self.offset(),
-                effectOpts = { top: pos.top, left: pos.left, width: self.width(), height:self.height() };
-
-            var notification = $.okOpen({ 
-              inEffect : 'zoomIn',  
-              outEffect : 'zoomOut',  
-              where  : {},
-              modal  : true
-            })
-            .addClass('image')
-            .open("<img src='"+self.attr('href')+"' alt=''/>", effectOpts);
-
-            notification.overlay.click(function(e){ notification.close(effectOpts); });
+          var self = $("#example-4"),
+              pos =  self.offset();
+            self.okPopup({
+              show      : 'click',
+              inEffect  :[ 'zoomIn', { top: pos.top, left: pos.left, width: self.width(), height:self.height() }],
+              outEffect :[ 'zoomOut', { top: pos.top, left: pos.left, width: self.width(), height:self.height() }],
+              modal     : 'click',
+              content   : function(){
+                return "<img src='"+$(this).attr('href')+"' alt=''/>";
+              }
           });
         </script>
-
       </section>
     </article>
 
