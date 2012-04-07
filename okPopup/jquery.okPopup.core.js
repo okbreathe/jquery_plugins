@@ -57,8 +57,8 @@
         .appendTo(options.parent)
         .hide()
         .extend({ 
-          open    : function(){ return $.okPopup.open.call(this, self); }, 
-          close   : function(){ return $.okPopup.close.call(this, self); } ,
+          open    : function(el){ return $.okPopup.open.call(this, el ? el : self); }, 
+          close   : function(el){ return $.okPopup.close.call(this, el ? el : self); } ,
           overlay : overlay,
           options : expandOptions(options)
         });
@@ -67,14 +67,14 @@
       if (options.show) {
         $(self.selector).on(options.show,function(e){
           e.preventDefault();
-          popup.open(e.target);
+          popup.open(e.currentTarget);
         });
       }
 
       if (options.hide) {
         $(self.selector).on(options.hide,function(e){
           e.preventDefault();
-          popup.close(e.target);
+          popup.close(e.currentTarget);
         });
       }
 

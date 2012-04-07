@@ -1,4 +1,4 @@
-# okCycle
+# okPopup
 
 *Tiny, modular, flexible content display* 
 
