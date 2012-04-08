@@ -1,114 +1,159 @@
 (function($){
 
-  /*
+  /**
    * jQuery.fn.positionAt     
-   * Assists positioning DOM elements relative to body
-   * @param object   - A String of a named object, DOM Element, Dom Event, or [x,y] array of coordinates
-   * @param offsetLeft - added to the calculated x position
-   * @param offsetTop  - added to the calculated y position
+   * Assists positioning DOM elements relative to other elements
+   * @param element {DOMElement} - An element to position
+   * @param offsetElement {DOMElement|Event} - An element to position from
+   * @param locationOrOptions {String|Object} - A String of a named location, or an options object
    *
-    element, offsetX, offsetY
-    element, namedPosition
-    object of CSS options
+   * If passing an object, you can specify the offset from the caculated
+   * position by giving offsetLeft and offsetTop
+   *
    */
-  $.fn.positionAt = function(object, positionOrOffset){
-    var params, scrollTop, screenWidth, top, left, offsetTop, offsetLeft;
+  $.positionAt = function(element, offsetElement, locationOrOptions) {
+    var scrollTop, 
+        screenWidth, 
+        top, 
+        left, 
+        offsetTop, 
+        offsetLeft, 
+        location,
+        options,
+        self   = $(element),
+        params = {};
 
-    return this.each(function(){
-      var self = $(this);
+    if (typeof(locationOrOptions) == 'string' ) {
+      location = locationOrOptions;
+    } else if ($.isPlainObject(locationOrOptions)) {
+      location = locationOrOptions.location;
+      options  = locationOrOptions;
+    } 
 
-      if ($.isPlainObject(positionOrOffset)) {
-        params = positionOrOffset;
-      } else { // Event or DOM Element
+    options = options || {};
 
-        if (typeof(positionOrOffset) == 'string') {
-          self.css({position:'absolute'});
-          params = $.fn.positionAt.locations[positionOrOffset].call(object,this);
-        } else {
-        
-          if (positionOrOffset instanceof Array) {
-             offsetLeft = positionOrOffset[0] || 0;
-             offsetTop  = positionOrOffset[1] || 0; 
-          }
+    if (location) {
+      self.css({ position:'absolute' }); // Needs to be done before we measure
+      params = $.positionAt.locations[location].call(offsetElement, element, options);
+    } else {
+    
+      offsetLeft  = options.offsetLeft || 0;
+      offsetTop   = options.offsetTop  || 0; 
 
-          scrollTop   = $(window).scrollTop(); 
-          screenWidth = $(window).width();
+      scrollTop   = $(window).scrollTop(); 
+      screenWidth = $(window).width();
 
-          if (object.currentTarget) {
-            left = object.pageX;
-            top  = object.pageY;
-          } else {
-            object = $(object).offset();
-            left = object.left;
-            top  = object.top;
-          }
-
-          // Ensure we don't clip the screen
-          
-          if (left + self.outerWidth() + (offsetLeft*2) >= screenWidth){
-            left = screenWidth - self.width() - offsetLeft;
-          }
-
-          if (top + (offsetTop*2) <= scrollTop) {
-            top = scrollTop - (offsetTop*2);
-          }
-
-          params = {
-            top:  top  + offsetTop,
-            left: left + offsetLeft
-          };
-
-        }
-
-        if (!params.position){ 
-          params.position = "absolute"; 
-        }
-
+      if (offsetElement.currentTarget) {
+        left = offsetElement.pageX;
+        top  = offsetElement.pageY;
+      } else {
+        offsetElement = $(offsetElement).offset();
+        left = offsetElement.left;
+        top  = offsetElement.top;
       }
 
-      self.css(params);
-    });
+      // Ensure we don't clip the screen
+      
+      if (left + self.outerWidth() + (offsetLeft*2) >= screenWidth){
+        left = screenWidth - self.width() - offsetLeft;
+      }
+
+      if (top + (offsetTop*2) <= scrollTop) {
+        top = scrollTop - (offsetTop*2);
+      }
+
+      params = {
+        top:  top  + offsetTop,
+        left: left + offsetLeft
+      };
+
+    }
+
+    return params;
+
   };
 
-  function getPosition(elem,popup) {
-    return $.extend({}, $(elem).offset(), {
-      width: elem.offsetWidth , 
-      height: elem.offsetHeight,
-      actualWidth: popup.offsetWidth,
-      actualHeight: popup.offsetHeight
+  $.fn.positionAt = function(offsetElement, locationOrOptions){
+    return this.each(function(){
+      $(this).css($.positionAt(this, offsetElement, locationOrOptions));
     });
-  }
+  };
 
   /*
    * Named locations for use with jQuery.fn.positionAt
+   * popup should be renamed - we don't know that it's a popup
+   * should be element, offsetElement
    */
-  $.fn.positionAt.locations = {
-    elementBottom: function(popup) {
-      var pos = getPosition(this,popup);
-      return {top: pos.top + pos.height, left: pos.left + pos.width / 2 - pos.actualWidth / 2};
+  $.positionAt.locations = {
+    elementBottom: function(element,opts) {
+      var pos = getPosition(this,element);
+      return {top: pos.top + pos.height, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
     },
-    elementTop: function(popup) {
-      var pos = getPosition(this,popup);
-      return {top: pos.top - pos.actualHeight, left: pos.left + pos.width / 2 - pos.actualWidth / 2};
+    elementTop: function(element,opts) {
+      var pos = getPosition(this,element);
+      return {top: pos.top - pos.elementHeight, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
     },
-    elementLeft: function(popup) {
-      var pos = getPosition(this,popup);
-      return {top: pos.top + pos.height / 2 - pos.actualHeight / 2, left: pos.left - pos.actualWidth};
+    elementLeft: function(element,opts) {
+      var pos = getPosition(this,element);
+      return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left - pos.elementWidth};
     },
-    elementRight: function(popup) {
-      var pos = getPosition(this,popup);
-      return {top: pos.top + pos.height / 2 - pos.actualHeight / 2, left: pos.left + pos.width};
+    elementRight: function(element,opts) {
+      var pos = getPosition(this,element);
+      return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left + pos.width};
     },
-    center: function(popup){
-      var top  = ($(window).height() - this.offsetHeight) / 2,
-          left = ($(window).width()  - this.offsetWidth)  / 2;
-      return {
-        position: $.browser.msie && $.browser.version.substr(0,1)<7 ? "absolute" : "fixed", // IE6 doesn't do position:fixed
-        margin:0, 
-        top:  (top  > 0 ? top  : 0), 
-        left: (left > 0 ? left : 0)
-      };
+    center: function(element,opts){
+      return center.call(this,element,opts);
+    },
+    magnify: function(element,opts) {
+      return center.call(this,element,opts, true);
     }
   };
+
+  function center (element,opts, magnify) {
+    var params      = {},
+        self        = $(element),
+        win         = $(window), 
+        doc         = $(document),
+        width       = self.width(),
+        height      = self.height(),
+        margin      = opts.margin || 0,
+        adjusted,
+        top, 
+        left;
+
+    // Set final dimensions for image
+    if (opts.fitToViewport) {
+      if (width > (win.width() - margin * 2)) {
+        adjusted = win.width() - margin * 2;
+        height	 = (adjusted / width) * height;
+        width	   = adjusted;
+      }
+      if (height > (win.height() - margin * 2)) {
+        adjusted = win.height() - margin * 2;
+        width	   = (adjusted / height) * width;
+        height   = adjusted;
+      }
+    }
+
+    params.top  = Math.max((win.height() / 2) - (height / 2) + doc.scrollTop(), 0);
+    params.left = Math.max((win.width() / 2) - (width / 2) + doc.scrollLeft(), 0);
+
+    // Don't explicitly set the width unless it's larger than the viewport, or we're magnifying
+    if (magnify || (self.width() >= win.width || self.height() >= win.height)) {
+      params.width = width;
+      params.height = height;
+    }
+
+    return params;
+  }
+
+  function getPosition(offsetElement,element) {
+    return $.extend({}, $(offsetElement).offset(), {
+      width         : offsetElement.offsetWidth,
+      height        : offsetElement.offsetHeight,
+      elementWidth  : element.offsetWidth,
+      elementHeight : element.offsetHeight
+    });
+  }
 
 })(jQuery);

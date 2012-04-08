@@ -10,21 +10,6 @@
 
 (function($) {
 
-  function expandOptions(options) {
-    function expand(dir,effect) {
-      if ($.isArray(effect)) {
-        options[dir+'Effect'] = effect.shift();
-        options[dir+'EffectOptions'] = effect;
-      } else {
-        options[dir+'Effect'] = effect;
-        options[dir+'EffectOptions'] = [];
-      }
-    }
-    expand('in',options.inEffect);
-    expand('out',options.outEffect);
-    return options;
-  }
-
   $.fn.okPopup = function(options) {
     return $.okPopup.create(this,options);
   };
@@ -32,11 +17,12 @@
   $.okPopup = {
     create: function(self,options){
       options = $.extend({
-        inEffect     : 'show', // If your effect takes options, pass an array here
-        outEffect    : 'hide', // If your effect takes options, pass an array here
+        openEffect   : 'show', // If your effect takes options, pass an array here
+        closeEffect  : 'hide', // If your effect takes options, pass an array here
+        onOpen       : function(event,popup){ popup.open(event); }, // Intercept the open event. Arguments are the original event and the default functionality. Call doDefault() when you're done.
+        onClose      : function(event,popup){ popup.close(); }, // Intercept the close event. Arguments are the original event and the default functionality. Call doDefault() when you're done. 
         modal        : false,  // Whether we should create a modal overlay, if you pass a string of an event, 
-                               // it will be closed when the event is triggered on the modal. 
-                               // If you pass a string it will be bound as an event on the overlay that 
+                               // it will be closed when the event is triggered on the overlay. 
         parent       : "body", // element or selector of the parent element 
         template     : "<div class='ui-popup'></div>", // Content container
         overlayClass : 'ui-widget-overlay' // The overlay class
@@ -57,8 +43,8 @@
         .appendTo(options.parent)
         .hide()
         .extend({ 
-          open    : function(el){ return $.okPopup.open.call(this, el ? el : self); }, 
-          close   : function(el){ return $.okPopup.close.call(this, el ? el : self); } ,
+          open    : function(event){ return $.okPopup.open.call(this, event); }, 
+          close   : function(){ return $.okPopup.close.call(this); } ,
           overlay : overlay,
           options : expandOptions(options)
         });
@@ -67,31 +53,31 @@
       if (options.show) {
         $(self.selector).on(options.show,function(e){
           e.preventDefault();
-          popup.open(e.currentTarget);
+          popup.options.onOpen(e,popup);
         });
       }
 
       if (options.hide) {
         $(self.selector).on(options.hide,function(e){
           e.preventDefault();
-          popup.close(e.currentTarget);
+          popup.options.onClose(e,popup);
         });
       }
 
       return popup;
     },
-    open: function(el){
+    open: function(event){
       var self    = this, 
-          content = this.options.content.call(el),
+          content = this.options.content ? this.options.content(event) : null,
           where   = $.isArray(this.options.where) ? this.options.where : [this.options.where];
 
-      where.unshift(el);
+      where.unshift(event.currentTarget);
 
       if (this.overlay) {
         this.overlay.show();
         if (typeof(this.options.modal) == "string") {
           this.overlay.one(this.options.modal,function(e){
-            self.close();
+            self.options.onClose(e,self)
           });
         }
       }
@@ -102,17 +88,26 @@
         this.html(content);
       }
 
-      return this[this.options.inEffect].apply(this, this.options.inEffectOptions).positionAt.apply(this, where);
+      return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
     },
-    close: function(el){
-      var effect, effectOptions;
-
+    close: function(){
       if (this.overlay) {
         this.overlay.hide();
       }
 
-      this[this.options.outEffect].apply(this, this.options.outEffectOptions);
+      this[this.options.closeEffect].apply(this, this.options.closeEffectOptions);
     }
   };
+
+  function expandOptions(options) {
+    function expand(dir,effect) {
+      effect = $.isArray(effect) ? effect : [effect];
+      options[dir+'Effect'] = effect.shift();
+      options[dir+'EffectOptions'] = effect;
+    }
+    expand('in',options.openEffect);
+    expand('out',options.closeEffect);
+    return options;
+  }
 
 })(jQuery);
