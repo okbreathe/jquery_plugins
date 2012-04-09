@@ -17,21 +17,23 @@
   $.okPopup = {
     create: function(self,options){
       options = $.extend({
-        openEffect   : 'show', // If your effect takes options, pass an array here
-        closeEffect  : 'hide', // If your effect takes options, pass an array here
-        onOpen       : function(event,popup){ popup.open(event); }, // Intercept the open event. Arguments are the original event and the default functionality. Call doDefault() when you're done.
-        onClose      : function(event,popup){ popup.close(); }, // Intercept the close event. Arguments are the original event and the default functionality. Call doDefault() when you're done. 
-        modal        : false,  // Whether we should create a modal overlay, if you pass a string of an event, 
-                               // it will be closed when the event is triggered on the overlay. 
-        parent       : "body", // element or selector of the parent element 
-        template     : "<div class='ui-popup'></div>", // Content container
-        overlayClass : 'ui-widget-overlay' // The overlay class
+        openEvent    : null,                                        // Which event triggers the popup to show
+        closeEvent   : null,                                        // Which event triggers the popup to be hidden
+        openEffect   : 'show',                                      // If your effect takes options, pass an array here
+        closeEffect  : 'hide',                                      // If your effect takes options, pass an array here
+        onOpen       : function(event,popup){ popup.open(event); }, // Called when open event is triggered.
+        onClose      : function(event,popup){ popup.close(); },     // Called when close event is triggered.
+        modal        : false,                                       // Whether we should create a modal overlay, if you pass a string of an event,
+                                                                    // it will be closed when the event is triggered on the overlay.
+        parent       : "body",                                      // element or selector of the parent element
+        template     : "<div class='ui-popup'></div>",              // Content container
+        overlayClass : 'ui-widget-overlay'                          // The overlay class
       },options);
 
       var popup, overlay;
 
       if (options.modal) {
-        overlay = $(options.overlayClass);
+        overlay = $('.'+options.overlayClass);
 
         if ( overlay.length === 0 ) {
           overlay = $("<div class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
@@ -50,23 +52,27 @@
         });
 
       // Bind events if given
-      if (options.show) {
-        $(self.selector).on(options.show,function(e){
+      if (options.openEvent) {
+        $(self.selector).on(options.openEvent,function(e){
           e.preventDefault();
           popup.options.onOpen(e,popup);
         });
       }
 
-      if (options.hide) {
-        $(self.selector).on(options.hide,function(e){
+      if (options.closeEvent) {
+        $(self.selector).on(options.closeEvent,function(e){
           e.preventDefault();
           popup.options.onClose(e,popup);
         });
       }
 
       return popup;
-    },
-    open: function(event,content){
+   },
+   // `content` can be a string or function. If a string it will just set the
+   // innerHTML to the value. If given a function, it will be called with the
+   // event and popup. This is primarily used if you call the open function
+   // manually.
+    open: function(event, content){
       var self  = this, 
           where = $.isArray(this.options.where) ? this.options.where : [this.options.where];
 

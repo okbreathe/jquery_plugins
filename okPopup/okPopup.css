@@ -4,13 +4,27 @@
 
 .ui-popup.tooltip {
   padding: 5px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.7);
   position: relative;
   display: inline;
   border: 1px solid #fff;
   color:#fff;
   -moz-border-radius: 4px 4px 4px 4px;
   -webkit-border-radius: 4px 4px 4px 4px;
+}
+
+
+.ui-popup.tooltip:after {
+  content:'\0020';
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom:-5px;
+  left: 50%;
+  margin-left: -5px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(0,0,0,0.7);
 }
 
 .ui-popup.modal {
@@ -48,7 +62,7 @@
 }
 
 #notification-queue {
-  position:absolute;
-  top:0;
-  right:0;
+  position:fixed;
+  top:10px;
+  right:10px;
 }
