@@ -44,12 +44,12 @@
         </p>
         <script>
           $(".tip").okPopup({
-            openEvent        : 'mouseenter',
-            closeEvent        : 'mouseleave',
+            openEvent   : 'mouseenter',
+            closeEvent  : 'mouseleave',
             openEffect  : 'fadeIn',
             closeEffect : 'fadeOut' ,
-            where       : 'elementTop',
-            onOpen     : function(e,popup){ 
+            where       : {location:'elementTop', offsetTop:-5},
+            onOpen      : function(e,popup){ 
               popup.html($(e.currentTarget).data('content')); 
               popup.open(e); 
             }
@@ -62,7 +62,7 @@ $(".tip").okPopup({
   closeEvent  : 'mouseleave',
   openEffect  : 'fadeIn',
   closeEffect : 'fadeOut' ,
-  where       : 'elementTop',
+  where       : {location:'elementTop', offsetTop:-5},
   onOpen      : function(e,popup){ 
     popup.html($(e.currentTarget).data('content')); 
     popup.open(e); 
@@ -227,6 +227,9 @@ self.okPopup({
       popup.animate(finalCss, 300, 'swing');
     }
 
+    // Ensure the image is loaded before we try to display it.
+    // You'd probably want some sort of 'loading' image displayed
+    // in the real world
     popup
     .children()
       .one("load", open)

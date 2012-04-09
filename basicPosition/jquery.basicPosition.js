@@ -12,14 +12,7 @@
    *
    */
   $.positionAt = function(element, offsetElement, locationOrOptions) {
-    var scrollTop, 
-        screenWidth, 
-        top, 
-        left, 
-        offsetTop, 
-        offsetLeft, 
-        location,
-        options,
+    var scrollTop, screenWidth, top, left, offsetTop, offsetLeft, location, options,
         self   = $(element),
         params = {};
 
@@ -30,16 +23,15 @@
       options  = locationOrOptions;
     } 
 
-    options = options || {};
+    options    = options || {};
+    offsetLeft = options.offsetLeft || 0;
+    offsetTop  = options.offsetTop  || 0; 
 
     if (location) {
       self.css({ position:'absolute' }); // Needs to be done before we measure
       params = $.positionAt.locations[location].call(offsetElement, element, options);
     } else {
     
-      offsetLeft  = options.offsetLeft || 0;
-      offsetTop   = options.offsetTop  || 0; 
-
       scrollTop   = $(window).scrollTop(); 
       screenWidth = $(window).width();
 
@@ -62,12 +54,12 @@
         top = scrollTop - (offsetTop*2);
       }
 
-      params = {
-        top:  top  + offsetTop,
-        left: left + offsetLeft
-      };
+      params = { top: top, left: left };
 
     }
+
+    params.top  = params.top + offsetTop;
+    params.left = params.left + offsetLeft;
 
     return params;
 
