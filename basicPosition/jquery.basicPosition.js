@@ -16,6 +16,8 @@
         self   = $(element),
         params = {};
 
+    offsetElement = offsetElement instanceof jQuery ? offsetElement[0] : offsetElement;
+
     if (typeof(locationOrOptions) == 'string' ) {
       location = locationOrOptions;
     } else if ($.isPlainObject(locationOrOptions)) {
