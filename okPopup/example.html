@@ -46,9 +46,26 @@
             openEffect  : 'fadeIn',
             closeEffect : 'fadeOut' ,
             where       : 'elementTop',
-            content     : function(e){ return $(e.currentTarget).data('content'); }
+            onOpen     : function(e,popup){ 
+              popup.html($(e.currentTarget).data('content')); 
+              popup.open(e); 
+            }
           }).addClass('tooltip');
         </script>
+          <pre>
+            <code>
+$(".tip").okPopup({
+  show        : 'mouseenter',
+  hide        : 'mouseleave',
+  openEffect  : 'fadeIn',
+  closeEffect : 'fadeOut' ,
+  where       : 'elementTop',
+  onOpen     : function(e,popup){ 
+    popup.html($(e.currentTarget).data('content')); 
+    popup.open(e); 
+  }
+});</code>
+          </pre>
 
         <h3>Modal Windows</h3>
         <p>
@@ -62,10 +79,27 @@
             openEffect  : 'fadeIn',
             closeEffect : 'fadeOut',
             modal       : 'click',
-            content   : function(e){ return $(e.currentTarget).data('content'); }
+            onOpen     : function(e, popup){ 
+              popup.html($(e.currentTarget).data('content')); 
+              popup.open(e); 
+            }
           }).addClass('modal');
 
         </script>
+          <pre>
+            <code>
+$("#example-2").okPopup({
+  show        : 'click',
+  where       : 'center',
+  openEffect  : 'fadeIn',
+  closeEffect : 'fadeOut',
+  modal       : 'click',
+  onOpen     : function(e, popup){ 
+    popup.html($(e.currentTarget).data('content')); 
+    popup.open(e); 
+  }
+});</code>
+          </pre>
 
         <h3>Notifications</h3>
         <p>
@@ -76,14 +110,11 @@
           $("#example-3").on('click',function(e){
             e.preventDefault();
             var notification = $.okPopup.create($(this),{ 
-              // show     : 'click', // By ommitting the show property, we won't bind any events
               openEffect  : 'fadeIn',
-              // closeEffect : 'fadeOut', // Unnecessary as we haven't bound any events
-              parent      : "#notification-queue", // Set the parent to a specific element
-              content     : function(e){ return $(e.currentTarget).data('content'); }
+              parent      : "#notification-queue" // Set the parent to a specific element
             })
             .addClass('notification')
-            .open(e);
+            .open(e, $(e.currentTarget).data('content')); // If given a string it will just set the innerHTML to the value. If given a function, it will be called with the event and popup
 
             setTimeout(function() {
               notification.fadeOut(function(){
@@ -93,6 +124,25 @@
 
           });
         </script>
+          <pre>
+            <code>
+$("#example-3").on('click',function(e){
+  e.preventDefault();
+  var notification = $.okPopup.create($(this),{ 
+    openEffect  : 'fadeIn',
+    parent      : "#notification-queue" // Set the parent to a specific element
+  })
+  .addClass('notification')
+  .open(e, $(e.currentTarget).data('content')); // If given a string it will just set the innerHTML to the value. If given a function, it will be called with the event and popup
+
+  setTimeout(function() {
+    notification.fadeOut(function(){
+      notification.remove();
+    });
+  }, 3000);
+
+});</code>
+          </pre>
 
         <h3>Images</h3>
         <a id='example-4' href='../shared/images/one.png' ><img src='../shared/images/thumbs/one.png' alt='' /></a>
@@ -141,6 +191,52 @@
             }
           });
         </script>
+          <pre>
+            <code>
+var self = $("#example-4");
+
+self.okPopup({
+  show      : 'click',
+  modal     : 'click',
+  onOpen    : function(e,popup) {
+
+    popup.html("&lt;img src='"+ $(e.currentTarget).attr('href')+"' alt=''/&gt;");
+
+    function open(){
+      var initialCss = { height: self.height(), width: self.width(), top: self.offset().top, left: self.offset().left, position: 'absolute' },
+          finalCss = $.positionAt(popup, e.currentTarget, 'magnify');
+
+      popup.open(e); // Show the modal and popup
+
+      // Do our custom animation
+      popup.css(initialCss).find('img').css({ width: '100%' });
+
+      return popup.animate(finalCss, 300, 'swing');
+    }
+
+    popup
+    .children()
+      .one("load", open)
+      .each(function(){
+        if(popup.children()[0].complete) {
+          popup.trigger("load");
+        }
+      });
+  },
+  onClose : function(e,popup) {
+    return popup.animate({
+      top     : self.offset().top,
+      left    : self.offset().left,
+      opacity : "hide",
+      width   : 1,
+      height  : 1
+    }, 200, 'swing', function(){
+      $(this).css({width:'',height:''}).hide();
+      popup.close();
+    });
+  }
+});</code>
+          </pre>
       </section>
     </article>
 

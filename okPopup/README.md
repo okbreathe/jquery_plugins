@@ -9,3 +9,7 @@ internals.
 Can be used for tooltips, modal windows etc.
 
 ## Usage
+
+## Notes
+
+Requires jQuery 1.7.0 or greater

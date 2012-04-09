@@ -43,7 +43,7 @@
         .appendTo(options.parent)
         .hide()
         .extend({ 
-          open    : function(event){ return $.okPopup.open.call(this, event); }, 
+          open    : function(event,content){ return $.okPopup.open.call(this, event, content); }, 
           close   : function(){ return $.okPopup.close.call(this); } ,
           overlay : overlay,
           options : expandOptions(options)
@@ -66,10 +66,9 @@
 
       return popup;
     },
-    open: function(event){
-      var self    = this, 
-          content = this.options.content ? this.options.content(event) : null,
-          where   = $.isArray(this.options.where) ? this.options.where : [this.options.where];
+    open: function(event,content){
+      var self  = this, 
+          where = $.isArray(this.options.where) ? this.options.where : [this.options.where];
 
       where.unshift(event.currentTarget);
 
@@ -82,11 +81,13 @@
         }
       }
 
-      this.stop(true,true).hide();
-
-      if (typeof(content) == "string" ) {
+      if (typeof(content) == 'string') {
         this.html(content);
+      } else if (typeof(content) == 'function') {
+        content(event, self);
       }
+
+      this.stop(true,true).hide();
 
       return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
     },
@@ -99,6 +100,7 @@
     }
   };
 
+  // Standardize effect options into an array
   function expandOptions(options) {
     function expand(dir,effect) {
       effect = $.isArray(effect) ? effect : [effect];
