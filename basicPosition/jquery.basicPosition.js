@@ -74,9 +74,7 @@
   };
 
   /*
-   * Named locations for use with jQuery.fn.positionAt
-   * popup should be renamed - we don't know that it's a popup
-   * should be element, offsetElement
+   * Named locations for use with jQuery.positionAt
    */
   $.positionAt.locations = {
     elementBottom: function(element,opts) {
@@ -96,50 +94,36 @@
       return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left + pos.width};
     },
     center: function(element,opts){
-      return center.call(this,element,opts);
-    },
-    magnify: function(element,opts) {
-      return center.call(this,element,opts, true);
+      var self        = $(element),
+          win         = $(window), 
+          doc         = $(document),
+          width       = self.width(),
+          height      = self.height(),
+          margin      = opts.margin || 10,
+          adjusted;
+
+      // Don't set the width if we've been told not to
+      if (opts.constrain !== false) {
+        if (width > (win.width() - margin * 2)) {
+          adjusted = win.width() - margin * 2;
+          height	 = (adjusted / width) * height;
+          width	   = adjusted;
+        }
+        if (height > (win.height() - margin * 2)) {
+          adjusted = win.height() - margin * 2;
+          width	   = (adjusted / height) * width;
+          height   = adjusted;
+        }
+      }
+
+      return {
+        width  : width,
+        height : height,
+        top    : Math.max((win.height() / 2) - (height / 2) + doc.scrollTop(), 0),
+        left   : Math.max((win.width() / 2) - (width / 2) + doc.scrollLeft(), 0)
+      };
     }
   };
-
-  function center (element,opts, magnify) {
-    var params      = {},
-        self        = $(element),
-        win         = $(window), 
-        doc         = $(document),
-        width       = self.width(),
-        height      = self.height(),
-        margin      = opts.margin || 0,
-        adjusted,
-        top, 
-        left;
-
-    // Set final dimensions for image
-    if (opts.fitToViewport) {
-      if (width > (win.width() - margin * 2)) {
-        adjusted = win.width() - margin * 2;
-        height	 = (adjusted / width) * height;
-        width	   = adjusted;
-      }
-      if (height > (win.height() - margin * 2)) {
-        adjusted = win.height() - margin * 2;
-        width	   = (adjusted / height) * width;
-        height   = adjusted;
-      }
-    }
-
-    params.top  = Math.max((win.height() / 2) - (height / 2) + doc.scrollTop(), 0);
-    params.left = Math.max((win.width() / 2) - (width / 2) + doc.scrollLeft(), 0);
-
-    // Don't explicitly set the width unless it's larger than the viewport, or we're magnifying
-    if (magnify || (self.width() >= win.width || self.height() >= win.height)) {
-      params.width = width;
-      params.height = height;
-    }
-
-    return params;
-  }
 
   function getPosition(offsetElement,element) {
     return $.extend({}, $(offsetElement).offset(), {

@@ -1,4 +1,4 @@
-/*
+/**
  * jquery.okValidate 
  *
  * Copyright (c) 2011 Asher Van Brunt | http://www.okbreathe.com
@@ -15,8 +15,6 @@
  * @param {Object} Hash of settings, none are required.
  * @return {jQuery} Returns the same jQuery object
  *
- * Notes:
- *	- The plugin has only been tested with jQuery v 1.3.1, v 1.4.2 
  */
 
 (function($){

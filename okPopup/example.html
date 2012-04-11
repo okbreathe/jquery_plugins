@@ -148,7 +148,7 @@ $("#example-3").on('click',function(e){
           </pre>
 
         <h3>Images</h3>
-        <a id='example-4' href='../shared/images/one.png' ><img src='../shared/images/thumbs/one.png' alt='' /></a>
+        <a id='example-4' href='../shared/images/giant.png' ><img src='../shared/images/thumbs/giant.png' alt='' /></a>
         <script>
           var self = $("#example-4");
 
@@ -167,7 +167,7 @@ $("#example-3").on('click',function(e){
                     left: self.offset().left, 
                     position: 'absolute' 
                   },
-                  finalCss = $.positionAt(popup, e.currentTarget, 'magnify');
+                  finalCss = $.positionAt(popup, e.currentTarget, 'center');
 
                 popup.open(e); // openEvent the overlay and popup
 
