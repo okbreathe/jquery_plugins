@@ -31,6 +31,19 @@ body {
 	-webkit-text-size-adjust:100%; /* Fix for webkit rendering */
   -ms-text-size-adjust: 100%; /* Fix for IE rendering */
   background: #e8e8e8;
+  background-image: linear-gradient(bottom, rgb(230,230,231) 0%, rgb(191,192,195) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(230,230,231) 0%, rgb(191,192,195) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(230,230,231) 0%, rgb(191,192,195) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(230,230,231) 0%, rgb(191,192,195) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(230,230,231) 0%, rgb(191,192,195) 100%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, rgb(230,230,231)),
+    color-stop(1, rgb(191,192,195))
+  );
   color:#444;
 }
 
@@ -39,13 +52,21 @@ body {
   padding: 10px 0;
   margin: 1em auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
+  -ms-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
+  -o-box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
   -webkit-transition: box-shadow linear 0.4s;
   -moz-transition: box-shadow linear 0.4s;
   -ms-transition: box-shadow linear 0.4s;
   -o-transition: box-shadow linear 0.4s;
-  -ms-transition: box-shadow linear 0.4s;
-  border-radius: 10px;
+  transition: box-shadow linear 0.4s;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
 }
 
 #main:hover {

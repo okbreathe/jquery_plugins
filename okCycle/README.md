@@ -1,6 +1,6 @@
 # okCycle
 
-*jQuery Slideshow - Tiny, modular, flexible slideshow* 
+*Tiny, modular, flexible slideshow* 
 
 If you're looking for a drop-in solution that does all the styling and other
 work for you, you're in the wrong place. While I hate to reinvent the wheel for

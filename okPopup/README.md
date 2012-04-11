@@ -1,12 +1,13 @@
 # okPopup
 
-*Tiny, modular, flexible content display* 
+*For all your popup needs*
 
-Thin wrapper on top of okPosition. It abstracts enough out of your way that you
-can get basic functionality without fuss, but can still work directly with the
-internals.
+okPopup allows you to display a variety of popups, tooltips, modal windows etc.
 
-Can be used for tooltips, modal windows etc.
+It's basically a thin wrapper on `okPosition`. The goal is to abstract enough
+out of your way that you can get basic functionality without fuss, but are
+still replace most of the functionality when needed.
+
 
 ## Usage
 
