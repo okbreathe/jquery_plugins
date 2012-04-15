@@ -78,13 +78,13 @@
       var self  = this, 
           where = $.isArray(this.options.where) ? this.options.where : [this.options.where];
 
-      where.unshift(event.currentTarget);
+      where.unshift(this.options.modal ? $(this.options.parent) : event.currentTarget);
 
       if (this.overlay) {
         this.overlay.show();
         if (typeof(this.options.modal) == "string") {
           this.overlay.one(this.options.modal,function(e){
-            self.options.onClose(e,self)
+            self.options.onClose(e,self);
           });
         }
       }
@@ -96,7 +96,6 @@
       }
 
       this.stop(true,true).hide();
-
       return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
     },
     close: function(){
@@ -110,13 +109,13 @@
 
   // Standardize effect options into an array
   function expandOptions(options) {
-    function expand(dir,effect) {
+    function expand(op,effect) {
       effect = $.isArray(effect) ? effect : [effect];
-      options[dir+'Effect'] = effect.shift();
-      options[dir+'EffectOptions'] = effect;
+      options[op+'Effect'] = effect.shift();
+      options[op+'EffectOptions'] = effect;
     }
-    expand('in',options.openEffect);
-    expand('out',options.closeEffect);
+    expand('open',options.openEffect);
+    expand('close',options.closeEffect);
     return options;
   }
 

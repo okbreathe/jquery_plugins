@@ -11,7 +11,6 @@
    * position by giving offsetLeft and offsetTop
    *
    */
-  // TODO allow omitting the offsetElement
   $.positionAt = function(element, offsetElement, locationOrOptions) {
     var scrollTop, screenWidth, top, left, offsetTop, offsetLeft, location, options,
         self   = $(element),
@@ -74,6 +73,7 @@
     });
   };
 
+
   /*
    * Named locations for use with jQuery.positionAt
    */
@@ -96,7 +96,8 @@
     },
     center: function(element,opts){
       var self        = $(element),
-          win         = $(window), 
+          parent      = $(this), 
+          fixed       = parent.css('position') == 'fixed',
           doc         = $(document),
           width       = self.width(),
           height      = self.height(),
@@ -105,13 +106,13 @@
 
       // Don't set the width if we've been told not to
       if (opts.constrain !== false) {
-        if (width > (win.width() - margin * 2)) {
-          adjusted = win.width() - margin * 2;
+        if (width > (parent.width() - margin * 2)) {
+          adjusted = parent.width() - margin * 2;
           height	 = (adjusted / width) * height;
           width	   = adjusted;
         }
-        if (height > (win.height() - margin * 2)) {
-          adjusted = win.height() - margin * 2;
+        if (height > (parent.height() - margin * 2)) {
+          adjusted = parent.height() - margin * 2;
           width	   = (adjusted / height) * width;
           height   = adjusted;
         }
@@ -120,8 +121,8 @@
       return {
         width  : width,
         height : height,
-        top    : Math.max((win.height() / 2) - (height / 2) + doc.scrollTop(), 0),
-        left   : Math.max((win.width() / 2) - (width / 2) + doc.scrollLeft(), 0)
+        top    : Math.max((parent.height() / 2) - (height / 2) + (fixed ? 0 : doc.scrollTop()), margin),
+        left   : Math.max((parent.width() / 2) - (width / 2) + doc.scrollLeft(), margin)
       };
     }
   };

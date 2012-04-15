@@ -31,6 +31,7 @@ $.okPopup.ui = {
         loading;
 
     opts = $.extend({
+      parent          : '#ui-overlay', // make the parent the overlay so clicking the element will also trigger a close
       durationIn      : 300,
       durationOut     : 200,
       easingIn        : 'swing',
@@ -51,20 +52,12 @@ $.okPopup.ui = {
         });
       }
 
-      initialCSS = { 
-        height   : thumb.height(),
-        width    : thumb.width(),
-        top      : thumb.offset().top,
-        left     : thumb.offset().left,
-        position : 'absolute'
-      };
-
       popup.overlay.show(); // overlay needs to be visible before we take measurements
 
 
-      finalCSS = $.positionAt(popup, target, 'center');
+      finalCSS = $.positionAt(popup, popup.overlay, 'center');
 
-      popup.bind('click', function(e){ close(e, popup); }).open(e).css(initialCSS).find('img').css({ width: '100%' }); // Set the initial position
+      popup.open(e).css($.extend({ position: 'absolute' }, dimensions())).find('img').css({ width: '100%' }); // Set the initial position
       popup.animate(finalCSS, opts.durationIn, opts.easingIn); // Animate to the final position
     }
 
@@ -84,27 +77,30 @@ $.okPopup.ui = {
         animate(e, popup); // Animate now that the image is loaded 
       };
 
-      loading = $(opts.loadingTemplate).appendTo("body").positionAt(target, 'center').fadeIn();
+      loading = $(opts.loadingTemplate).appendTo("body").positionAt(popup.overlay, 'center').fadeIn();
 
       imgPreload.src = target.attr('href');
 
     }
 
+    function dimensions(){
+      return { 
+        height : thumb.height(),
+        width  : thumb.width(),
+        top    : thumb.offset().top - $(window).scrollTop(),
+        left   : thumb.offset().left - $(window).scrollLeft()
+      };
+    }
+
     function close(e, popup) {
-      popup.unbind('click');
-      return popup.animate({
-        top     : thumb.offset().top,
-        left    : thumb.offset().left,
-        opacity : "hide",
-        width   : 1,
-        height  : 1
-      }, opts.durationOut, opts.easingOut, function(){
+      return popup.animate($.extend({ opacity:'hide' }, dimensions()), opts.durationOut, opts.easingOut, function(){
         $(this).css({width:'',height:''}).hide();
         popup.close();
       });
     }
 
     return {
+      parent    : opts.parent,
       openEvent : 'click',
       modal     : 'click',
       onOpen    : preload,

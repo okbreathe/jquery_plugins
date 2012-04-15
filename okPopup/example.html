@@ -79,12 +79,13 @@ $(".tip").okPopup({
         <script>
 
           $("#example-2").okPopup({
-            openEvent        : 'click',
+            openEvent   : 'click',
             where       : 'center',
             openEffect  : 'fadeIn',
             closeEffect : 'fadeOut',
             modal       : 'click',
-            onOpen     : function(e, popup){ 
+            parent      : '#ui-overlay',
+            onOpen      : function(e, popup){ 
               popup.html($(e.currentTarget).data('content')); 
               popup.open(e); 
             }
@@ -99,6 +100,7 @@ $("#example-2").okPopup({
   openEffect  : 'fadeIn',
   closeEffect : 'fadeOut',
   modal       : 'click',
+  parent      : '#ui-overlay',
   onOpen      : function(e, popup){ 
     popup.html($(e.currentTarget).data('content')); 
     popup.open(e); 
