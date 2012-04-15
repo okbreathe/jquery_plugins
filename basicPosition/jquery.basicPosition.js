@@ -11,6 +11,7 @@
    * position by giving offsetLeft and offsetTop
    *
    */
+  // TODO allow omitting the offsetElement
   $.positionAt = function(element, offsetElement, locationOrOptions) {
     var scrollTop, screenWidth, top, left, offsetTop, offsetLeft, location, options,
         self   = $(element),

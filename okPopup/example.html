@@ -19,6 +19,7 @@
   <script src="jquery.basicPosition.js"></script>
   <script src="jquery.okPopup.core.js"></script>
   <script src="jquery.okPopup.effects.js"></script>
+  <script src="jquery.okPopup.ui.js"></script>
 </head>
 <body>
 
@@ -154,108 +155,11 @@ $("#example-3").on('click',function(e){
           This image is actually 2000x2000, the 'center' location fits content within the screen.
         </p>
         <script>
-          var self = $("#example-4");
-
-          self.okPopup({
-            openEvent      : 'click',
-            modal     : 'click',
-            onOpen    : function(e,popup) {
-
-              popup.html("<img src='"+ $(e.currentTarget).attr('href')+"' alt=''/>");
-
-              function open(){
-                  var initialCss = { 
-                    height: self.height(), 
-                    width: self.width(), 
-                    top: self.offset().top, 
-                    left: self.offset().left, 
-                    position: 'absolute' 
-                  },
-                  finalCss = $.positionAt(popup, e.currentTarget, 'center');
-
-                popup.open(e); // openEvent the overlay and popup
-
-                // Do our custom animation
-                popup.css(initialCss).find('img').css({ width: '100%' });
-                popup.animate(finalCss, 300, 'swing');
-              }
-
-              popup
-              .children()
-                .one("load", open)
-                .each(function(){
-                  if(popup.children()[0].complete) {
-                    popup.trigger("load");
-                  }
-                });
-            },
-            onClose : function(e,popup) {
-              return popup.animate({
-                top     : self.offset().top,
-                left    : self.offset().left,
-                opacity : "hide",
-                width   : 1,
-                height  : 1
-              }, 200, 'swing', function(){
-                $(this).css({width:'',height:''}).hide();
-                popup.close();
-              });
-            }
-          });
+          $("#example-4").okPopup({ ui: 'imageZoom' });
         </script>
           <pre>
             <code>
-var self = $("#example-4");
-
-self.okPopup({
-  openEvent : 'click',
-  modal     : 'click',
-  onOpen    : function(e,popup) {
-
-    popup.html("&lt;img src='"+ $(e.currentTarget).attr('href')+"' alt=''/&gt;");
-
-    function open(){
-      var initialCss = { 
-        height: self.height(), 
-        width: self.width(), 
-        top: self.offset().top, 
-        left: self.offset().left, 
-        position: 'absolute' 
-      },
-      finalCss = $.positionAt(popup, e.currentTarget, 'magnify');
-
-      popup.open(e); // Show the overlay and popup
-
-      // Do our custom animation
-      popup.css(initialCss).find('img').css({ width: '100%' });
-      popup.animate(finalCss, 300, 'swing');
-    }
-
-    // Ensure the image is loaded before we try to display it.
-    // You'd probably want some sort of 'loading' image displayed
-    // in the real world
-    popup
-    .children()
-      .one("load", open)
-      .each(function(){
-        if(popup.children()[0].complete) {
-          popup.trigger("load");
-        }
-      });
-  },
-  onClose : function(e,popup) {
-    return popup.animate({
-      top     : self.offset().top,
-      left    : self.offset().left,
-      opacity : "closeEvent",
-      width   : 1,
-      height  : 1
-    }, 200, 'swing', function(){
-      $(this).css({width:'',height:''}).closeEvent();
-      popup.close();
-    });
-  }
-});</code>
+$("#example-4").okPopup({ ui: 'imageZoom' }); // Prefab UI component</code>
           </pre>
       </section>
     </article>
@@ -266,6 +170,5 @@ self.okPopup({
       <h1><a href='http://okbreathe.com'>okbreathe</a></h1>
     </footer>
   </div> <!-- #doc -->
-
 </body>
 </html>

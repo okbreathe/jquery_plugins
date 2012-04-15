@@ -27,8 +27,8 @@
                                                                     // it will be closed when the event is triggered on the overlay.
         parent       : "body",                                      // element or selector of the parent element
         template     : "<div class='ui-popup'></div>",              // Content container
-        overlayClass : 'ui-widget-overlay'                          // The overlay class
-      },options);
+        overlayClass : 'ui-overlay'                                 // The overlay class
+      }, options.ui ? $.okPopup.ui[options.ui](options) : null, options);
 
       var popup, overlay;
 
@@ -36,7 +36,7 @@
         overlay = $('.'+options.overlayClass);
 
         if ( overlay.length === 0 ) {
-          overlay = $("<div class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
+          overlay = $("<div id='ui-overlay' class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
         }
 
       }
@@ -54,15 +54,17 @@
       // Bind events if given
       if (options.openEvent) {
         $(self.selector).on(options.openEvent,function(e){
-          e.preventDefault();
-          popup.options.onOpen(e,popup);
+          if ( popup.options.onOpen(e,popup) !== true ) {
+            e.preventDefault();
+          }
         });
       }
 
       if (options.closeEvent) {
         $(self.selector).on(options.closeEvent,function(e){
-          e.preventDefault();
-          popup.options.onClose(e,popup);
+          if ( popup.options.onClose(e,popup) !== true ) {
+            e.preventDefault();
+          }
         });
       }
 
