@@ -86,6 +86,7 @@ header h1 {
   margin: 0.5em auto;
   padding: 0.5em 0;
   width:960px;
+  line-height:1;
   text-shadow: 0px 0px 2px #fff;
   -moz-text-shadow: 0px 0px 2px #fff;
   -webkit-text-shadow: 0px 0px 2px #fff;
@@ -129,8 +130,8 @@ footer h1 a:hover{
 
 /* ........................................................... [02.TYPOGRAPHY] */
 
-p { padding:0 0 1.5em 0; word-spacing:0.08em; letter-spacing:0.03em; }
-p img { float: left; margin: 0 1em 1em 0; padding: 0; }
+p { margin:0 0 1em 0; word-spacing:0.08em; letter-spacing:0.03em; }
+p img.left { float: left; margin: 0 1em 1em 0; padding: 0; }
 p img.right { float: right; margin: 0 0 1em 1em;  }
 
 small { font-size: 80%; }
@@ -145,16 +146,17 @@ p a, p a:visited { line-height: inherit; }
 
 /* Headings */
 
-h1, h2, h3, h4, h5, h6 { font-weight: normal; color:#777; text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; color:#777; text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); text-rendering:optimizelegibility;}
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
-h1 { font-size: 3em; line-height: 1; margin-bottom: 0.5em; }
-h2 { font-size: 2em; margin-bottom: 0.75em; }
-h3 { font-size: 1.5em; line-height: 1; margin-bottom: 1em; }
-h4 { font-size: 1.2em; line-height: 1.25; margin-bottom: 1.25em; }
-h5 { font-weight:normal;font-size: 1em;  margin-bottom: 1.5em; }
-h6 { font-weight:normal;font-size: .8333em; line-height: 1.8em; margin-bottom: 1.8em;  }
+h1 { font-size: 2.143em; line-height: 1.4em;  }
+h2 { font-size: 1.71em;  line-height: 1.75em; }
+h3 { font-size: 1.28em;  line-height: 2.35em; }
+h4 { font-size: 1em;     line-height: 1.52em; }
+h5 { font-size: 0.85em;  line-height: 1.70em; }
+h6 { font-size: 0.79em;  line-height: 1.90em; }
 
 h1 img, h2 img, h3 img, h4 img, h5 img, h6 img { margin: 0; }
+
 
 /* #Lists */
 
