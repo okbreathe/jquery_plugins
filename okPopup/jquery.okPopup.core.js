@@ -53,16 +53,16 @@
 
       // Bind events if given
       if (options.openEvent) {
-        $(self.selector).on(options.openEvent,function(e){
-          if ( popup.options.onOpen(e,popup) !== true ) {
+        $(document).on(options.openEvent, self.selector, function(e){
+          if ( popup.options.onOpen.call(this,e,popup) !== true ) {
             e.preventDefault();
           }
         });
       }
 
       if (options.closeEvent) {
-        $(self.selector).on(options.closeEvent,function(e){
-          if ( popup.options.onClose(e,popup) !== true ) {
+        $(document).on(options.closeEvent, self.selector, function(e){
+          if ( popup.options.onClose.call(this,e,popup) !== true ) {
             e.preventDefault();
           }
         });
@@ -99,11 +99,13 @@
       return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
     },
     close: function(){
+      var toHide = this;
+
       if (this.overlay) {
-        this.overlay.hide();
+        toHide = toHide.add(this.overlay);
       }
 
-      this[this.options.closeEffect].apply(this, this.options.closeEffectOptions);
+      toHide[this.options.closeEffect].apply(toHide, this.options.closeEffectOptions);
     }
   };
 
