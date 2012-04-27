@@ -18,28 +18,6 @@
   // Holds meta-plugin settings
   $.okCycle = {};
 
-  // Fired when an image is successfully loaded
-  $.event.special.imageloaded = {
-    
-		add: function (obj) {
-      var self = $(this);
-	    if ( this.tagName == 'IMG' && this.src !== '' ) {
-  			if ( this.complete || this.readyState == 4 ) {
-          obj.handler.apply(this, arguments);
-  			} else {
-          self.bind('load.imageloaded', function(){
-            obj.handler.apply(self[0], arguments);
-            self.unbind('load.imageloaded');
-          });
-  			}
-  		}
-		},
-		
-		teardown: function (namespaces) {
-		  $(this).unbind('.imageloaded');
-		}
-	};
-
   $.fn.okCycle = function(opts){
     opts = $.extend({
       effect     : 'scroll',              // Transition effect used to cycle elements
@@ -134,15 +112,9 @@
       $.each(plugins, function(i,v){ if(v){v.call(self,self.data('ui'),opts);} });
 
       // Initialize transition effect after all images have loaded
-      if (imgs.length) {
-        imgs.bind('imageloaded', function () {
-          if (++loaded == imgs.length) {
-            setup.init.call(self,opts);
-          }
-        });
-      } else {
+      imgs.imagesLoaded(function(){
         setup.init.call(self,opts);
-      }
+      });
 
       // Expose API
       self.extend({ pause: pause, play: play, next: next, prev: prev, moveTo: moveTo });
