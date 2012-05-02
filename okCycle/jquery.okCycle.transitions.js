@@ -87,7 +87,7 @@
         this
           .css({position:'relative', width:iw, 'float':'left'})
           .children()
-            .css({'float':'left', display:'inline'});
+            .css({'float':'left', display:'inline', position: 'relative'});
       },
       move: function(transition){
         var self   = this, 
