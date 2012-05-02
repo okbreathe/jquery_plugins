@@ -1,6 +1,6 @@
 # okPopup
 
-*For all your popup needs*
+*For popups, modal windows, tooltips etc.*
 
 okPopup allows you to display a variety of popups, tooltips, modal windows etc.
 
