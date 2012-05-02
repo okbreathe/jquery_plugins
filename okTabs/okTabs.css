@@ -1,0 +1,76 @@
+/* Note that all this styling is unnecessary for the plugin to work */
+
+ul.tabs {
+  border-bottom: 1px solid #DDDDDD;
+  display: block;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+ul.tabs li {
+  display: block;
+  float: left;
+  height: 30px;
+  margin-bottom: 0;
+  padding: 0;
+  width: auto;
+}
+
+ul.tabs li a {
+  background: none repeat scroll 0 0 #F5F5F5;
+  border-color: #DDDDDD;
+  border-style: solid;
+  border-width: 1px 1px 0 0;
+  display: block;
+  font-size: 13px;
+  height: 29px;
+  line-height: 30px;
+  margin: 0;
+  padding: 0 20px;
+  text-decoration: none;
+  width: auto;
+}
+
+ul.tabs li.active a {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border-left-width: 1px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  color: #111111;
+  height: 30px;
+  margin: 0 0 0 -1px;
+  padding-top: 4px;
+  position: relative;
+  top: -4px;
+}
+
+ul.tabs li.active:first-child a {
+  margin-left: 0;
+}
+
+ul.tabs li:first-child a {
+  border-top-left-radius: 2px;
+  border-width: 1px 1px 0;
+}
+
+ul.tabs li:last-child a {
+  border-top-right-radius: 2px;
+}
+
+ul.tabs:before, ul.tabs:after {
+  content: " ";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+}
+
+ul.tabs:after {
+  clear: both;
+}
+
+
+.content {
+  min-height: 20px;
+}
