@@ -25,6 +25,36 @@ This is that.
 
 See each file for information on how to extend and write your own transitions/user interface elements.
 
+## Dependencies
+
+ * jQuery imagesLoaded 
+
+The image load event is an unreliable, and tricky beast. imagesLoaded paves over some of the quirks.
+
+If you find the plugin too large for your tastes (although its less than 1KB minified), you can try replacing it with this snippet, which
+is not quite as cross-browser compatible, but significantly smaller.
+
+      $.event.special.imagesloaded = {
+        
+        add: function (obj) {
+          var self = $(this);
+          if ( this.tagName == 'IMG' && this.src !== '' ) {
+            if ( this.complete || this.readyState == 4 ) {
+              obj.handler.apply(this, arguments);
+            } else {
+              self.bind('load.imagesloaded', function(){
+                obj.handler.apply(self[0], arguments);
+                self.unbind('load.imagesloaded');
+              });
+            }
+          }
+        },
+        
+        teardown: function (namespaces) {
+          $(this).unbind('.imagesloaded');
+        }
+      };
+
 ## Options
 
 option           | default                | description
@@ -43,8 +73,11 @@ afterMove        | function(transition){} | Called after we move to another slid
 * Has been tested on jQuery 1.6.2 and higher
 
 * Although okCycle implements an autoplaying feature, it does not by default
-  pause on hover. This is easy to implement and therefore not included by
-  default. Instead, just add the behavior for the hover event inside the 'afterSetup' callback
+  pause on hover.  Because okCycle allows the controls can exist anywhere on
+  page, it is necessary to define hover behavior manually
+ 
+  Just add the behavior for the hover event inside the 'afterSetup' callback
+
 
 
           // Note that you shouldn't call pause/play directly as our reference 
@@ -52,7 +85,8 @@ afterMove        | function(transition){} | Called after we move to another slid
           var slideshow = $("my_slides_show").okCycle({
             autoplay: true, 
             afterSetup:function(){
-              var slideshow = this;
-              this.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
+              var slideshow = this,
+                  ui        = this.data('ui');
+              ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
             }
           });

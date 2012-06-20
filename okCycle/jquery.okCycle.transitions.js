@@ -81,8 +81,7 @@
     // Rather than sliding on top of the other slide, all children are shifted
     scroll:{
       init: function(opts){
-        var ow = this.children().width(), iw = 0;
-        this.children().each(function(){ iw += $(this).outerWidth(true);});
+        var ow = this.children().width(), iw = this.children().outerWidth(true) * this.children().length;
         this.wrap("<div class='okCycle-container' />").parent().css({position:'relative', overflow: 'hidden', width: ow});
         this
           .css({position:'relative', width:iw, 'float':'left'})

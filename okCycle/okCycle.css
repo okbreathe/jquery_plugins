@@ -65,3 +65,7 @@ section {
   z-index:2;
   text-indent:10px;
 }
+
+#example_three li {
+  background: #fff url('images/spinner.gif') center center no-repeat;
+}

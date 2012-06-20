@@ -39,14 +39,20 @@
           <li title='caption for six'><img src='../shared/images/six.png' alt='' /></li>
           <li title=''><img src='../shared/images/seven.png' alt='' /></li>
         </ul>
+        <p>
+          Stop the autoplay by hovering the slideshow
+        </p>
         <pre>
           <code>
 $("#example_one").okCycle({
   autoplay: true,
   effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
   afterSetup:function(){
-    var slideshow = this;
-    this.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
+    // Because the controls can exist anywhere on page, it is necessary to define
+    // hover behavior manually
+    var slideshow = this,
+        ui        = this.data('ui');
+    ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
   }
 });</code>
         </pre>
@@ -64,11 +70,12 @@ $("#example_one").okCycle({
             <li title='#html-caption-6'><img src='../shared/images/six.png' alt='' /></li>
             <li title='#html-caption-7'><img src='../shared/images/seven.png' alt='' /></li>
           </ul>
+          <p>Try using your mousewheel</p>
           <pre>
             <code>
 $("#example_two").okCycle({
   effect:'scroll',
-  ui: ['caption','navigation','pagination','currentPage']
+  ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']
 });</code>
           </pre>
         </div>
@@ -100,6 +107,9 @@ $("#example_two").okCycle({
           <li title='six'><img src='../shared/images/six.png' alt='' /></li>
           <li title='seven'><img src='../shared/images/seven.png' alt='' /></li>
         </ul>
+        <p>
+          Image loading is deferred until scrolled to (You might have troubling seeing this if you're viewing this locally)
+        </p>
         <pre>
           <code>
 $("#example_three").okCycle({
@@ -121,6 +131,8 @@ $("#example_three").okCycle({
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="jquery.imagesloaded.js"></script>
+  <!-- Only required for mousewheel functionality -->
+  <script src="jquery.mousewheel.js"></script>
   <script src="jquery.okCycle.core.js"></script>
   <script src="jquery.okCycle.transitions.js"></script>
   <script src="jquery.okCycle.ui.js"></script>
@@ -130,12 +142,13 @@ $("#example_three").okCycle({
       autoplay: true,
       effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
       afterSetup:function(){
-        var slideshow = this;
-        this.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
+        var slideshow = this,
+            ui        = this.data('ui');
+        ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
       }
     });
-    $("#example_two").okCycle({effect:'scroll', ui: ['caption','navigation','pagination','currentPage']});
-    $("#example_three").okCycle({effect:'slide', ui: ['caption','navigation','pagination','currentPage']});
+    $("#example_two").okCycle({effect:'scroll', ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']});
+    $("#example_three").okCycle({effect:'slide', loadOnShow: true, ui: ['caption','navigation','pagination','currentPage']});
   </script>
 
 </body>

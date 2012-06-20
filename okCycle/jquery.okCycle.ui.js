@@ -89,6 +89,16 @@
         $("li.current", ui).html(transition.toIndex+1);
       }
     },
+		// mousewheel support
+    mouseWheel: {
+      init: function(ui,opts) {
+        var self = this;
+        ui.mousewheel(function(e, delta)  {
+          self[delta < 0 ? 'next' : 'prev'](); 
+          return false;
+        });			
+      }
+    },
     // Add touch control the slideshow
     touch: {
       init: function(ui,opts) {

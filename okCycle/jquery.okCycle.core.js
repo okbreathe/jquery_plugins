@@ -25,12 +25,14 @@
       ui         : [],                    // Any UI elements that we should build
       duration   : 2000,                  // Time between animations
       speed      : 500,                   // Speed the slides are transitioned between
+      preload    : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
+      loadOnShow : false,                 // If true, successive images will not be loaded until they become visible
       autoplay   : false,                 // Whether to start playing immediately
       afterSetup : function(){},          // Call with the slideshow as 'this' immediately after setup is performed
       afterMove  : function(transition){} // Called after we move to another slide
     },opts);
 
-    var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', active = 'activeSlide', interval = 'interval';
+    var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', active = 'activeSlide', interval = 'interval', unloaded = 'unloaded';
 
     if (!setup) {
       if (console && console.log) {
@@ -39,10 +41,25 @@
       return false; // Fail early since we don't know what to do
     }
 
-    function pause(){
+    function  loadImage (img) { 
+      var idx = $.inArray(img[0], this.data(unloaded));
+      if ( idx > -1 ) {
+        img.imagesLoaded(function(){
+          $(this).fadeIn(); 
+        });
+        img[0].src = img[0]._src; 
+        delete unloaded[idx];
+      }
+    }
+
+    function endAnimation() {
       if (this.data(interval)) {
         this.data(interval, clearTimeout(this.data(interval)));
       }
+    }
+
+    function pause(){
+      endAnimation.call(this);
       return this.data(animating, false);
     }
 
@@ -67,6 +84,12 @@
     }
 
     function transition(self, prev, cur, forward){
+      endAnimation.call(self);
+
+      if (opts.preload > 0 && opts.loadOnShow) {
+        loadImage.call(self,self.children().eq(cur).find("img")); // Load the next image
+      }
+
       var fn, data = { 
         from      : self.children().eq(prev),
         to        : self.children().eq(cur),
@@ -76,6 +99,7 @@
         easing    : opts.easing,
         speed     : opts.speed,
         after     : function(){
+
           opts.afterMove.call(self, this);
           if (self.data(animating)) { 
             play.call(self); 
@@ -87,7 +111,9 @@
 
       $.each(opts.ui, function(){
         fn = $.okCycle.ui[this];
-        if (fn && fn.move) { fn.move.call(self, self.data('ui'), data); }
+        if (fn && fn.move) { 
+          fn.move.call(self, self.data('ui'), data); 
+        }
       });
 
     }
@@ -96,6 +122,18 @@
       var self   = $(this),
           imgs   = $('img', self),
           loaded = 0;
+
+      if (opts.preload > 0) {
+        if  (opts.loadOnShow) {
+          self.data(unloaded,[]);
+          imgs.slice(opts.preload).each(function(){
+            this._src = this.src;
+            this.src = '';
+            self.data(unloaded).push($(this).hide()[0]);
+          });
+        }
+        imgs = imgs.slice(0,opts.preload);
+      }
 
       // Initialize UI
       if (opts.ui.length) {
@@ -120,7 +158,9 @@
       self.extend({ pause: pause, play: play, next: next, prev: prev, moveTo: moveTo });
 
       // Start autoplaying if enabled
-      if (opts.autoplay){ play.call(self); }
+      if (opts.autoplay){ 
+        play.call(self); 
+      }
 
       // Call after setup hook
       opts.afterSetup.call(self);
