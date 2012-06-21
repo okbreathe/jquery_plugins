@@ -28,17 +28,17 @@
    */
 
   $.okCycle.ui = {
-    // Pull the title attribute or a specific element to provide a caption
+    // Pull the data-caption attribute or a specific element to provide a caption
     caption: {
       init: function(ui,opts){
         $.okCycle.ui.caption.setCaption(this.children().eq(this.data('activeSlide')),$("<div class='caption'></div>").appendTo(ui).hide());
       },
-      // If a title begins with a octothorpe we'll consider it an id attribute of an element containing the caption
+      // If a caption begins with a octothorpe we'll consider it an id attribute of an element containing the caption
       move: function(ui,transition){
         $.okCycle.ui.caption.setCaption(this.children('.active'), $(".caption", ui));
       },
       setCaption: function(el,container){
-        var caption = el.attr('title') || ''; 
+        var caption = el.data('caption') || ''; 
 
         caption = caption[0] == '#' ? $(caption).html() : caption;
 

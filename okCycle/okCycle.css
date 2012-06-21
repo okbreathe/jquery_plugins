@@ -69,3 +69,8 @@ section {
 #example_three li {
   background: #fff url('images/spinner.gif') center center no-repeat;
 }
+
+.slideshow li {
+  width: 620px;
+  height: 400px;
+}

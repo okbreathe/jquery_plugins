@@ -24,7 +24,7 @@
       easing     : 'swing',               // Easing used by the effect
       ui         : [],                    // Any UI elements that we should build
       duration   : 2000,                  // Time between animations
-      speed      : 500,                   // Speed the slides are transitioned between
+      speed      : 300,                   // Speed the slides are transitioned between
       preload    : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
       loadOnShow : false,                 // If true, successive images will not be loaded until they become visible
       autoplay   : false,                 // Whether to start playing immediately
@@ -32,7 +32,7 @@
       afterMove  : function(transition){} // Called after we move to another slide
     },opts);
 
-    var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', active = 'activeSlide', interval = 'interval', unloaded = 'unloaded';
+    var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', autoplaying = 'autoplaying', active = 'activeSlide', interval = 'interval', unloaded = 'unloaded';
 
     if (!setup) {
       if (console && console.log) {
@@ -41,30 +41,26 @@
       return false; // Fail early since we don't know what to do
     }
 
-    function  loadImage (img) { 
+    function loadImage(img) { 
       var idx = $.inArray(img[0], this.data(unloaded));
-      if ( idx > -1 ) {
+      if (idx > -1) {
         img.imagesLoaded(function(){
           $(this).fadeIn(); 
         });
         img[0].src = img[0]._src; 
-        delete unloaded[idx];
-      }
-    }
-
-    function endAnimation() {
-      if (this.data(interval)) {
-        this.data(interval, clearTimeout(this.data(interval)));
+        delete this.data(unloaded)[idx];
       }
     }
 
     function pause(){
-      endAnimation.call(this);
-      return this.data(animating, false);
+      if (this.data(interval)) {
+        this.data(interval, clearTimeout(this.data(interval)));
+      }
+      return this.data(autoplaying, false);
     }
 
     function play(){
-      var self = this.data(animating, true);
+      var self = this.data(autoplaying, true);
       return self.data(interval, setTimeout(function(){ next.call(self); }, opts.duration));
     }
 
@@ -84,38 +80,43 @@
     }
 
     function transition(self, prev, cur, forward){
-      endAnimation.call(self);
+      if (!self.data(animating) && prev != cur) {
+      
+        self.data(animating, true);
 
-      if (opts.preload > 0 && opts.loadOnShow) {
-        loadImage.call(self,self.children().eq(cur).find("img")); // Load the next image
-      }
+        if (opts.preload > 0 && opts.loadOnShow) {
+          loadImage.call(self,self.children().eq(cur).find("img")); // Load the next image
+        }
 
-      var fn, data = { 
-        from      : self.children().eq(prev),
-        to        : self.children().eq(cur),
-        fromIndex : prev,
-        toIndex   : cur,
-        forward   : forward,
-        easing    : opts.easing,
-        speed     : opts.speed,
-        after     : function(){
+        var fn, data = { 
+          from      : self.children().eq(prev),
+          to        : self.children().eq(cur),
+          fromIndex : prev,
+          toIndex   : cur,
+          forward   : forward,
+          easing    : opts.easing,
+          speed     : opts.speed,
+          after     : function(){
+            self.data(animating, false);
 
-          opts.afterMove.call(self, this);
-          if (self.data(animating)) { 
-            play.call(self); 
+            opts.afterMove.call(self, this);
+
+            if (self.data(autoplaying)) { 
+              play.call(self); 
+            }
           }
-        }
-      };
+        };
 
-      setup.move.call(self.data(active, cur),data);
+        setup.move.call(self.data(active, cur),data);
 
-      $.each(opts.ui, function(){
-        fn = $.okCycle.ui[this];
-        if (fn && fn.move) { 
-          fn.move.call(self, self.data('ui'), data); 
-        }
-      });
+        $.each(opts.ui, function(){
+          fn = $.okCycle.ui[this];
+          if (fn && fn.move) { 
+            fn.move.call(self, self.data('ui'), data); 
+          }
+        });
 
+      }
     }
 
     return this.each(function(){
