@@ -95,37 +95,60 @@
       return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left + pos.width};
     },
     center: function(element,opts){
-      var self        = $(element),
-          parent      = $(this), 
-          fixed       = parent.css('position') == 'fixed',
-          doc         = $(document),
-          width       = self.width(),
-          height      = self.height(),
-          margin      = opts.margin || 10,
-          adjusted;
-
-      // Don't set the width if we've been told not to
-      if (opts.constrain !== false) {
-        if (width > (parent.width() - margin * 2)) {
-          adjusted = parent.width() - margin * 2;
-          height	 = (adjusted / width) * height;
-          width	   = adjusted;
-        }
-        if (height > (parent.height() - margin * 2)) {
-          adjusted = parent.height() - margin * 2;
-          width	   = (adjusted / height) * width;
-          height   = adjusted;
-        }
-      }
-
-      return {
-        width  : width,
-        height : height,
-        top    : Math.max((parent.height() / 2) - (height / 2) + (fixed ? 0 : doc.scrollTop()), margin),
-        left   : Math.max((parent.width() / 2) - (width / 2) + doc.scrollLeft(), margin)
-      };
+      return centerParent.call(this,element,opts);
+    },
+    // Same as position 'center'
+    centerParent: function(element,opts){
+      return centerParent.call(this,element,opts);
+    },
+    centerViewport: function(element,opts){
+      return centerViewport.call(this,element,opts);
     }
   };
+
+  function centerViewport(element,opts){
+    return center($(element), $(window), opts);
+  }
+
+  function centerParent(element, opts) {
+    return center($(element), $(this), opts);
+  }
+
+  function center(self, parent, opts) {
+    var width  = self.width,
+        height = self.height,
+        d      = constrain(self, parent, opts);
+
+    return {
+      width  : d.width,
+      height : d.height,
+      top    : Math.max(0, ((parent.height() - d.height) / 2) + parent.scrollTop()),
+      left   : Math.max(0, ((parent.width() - d.width) / 2) + parent.scrollLeft())
+    };
+  }
+
+  function constrain(self, parent, opts) {
+    var width  = self.width(),
+        height = self.height(),
+        margin = opts.margin || 10,
+        adjusted;
+
+    // Don't set the dimensions if we've been told not to
+    if (opts.constrain !== false) {
+      if (width > (parent.width() - margin * 2)) {
+        adjusted = parent.width() - margin * 2;
+        height	 = (adjusted / width) * height;
+        width	   = adjusted;
+      }
+      if (height > (parent.height() - margin * 2)) {
+        adjusted = parent.height() - margin * 2;
+        width	   = (adjusted / height) * width;
+        height   = adjusted;
+      }
+    }
+
+    return {height: height, width: width};
+  }
 
   function getPosition(offsetElement,element) {
     return $.extend({}, $(offsetElement).offset(), {
