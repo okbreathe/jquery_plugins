@@ -23,6 +23,34 @@
       inEffect              : 'show',   // Effect when content is shown
       outEffect             : 'hide'    // Effect when content is hidden
     }, opts);
+
+    function select(e) {
+      var self    = $(this),
+          content = $(self.attr('href'));
+  
+      if ( content.length ) {
+
+        if (e) { e.preventDefault(); }
+  
+        self.closest(opts.activeElementSelector).addClass(opts.activeClass).siblings().removeClass(opts.activeClass);
+  
+        // Show tab content and add active class
+        content.siblings()[opts.outEffect]().removeClass(opts.activeClass);
+        content[opts.inEffect]().addClass(opts.activeClass);
+
+      }
+    }
+
+    $(document).on('click', $(this).selector + ' a', select);
+
+    $(document).ready(function(e){
+      var anchor = window.location.hash,
+          target;
+      if (anchor && (target = $("a[href='"+anchor+"']")).length) {
+        select.call(target);
+      }
+      
+    });
     
     return this.each(function(){
       var links  = $("a", this),
@@ -37,22 +65,6 @@
 
       $((active.is("a") ? active : active.find("a")).attr('href')).show().siblings().hide();
     
-      $(document).on('click', $(this).selector + ' a', function(e) {
-        var self    = $(this),
-            content = $(self.attr('href'));
-    
-        if ( content.length ) {
-
-          e.preventDefault();
-    
-          self.closest(opts.activeElementSelector).addClass(opts.activeClass).siblings().removeClass(opts.activeClass);
-    
-          // Show tab content and add active class
-          content.siblings()[opts.outEffect]().removeClass(opts.activeClass);
-          content[opts.inEffect]().addClass(opts.activeClass);
-
-        }
-      });
     });
 
   };
