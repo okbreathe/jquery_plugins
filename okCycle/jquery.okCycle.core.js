@@ -27,8 +27,8 @@
       speed      : 300,                   // Speed the slides are transitioned between
       preload    : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
       loadOnShow : false,                 // If true, successive images will not be loaded until they become visible
-      autoplay   : false,                 // Whether to start playing immediately
-      afterSetup : function(){},          // Call with the slideshow as 'this' immediately after setup is performed
+      autoplay   : false,                 // Whether to start playing immediately. Provide a number (in seconds) to delay the inital start to the slideshow
+      afterSetup : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
       afterMove  : function(transition){} // Called after we move to another slide
     },opts);
 
@@ -125,7 +125,7 @@
           loaded = 0;
 
       if (opts.preload > 0) {
-        if  (opts.loadOnShow) {
+        if (opts.loadOnShow) {
           self.data(unloaded,[]);
           imgs.slice(opts.preload).each(function(){
             this._src = this.src;
@@ -133,7 +133,7 @@
             self.data(unloaded).push($(this).hide()[0]);
           });
         }
-        imgs = imgs.slice(0,opts.preload);
+        imgs = imgs.slice(0, opts.preload);
       }
 
       // Initialize UI
@@ -148,7 +148,7 @@
       self.data(active, 0);
 
       // Setup plugins
-      $.each(plugins, function(i,v){ if(v){v.call(self,self.data('ui'),opts);} });
+      $.each(plugins, function(i,v){ if (v){ v.call(self,self.data('ui'),opts); } });
 
       // Initialize transition effect after all images have loaded
       imgs.imagesLoaded(function(){
@@ -159,8 +159,10 @@
       self.extend({ pause: pause, play: play, next: next, prev: prev, moveTo: moveTo });
 
       // Start autoplaying if enabled
-      if (opts.autoplay){ 
-        play.call(self); 
+      if ( opts.autoplay === true || typeof(opts.autoPlay) == 'number' ){ 
+        setTimeout(function(){
+          play.call(self); 
+        },(isNaN(opts.autoplay) ? 0 : opts.autoplay));
       }
 
       // Call after setup hook
