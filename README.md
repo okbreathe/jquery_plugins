@@ -8,6 +8,7 @@ The "ok" series is typified by "just working", with minimal amount of
 configuration and bloat. 
 
  * okCycle:: Tiny, modular, flexible slideshow
+ * okPopup:: For popups, modal windows, tooltips etc.
  * okNotify:: Simple Growl-like notifications, with independent notification queues
  * okReveal:: Reveal hidden content through one or more animations.
  * okSlide:: UI for linear/branching choices via panels.
@@ -28,7 +29,7 @@ less. These plugins offer minimal amount of functionality to maximize their
 composability and reuse. This is the wrong place to look if you're looking for
 a drop-in solution.
  
- * ~~basicWindow:: Displays content in the specified position (think lightbox).~~ Replaced by okCycle
+ * ~~basicWindow:: Displays content in the specified position (think lightbox).~~ Replaced by okPopup
  * basicCycle:: Cycle through content (think slideshow).
  * basicPosition:: Easy element positioning.
  * basicLiveSearch:: Simple live search UI
