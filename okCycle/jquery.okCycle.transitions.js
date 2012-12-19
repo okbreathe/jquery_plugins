@@ -9,7 +9,7 @@
  * @description Provides transitions for okCycle
  * @author Asher Van Brunt
  * @mail asher@okbreathe.com
- * @version 1.00
+ * @version 0.20
  *
  */
 
@@ -81,8 +81,14 @@
     // Rather than sliding on top of the other slide, all children are shifted
     scroll:{
       init: function(opts){
-        var ow = this.children().outerWidth(true), iw = this.children().outerWidth(true) * this.children().length;
+        var groupedBy = opts.inGroupsOf || 1,
+            ow = this.children().outerWidth(true) * groupedBy, 
+            iw = this.children().outerWidth(true) * this.children().length;
+
+        this.data('groupedBy', groupedBy);
+
         this.wrap("<div class='okCycle-container' />").parent().css({position:'relative', overflow: 'hidden', width: ow});
+
         this
           .css({position:'relative', width:iw, 'float':'left'})
           .children()
@@ -92,8 +98,8 @@
         var self   = this, 
             diff   = transition.toIndex - transition.fromIndex, 
             offset = (( transition.forward && diff < 0) || ( !transition.forward && diff > 0)) ? 1 : Math.abs(diff),
-            child  = transition.forward ? self.children().slice(0,offset) : self.children().slice(-offset),
-            pos    = "-" + (offset*child.outerWidth())+"px";
+            child  = transition.forward ? self.children().slice(0,offset*this.data('groupedBy')) : self.children().slice(-offset*this.data('groupedBy')),
+            pos    = "-" + (offset*(child.outerWidth(true) * this.data('groupedBy') ))+"px";
 
         this.children().removeClass('active').eq(diff).addClass('active');
 

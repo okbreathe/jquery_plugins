@@ -1,35 +1,40 @@
 /**
- * jquery.okCycle.js
+ * jquery.miniScroll.js
  *
  * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/15/12
+ * Date: 10/15/12
  *
- * @description Tiny, modular, flexible slideshow
+ * @description Compact endless Scrolling
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.00
+ * @version 0.20
  *
  */
-
 (function($){
 
-  // Holds meta-plugin settings
+  // Hold meta-plugin settings
   $.okCycle = {};
 
   $.fn.okCycle = function(opts){
     opts = $.extend({
-      effect     : 'scroll',              // Transition effect used to cycle elements
-      easing     : 'swing',               // Easing used by the effect
-      ui         : [],                    // Any UI elements that we should build
-      duration   : 2000,                  // Time between animations
-      speed      : 300,                   // Speed the slides are transitioned between
-      preload    : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
-      loadOnShow : false,                 // If true, successive images will not be loaded until they become visible
-      autoplay   : false,                 // Whether to start playing immediately. Provide a number (in seconds) to delay the inital start to the slideshow
-      afterSetup : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
-      afterMove  : function(transition){} // Called after we move to another slide
+      effect        : 'scroll',              // Transition effect used to cycle elements
+      easing        : 'swing',               // Easing used by the effect
+      ui            : [],                    // Any UI elements that we should build
+      duration      : 2000,                  // Time between animations
+      speed         : 300,                   // Speed the slides are transitioned between
+      preload       : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
+      loadOnShow    : false,                 // If true, successive images will not be loaded until they become visible
+      inGroupsOf    : 1,                     // How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
+      autoplay      : false,                 // Whether to start playing immediately. Provide a number (in seconds) to delay the inital start to the slideshow
+      hoverBehavior : function(){            // During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering 
+        var slideshow = this,                // over the slideshow element or the ui container (".okCycle-ui") if it exists
+            ui        = this.data('ui');
+        (ui || slideshow).hover(function(){ slideshow.pause(); }, function(){ slideshow.play(); });
+      },
+      afterSetup    : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
+      afterMove     : function(transition){} // Called after we move to another slide
     },opts);
 
     var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', autoplaying = 'autoplaying', active = 'activeSlide', interval = 'interval', unloaded = 'unloaded';
@@ -85,7 +90,9 @@
         self.data(animating, true);
 
         if (opts.preload > 0 && opts.loadOnShow) {
-          loadImage.call(self,self.children().eq(cur).find("img")); // Load the next image
+          self.children().slice(opts.inGroupsOf, 2 * opts.inGroupsOf).find("img").each(function(){
+            loadImage.call(self, $(this)); // Load the next image
+          });
         }
 
         var fn, data = { 
@@ -107,7 +114,7 @@
           }
         };
 
-        setup.move.call(self.data(active, cur),data);
+        setup.move.call(self.data(active, cur), data);
 
         $.each(opts.ui, function(){
           fn = $.okCycle.ui[this];
@@ -148,7 +155,7 @@
       self.data(active, 0);
 
       // Setup plugins
-      $.each(plugins, function(i,v){ if (v){ v.call(self,self.data('ui'),opts); } });
+      $.each(plugins, function(i,v){ if(v){ v.call(self,self.data('ui'),opts); } });
 
       // Initialize transition effect after all images have loaded
       imgs.imagesLoaded(function(){
@@ -163,6 +170,10 @@
         setTimeout(function(){
           play.call(self); 
         },(isNaN(opts.autoplay) ? 0 : opts.autoplay));
+        // Setup hover behavior
+        if (typeof(opts.hoverBehavior) == 'function') {
+          opts.hoverBehavior.call(self);
+        }
       }
 
       // Call after setup hook

@@ -64,29 +64,19 @@ easing           | 'swing',               | Easing used by the effect
 ui               | [],                    | Any UI elements that we should build
 duration         | 2000,                  | Time between animations
 speed            | 500,                   | Speed the slides are transitioned between
+preload          | 1                      | Number of images to load (Use 0 for all) before the plugin is initialized
+loadOnShow       | false                  | If true, successive images will not be loaded until they become visible
+inGroupsOf       | 1                      | How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
 autoplay         | false,                 | Whether to start playing immediately
 afterSetup       | function(){},          | Call with the slideshow as 'this' immediately after setup is performed
 afterMove        | function(transition){} | Called after we move to another slide
+hoverBehavior    | function(){}           | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering 
+                                          | over the slideshow element or the ui container (".okCycle-ui") if it exists
 
 ## Notes
 
 * Has been tested on jQuery 1.6.2 and higher
 
-* Although okCycle implements an autoplaying feature, it does not by default
-  pause on hover.  Because okCycle allows the controls can exist anywhere on
-  page, it is necessary to define hover behavior manually
- 
-  Just add the behavior for the hover event inside the 'afterSetup' callback
-
-
-
-          // Note that you shouldn't call pause/play directly as our reference 
-          // to the slideshow as 'this' will be lost
-          var slideshow = $("my_slides_show").okCycle({
-            autoplay: true, 
-            afterSetup:function(){
-              var slideshow = this,
-                  ui        = this.data('ui');
-              ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
-            }
-          });
+* Although okCycle implements an autoplaying feature, as controls can exist anywhere on
+  page, it may be necessary to rewrite the hoverBehavior function to take into
+  account the position of your slideshow controls 
