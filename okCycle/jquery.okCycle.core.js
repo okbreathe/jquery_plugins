@@ -1,17 +1,18 @@
 /**
- * jquery.miniScroll.js
+ * jquery.okCycle.js
  *
  * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 10/15/12
+ * Date: 02/15/12
  *
- * @description Compact endless Scrolling
+ * @description Tiny, modular, flexible slideshow
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.20
+ * @version 1.00
  *
  */
+
 (function($){
 
   // Hold meta-plugin settings
