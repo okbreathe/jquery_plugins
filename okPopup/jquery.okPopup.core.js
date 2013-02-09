@@ -10,6 +10,7 @@
 
 (function($) {
 
+  // Convenience function for creating a popup from an existing element
   $.fn.okPopup = function(options) {
     return $.okPopup.create(this,options);
   };
@@ -28,20 +29,21 @@
         parent       : "body",                                      // element or selector of the parent element
         template     : "<div class='ui-popup'></div>",              // Content container
         overlayClass : 'ui-overlay'                                 // The overlay class
-      }, options.ui ? $.okPopup.ui[options.ui](options) : null, options);
+      }, options.ui ? $.okPopup.ui[options.ui].call(self,options) : null, options);
 
       var popup, overlay;
 
+      // Add an overlay if this is a modal popup
       if (options.modal) {
         overlay = $('.'+options.overlayClass);
 
         if ( overlay.length === 0 ) {
           overlay = $("<div id='ui-overlay' class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
         }
-
       }
 
-      popup = $(options.template)
+      // Create a new popup instance
+      popup = $(typeof(options.template) == 'function' ? options.template.call(self) : options.template)
         .appendTo(options.parent)
         .hide()
         .extend({ 
@@ -51,7 +53,7 @@
           options : expandOptions(options)
         });
 
-      // Bind events if given
+      // Bind open event if given
       if (options.openEvent) {
         $(document).on(options.openEvent, self.selector, function(e){
           if ( popup.options.onOpen.call(this,e,popup) !== true ) {
@@ -60,6 +62,7 @@
         });
       }
 
+      // Bind close event if given
       if (options.closeEvent) {
         $(document).on(options.closeEvent, self.selector, function(e){
           if ( popup.options.onClose.call(this,e,popup) !== true ) {
@@ -70,10 +73,12 @@
 
       return popup;
    },
-   // `content` can be a string or function. If a string it will just set the
-   // innerHTML to the value. If given a function, it will be called with the
-   // event and popup. This is primarily used if you call the open function
-   // manually.
+   /*
+    * `content` can be a string or function. If a string it will just set the
+    * innerHTML to the value. If given a function, it will be called with the
+    * event and popup. This is primarily used if you call the open function
+    * manually.
+    */
     open: function(event, content){
       var self  = this, 
           where = $.isArray(this.options.where) ? this.options.where : [this.options.where];
@@ -96,6 +101,7 @@
       }
 
       this.stop(true,true).hide();
+
       return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
     },
     close: function(){

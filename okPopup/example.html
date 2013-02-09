@@ -15,11 +15,18 @@
     <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->  
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="jquery.basicPosition.js"></script>
   <script src="jquery.okPopup.core.js"></script>
   <script src="jquery.okPopup.effects.js"></script>
   <script src="jquery.okPopup.ui.js"></script>
+
+  <!-- Only Used for the Gallery Example -->
+  <script src="../lib/jquery.mousewheel.js"></script>
+  <script src="../lib/jquery.imagesloaded.js"></script>
+  <script src="../okCycle/jquery.okCycle.core.js"></script>
+  <script src="../okCycle/jquery.okCycle.transitions.js"></script>
+  <script src="../okCycle/jquery.okCycle.ui.js"></script>
 </head>
 <body>
 
@@ -161,7 +168,27 @@ $("#example-3").on('click',function(e){
         </script>
           <pre>
             <code>
-$("#example-4").okPopup({ ui: 'imageZoom' });</code>
+$("#example-4").okPopup({ imageZoom: true });</code>
+          </pre>
+        <h3>Gallery</h3>
+        <p>
+          Assumes that the markup will be a list of image links (e.g. ul &lt; li &lt; a)
+        </p>
+        <ul id='example-5'>
+          <li><a href='../shared/images/one.png'><img src='../shared/images/thumbs/one.png' alt='' /></a></li>
+          <li><a href='../shared/images/two.png'><img src='../shared/images/thumbs/two.png' alt='' /></a></li>
+          <li><a href='../shared/images/three.png'><img src='../shared/images/thumbs/three.png' alt='' /></a></li>
+          <li><a href='../shared/images/four.png'><img src='../shared/images/thumbs/four.png' alt='' /></a></li>
+          <li><a href='../shared/images/five.png'><img src='../shared/images/thumbs/five.png' alt='' /></a></li>
+          <li><a href='../shared/images/six.png'><img src='../shared/images/thumbs/six.png' alt='' /></a></li>
+          <li><a href='../shared/images/seven.png'><img src='../shared/images/thumbs/seven.png' alt='' /></a></li>
+        </ul>
+        <script>
+          $("#example-5").okPopup({ ui: 'gallery' });
+        </script>
+          <pre>
+            <code>
+          $("#example-5").okPopup({ ui: 'gallery' });</code>
           </pre>
       </section>
     </article>

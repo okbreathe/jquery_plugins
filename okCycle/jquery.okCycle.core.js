@@ -25,7 +25,7 @@
       ui            : [],                    // Any UI elements that we should build
       duration      : 2000,                  // Time between animations
       speed         : 300,                   // Speed the slides are transitioned between
-      preload       : 1,                     // Number of images to load (Use 0 for all) before the plugin is initialized
+      preload       : 1,                     // Number of images to load (Use 0 for all, false for none) before the plugin is initialized
       loadOnShow    : false,                 // If true, successive images will not be loaded until they become visible
       inGroupsOf    : 1,                     // How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
       autoplay      : false,                 // Whether to start playing immediately. Provide a number (in seconds) to delay the inital start to the slideshow
@@ -129,10 +129,10 @@
 
     return this.each(function(){
       var self   = $(this),
-          imgs   = $('img', self),
+          imgs   = opts.preload === false ? $('') : $('img', self),
           loaded = 0;
 
-      if (opts.preload > 0) {
+      if (opts.preload && opts.preload > 0) {
         if (opts.loadOnShow) {
           self.data(unloaded,[]);
           imgs.slice(opts.preload).each(function(){

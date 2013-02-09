@@ -65,3 +65,13 @@
   top:10px;
   right:10px;
 }
+
+#example-5 {
+  float: left;
+  width: 100%;
+  clear: both;
+}
+
+#example-5 li {
+  float: left;
+}

@@ -115,9 +115,7 @@
   }
 
   function center(self, parent, opts) {
-    var width  = self.width,
-        height = self.height,
-        d      = constrain(self, parent, opts);
+    var d = constrain(self, parent, opts);
 
     return {
       width  : d.width,
@@ -128,26 +126,29 @@
   }
 
   function constrain(self, parent, opts) {
-    var width  = self.width(),
-        height = self.height(),
-        margin = opts.margin || 10,
+    var selfDimensions   = getDimensions(self),
+        parentDimensions = getDimensions(parent),
+        margin           = opts.margin || 10,
+        height           = selfDimensions.height,
+        width            = selfDimensions.width,
         adjusted;
 
     // Don't set the dimensions if we've been told not to
     if (opts.constrain !== false) {
-      if (width > (parent.width() - margin * 2)) {
-        adjusted = parent.width() - margin * 2;
-        height	 = (adjusted / width) * height;
+      if (selfDimensions.width > (parentDimensions.width - margin * 2)) {
+        adjusted = parentDimensions.width - margin * 2;
+        height	 = (adjusted / selfDimensions.width) * selfDimensions.height;
         width	   = adjusted;
       }
-      if (height > (parent.height() - margin * 2)) {
-        adjusted = parent.height() - margin * 2;
-        width	   = (adjusted / height) * width;
+      if (selfDimensions.height > (parentDimensions.height - margin * 2)) {
+        adjusted = parentDimensions.height - margin * 2;
+        width	   = (adjusted / selfDimensions.height) * selfDimensions.width;
         height   = adjusted;
       }
     }
+    console.log(width,height);
 
-    return {height: height, width: width};
+    return { height: height, width: width };
   }
 
   function getPosition(offsetElement,element) {
@@ -159,4 +160,23 @@
     });
   }
 
+  function getDimensions(el) {
+    var tempStyle = el.attr("style"),
+        ret;
+    
+    el.css({
+      position   : "absolute",
+      visibility : "hidden",
+      display    : "block"
+    });
+    
+    ret = {
+      width: el.width(),
+      height: el.height()
+    };
+    
+    el.removeAttr("style").attr("style", tempStyle);
+    
+    return ret;
+  }
 })(jQuery);
