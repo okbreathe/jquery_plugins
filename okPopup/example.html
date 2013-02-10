@@ -12,21 +12,14 @@
   <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
   <link href="okPopup.css" rel="stylesheet" type="text/css" media="screen">
   <!--[if lt IE 9]>
-    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->  
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="../lib/jquery.imagesloaded.js"></script>
   <script src="jquery.basicPosition.js"></script>
   <script src="jquery.okPopup.core.js"></script>
-  <script src="jquery.okPopup.effects.js"></script>
+  <script src="jquery.okPopup.transitions.js"></script>
   <script src="jquery.okPopup.ui.js"></script>
-
-  <!-- Only Used for the Gallery Example -->
-  <script src="../lib/jquery.mousewheel.js"></script>
-  <script src="../lib/jquery.imagesloaded.js"></script>
-  <script src="../okCycle/jquery.okCycle.core.js"></script>
-  <script src="../okCycle/jquery.okCycle.transitions.js"></script>
-  <script src="../okCycle/jquery.okCycle.ui.js"></script>
 </head>
 <body>
 
@@ -38,6 +31,7 @@
     <article id="main" class='container'>
       <section class='twelve'>
         <p class='box'>For all your popup needs</p>
+        <h2>Examples</h2>
         <h3>Tooltips</h3>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
@@ -52,144 +46,252 @@
           <a class='tip' href='#' data-content="Tooltip Three">Hover Me</a>
         </p>
         <script>
-          $(".tip").okPopup({
-            openEvent   : 'mouseenter',
-            closeEvent  : 'mouseleave',
-            openEffect  : 'fadeIn',
-            closeEffect : 'fadeOut' ,
-            where       : {location:'elementTop', offsetTop:-5},
-            onOpen      : function(e,popup){ 
-              popup.html($(e.currentTarget).data('content')); 
-              popup.open(e); 
-            }
-          }).addClass('tooltip');
+        $('a.tip').okPopup({ ui: 'tooltip' });
         </script>
           <pre>
             <code>
-$(".tip").okPopup({
-  openEvent   : 'mouseenter',
-  closeEvent  : 'mouseleave',
-  openEffect  : 'fadeIn',
-  closeEffect : 'fadeOut' ,
-  where       : {location:'elementTop', offsetTop:-5},
-  onOpen      : function(e,popup){ 
-    popup.html($(e.currentTarget).data('content')); 
-    popup.open(e); 
-  }
-});</code>
+$('a.tip').okPopup({ ui: 'tooltip' });</code>
           </pre>
-
+      </section>
+      <section class='twelve'>
         <h3>Modal Windows</h3>
         <p>
-          <a id='example-2' href='#' data-content="I'm a modal window!">Click Me</a>
+          Modals windows are all responsive. They can handle images or embedded iframes
         </p>
-        <script>
-
-          $("#example-2").okPopup({
-            openEvent   : 'click',
-            where       : 'center',
-            openEffect  : 'fadeIn',
-            closeEffect : 'fadeOut',
-            modal       : 'click',
-            parent      : '#ui-overlay',
-            onOpen      : function(e, popup){ 
-              popup.html($(e.currentTarget).data('content')); 
-              popup.open(e); 
-            }
-          }).addClass('modal');
-
-        </script>
-          <pre>
-            <code>
-$("#example-2").okPopup({
-  openEvent   : 'click',
-  where       : 'center',
-  openEffect  : 'fadeIn',
-  closeEffect : 'fadeOut',
-  modal       : 'click',
-  parent      : '#ui-overlay',
-  onOpen      : function(e, popup){ 
-    popup.html($(e.currentTarget).data('content')); 
-    popup.open(e); 
-  }
-});</code>
-          </pre>
-
-        <h3>Notifications</h3>
         <p>
-          <a id='example-3' href='#' data-content="I'm a notification!">Add a regular notification</a>
+          <a class='fade' href='../shared/images/huge.png'>Modal image using the 'zoom' transition</a>
+          <br/>
+          <a class='fade' href='http://player.vimeo.com/video/39792837'>Modal Embedded Video using the 'zoom' transition</a>
+          <br/>
         </p>
+        <pre>
+          <code>
+$(".fade").okPopup({ ui: 'modal' });</code>
+        </pre>
+        <p><a class='dropdown' href='../shared/images/giant.png'>Modal image using the 'dropdown' transition</a></p>
+        <pre>
+          <code>
+$(".dropdown").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
+        </pre>
         <script>
-
-          $("#example-3").on('click',function(e){
-            e.preventDefault();
-            var notification = $.okPopup.create($(this),{ 
-              openEffect  : 'fadeIn',
-              parent      : "#notification-queue" // Set the parent to a specific element
-            })
-            .addClass('notification')
-            .open(e, $(e.currentTarget).data('content')); 
-
-            setTimeout(function() {
-              notification.fadeOut(function(){
-                notification.remove();
-              });
-            }, 3000);
-
-          });
+        $(".fade").okPopup({ ui: 'modal' });
+        $(".dropdown").okPopup({ ui: 'modal', transition: 'dropdown' });
         </script>
-          <pre>
-            <code>
-$("#example-3").on('click',function(e){
-  e.preventDefault();
-  var notification = $.okPopup.create($(this),{ 
-    openEffect : 'fadeIn',
-    parent     : "#notification-queue" // Set the parent to a specific element
-  })
-  .addClass('notification')
-  .open(e, $(e.currentTarget).data('content')); 
-
-  setTimeout(function() {
-    notification.fadeOut(function(){
-      notification.remove();
-    });
-  }, 3000);
-
-});</code>
-          </pre>
-
-        <h3>Image Zoom</h3>
-        <p>
-          <a id='example-4' href='../shared/images/giant.png' ><img src='../shared/images/thumbs/giant.png' alt='' /></a>
-          At the moment, okPopup comes with one prefab component for displaying images.
-        </p>
-        <script>
-          $("#example-4").okPopup({ ui: 'imageZoom' });
-        </script>
-          <pre>
-            <code>
-$("#example-4").okPopup({ imageZoom: true });</code>
-          </pre>
+      </section>
+      <section class='twelve'>
         <h3>Gallery</h3>
         <p>
-          Assumes that the markup will be a list of image links (e.g. ul &lt; li &lt; a)
+          All the items that match the given selector will be treated as part of the same gallery
         </p>
         <ul id='example-5'>
           <li><a href='../shared/images/one.png'><img src='../shared/images/thumbs/one.png' alt='' /></a></li>
           <li><a href='../shared/images/giant.png'><img src='../shared/images/thumbs/giant.png' alt='' /></a></li>
           <li><a href='../shared/images/three.png'><img src='../shared/images/thumbs/three.png' alt='' /></a></li>
-          <li><a href='../shared/images/four.png'><img src='../shared/images/thumbs/four.png' alt='' /></a></li>
           <li><a href='../shared/images/huge.png'><img src='../shared/images/thumbs/huge.png' alt='' /></a></li>
-          <li><a href='../shared/images/six.png'><img src='../shared/images/thumbs/six.png' alt='' /></a></li>
-          <li><a href='../shared/images/seven.png'><img src='../shared/images/thumbs/seven.png' alt='' /></a></li>
+          <li><a href='../shared/images/five.png'><img src='../shared/images/thumbs/five.png' alt='' /></a></li>
         </ul>
         <script>
-          $("#example-5").okPopup({ ui: 'gallery' });
+          var gallery = $("#example-5 a").okPopup({ ui: 'gallery' });
         </script>
           <pre>
             <code>
-          $("#example-5").okPopup({ ui: 'gallery' });</code>
+$("#example-5 a").okPopup({ ui: 'gallery' });</code>
           </pre>
+      </section>
+      <section class='twelve'>
+        <h2>Advanced Usage</h2>
+        <p>okPopup has quite a few options, but unless you want to dig into the internals yourself, you only need to concern yourself with a few of them:</p>
+          <pre>
+            <code>
+$("#example").okPopup({
+  content: "",        // String or Function that returns the content for the popup
+  ui: null,           // String name of a UI function located in jquery.okPopup.ui.js
+  element: null,      // Which element will trigger the popup
+  openWhen: null,     // Takes a string eventMap - see Binding Events
+  closeWhen: null,    // Takes a string eventMap - see Binding Events
+  template: "&lt;div/&gt;", // String or Function that returns a String to use as the popup container
+  parent: 'body',     // Element the popup will be attached to
+  transition: null,   // String name of a transitions located in jquery.okPopup.transitions.js
+  // Provide instructions for the final location of the popup. See 'Positioning Popups'
+  position: {  
+    location: 'center',   // A named location. 
+    relativeTo: 'parent', // Position the popup relative to an element.
+    offset: {left:0,top:0},    // top,left offset applied to final the calculated position
+    margin: null          // Extra margin calculated into the final position
+  },
+  onInit: function(popup,opts){},                        // Called once when creating the popup
+  onOpen: function(popup,ui){ popup.html(ui.content); }, // Called every time the popup is opened
+  onClose: null                                          // Called every time the popup is closed
+});</code>
+          </pre>
+
+        <h3>Life Cycle</h3>
+
+        <p>The basic lifecycle of okPopup is as follows:</p>
+
+        <strong>On Creation</strong>
+        <ol>
+          <li>Initialize the selected UI and selected transition by calling their <code>onInit</code> functions</li>
+          <li>Bind Open/Close Events based on the given eventMaps</li>
+        </ol>
+        <strong>On Open</strong>
+        <ol>
+          <li>Preload Content</li>
+          <li>Retrieve the content by calling the <code>content</code> function (if it's a function) or just use it directly if it is a string</li>
+          <li>Call the UI's <code>onOpen</code></li>
+          <li>Call the transition's <code>onOpen</code> function</li>
+        </ol>
+        <strong>On Close</strong>
+          <ol>
+            <li>Call the transition's <code>onClose</code> function</li>
+          </ol>
+
+        <h3>Event Binding</h3>
+        <p>
+          Event binding is handled by providing a eventMap in a string as the value of openWhen and closeWhen.
+          <br />
+          The format is <code>"event [,selectors]"</code>
+        </p>
+          <pre>
+            <code>
+$(selector).okPopup({
+  openWhen: "click selector3, selector2, selector1",
+  closeWhen: "customEvent"
+});
+</code>
+          </pre>
+        <p>
+          In the above example clicking any elements that are found via
+          selector1,2,3 will trigger the popup to open, and when the
+          customEvent is triggered, the popup will close.
+        </p>
+        <p>
+          In addition to any valid jQuery selector, okPopup provides one special selector "element" which
+          simply binds to the original jQuery object's selector.
+        </p>
+        <pre>
+          <code>
+// Clicking on &lt;a class='foo-selector' &gt;&lt;a&gt; will trigger the popup to open
+$(a.foo-selector).okPopup({
+  openWhen: "click element",
+});
+</code>
+        </pre>
+        <h3>Positioning Popups</h3>
+          <pre>
+            <code>
+  position: {  
+    location: 'center',     // A named location. 
+    relativeTo: 'parent',   // Position the popup relative to an element.
+    offset: {left:0,top:0}, // left/top offset applied to final the calculated position
+    margin: {x: 10, y: 10}  // Extra margin calculated into the final position
+  }</code>
+          </pre>
+        <p>
+          <ul>
+            <li><strong>location</strong> 
+              <p>A named location provided by $.positionAt: elementBottom, elementTop, elementLeft, elementRight, centerParent, centerViewport, fillViewport</p>
+            </li>
+            <li><strong>relativeTo</strong> 
+              <p>
+                Calculate the position of the popup relative to a particular
+                element.  Can either be a selector or 'parent' or 'event' (if
+                event, the popup will be positioned relative to the event's
+                currentTarget property). If omitted, it default's to 'body'.
+              </p> 
+            </li>
+            <li><strong>offset</strong>
+              <p> after the final position is calculated the offset adjusted by adding these values to the calculated top,left properties respectively</p>
+            </li>
+            <li><strong>margin</strong>
+              <p>
+                Setting the margin will adjust the final dimensions of the
+                popup, which can be used to give it some breathing room.
+                Margins can be specified in a number of ways: Integer that will
+                be used for both X,Y margins, Object with X,Y margins or
+                Function that returns either an integer or an object
+              </p>
+            </li>
+          </ul>
+        </p>
+
+        <h3>UI</h3>
+        <p>
+          The UI does most of the work in okPopup. It's purpose is to prepare
+          the popup, by binding events, generating markup and setting
+          dimensions, pretty much everything but showing and hiding the popup.
+        </p>
+
+        <p>
+          When okPopup calls the UI function, it does whatever it needs to do
+          to setup the plugin and then returns an options object which extends
+          the default options. Any options that are passed in on plugin
+          initialization override the options generated by the UI. Then allows
+          you to replace chunks of functionality without having to muck around
+          in the plugin.
+        </p>
+
+        <p>
+          For example, the default transition for the <strong>modal</strong>
+          UI, is the <strong>zoom</strong> transition. To replace it, just 
+          pass in another transition:
+        </p>
+        <pre>
+          <code>
+$("#example").okPopup({ ui: 'modal' });
+
+$("#example").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
+        </pre>
+        <p>There are three methods that UI's generally need to concern themselves with</p>
+        <ul>
+          <li><strong>onInit(popup,options)</strong>
+            <p>Inside this function `this` is set to be the original jQuery object that okPopup was called on. Any UI setup should be performed here.</p>
+          </li>
+          <li><strong>onOpen(popup,uiPromise)</strong>
+            <p>
+              The UI object is an enhanced promise object with the additional properties: event, content and options. 
+              Event is the triggering event, content is the result of calling the <code>content</code> function (or a String if its a string), options are the original plugin options.
+              If the modal is going to be used to show content that needs to be preloaded (images, embeds etc.) you should attach that code to the UI promise's <code>done</code> method.
+            </p>
+            <p>
+              Finally, by default transition's <code>onOpen</code> method will called with the measured dimensions of the popup after the content has been loaded. The transition will
+              use these dimensions to transition the popup to its final position. If you need to set explicit dimensions, you need to use the UI promises' <code>then</code> method,
+              and return the new promise created by the <code>then</code> method.
+            </p>
+        <pre>
+          <code>
+          $("#example").okPopup({
+            // ...Other options
+            onOpen: function(popup,ui){
+              // ...Do stuff
+              return ui.then(function(dimensions){
+                // ...Calculate stuff
+                return updatedDimensions
+              });
+            }
+          });
+          </code>
+        </pre>
+          </li>
+          <li>
+            <strong>onClose(popup,event)</strong>
+            <p>
+              You can do any sort of teardown you need to do here. For example,
+              the modal UI removes the content from the popup in this function
+              (stops videos from playing in the background).
+            </p>
+          </li>
+        </ul>
+
+        <h3>Transitions</h3>
+
+        <p>
+          Like the UI, transitions have an onOpen, onClose and (optionally) and
+          onInit methods.  Transitions are only in charge of showing/hiding the
+          popup, and nothing else. They receive the final dimensions of the
+          popup when the <code>onOpen</code> method is called and should do
+          whatever they need with that information.
+        </p>
       </section>
     </article>
 

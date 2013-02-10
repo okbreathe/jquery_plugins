@@ -199,6 +199,15 @@ pre, code {
   line-height: 1; 
 }
 
+code {
+  background:#1c1c1c; 
+  padding: 5px;
+  color:#d0d0d0; 
+}
+
+pre code {
+  padding:0;
+}
  
 hr { border: none; clear: both; margin: 20px 0 20px 0; height: 2px; }
 

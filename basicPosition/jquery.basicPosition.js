@@ -1,163 +1,218 @@
+/**
+ *
+ * jquery.positionAt.js
+ *
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
+ * Dual licensed under the MIT (MIT-LICENSE.txt)
+ * and GPL (GPL-LICENSE.txt) licenses.
+ * Date: 02/17/13
+ *
+ * @description Assists positioning DOM elements relative to other elements
+ * @author Asher Van Brunt
+ * @mailto asher@okbreathe.com
+ * @version 1.0
+ *
+ * TODO maybe rename to measureing tools or something
+ *
+ */
 (function($){
 
   /**
-   * jQuery.fn.positionAt     
-   * Assists positioning DOM elements relative to other elements
+   * jQuery.positionAt     
+   *
+   * Given an element, and an offsetElement,
+   * return dimensions for adjusting the element's size/position.
+   *
+   * offsetElement - Selector, Event, DOM Element or jQuery object. If given an event the offsetElement will become the event's currentTarget
    * @param element {DOMElement} - An element to position
-   * @param offsetElement {DOMElement|Event} - An element to position from
-   * @param locationOrOptions {String|Object} - A String of a named location, or an options object
-   *
-   * If passing an object, you can specify the offset from the caculated
-   * position by giving offsetLeft and offsetTop
-   *
+   * @param options {String|Object} - A string of a named location, or an options object with the following properties
+   * location - Named location
+   * margin   -  String, Object or Function
    */
-  $.positionAt = function(element, offsetElement, locationOrOptions) {
-    var scrollTop, screenWidth, top, left, offsetTop, offsetLeft, location, options,
-        self   = $(element),
-        params = {};
+  $.positionAt = function(element, options) {
+    var offsetElement, location, css, fn, ret;
 
+    // Standardize our element into a jQuery object
+    if (!(element instanceof jQuery)) element = $(element);
+
+    if (typeof(options) == "string") options = { location : options };
+
+    options = $.extend({
+      location      :  'centerParent',
+      offsetElement :  element.parent()
+    }, options);
+
+    location      = options.location;
+    offsetElement = options.offsetElement;
+
+    // Standardize our offsetElement into a jQuery Object
     if (typeof(offsetElement) == "string") offsetElement = $(offsetElement);
+    if (offsetElement.target) offsetElement = $(offsetElement.currentTarget);
+    if (offsetElement.tagName) offsetElement = $(offsetElement);
 
-    offsetElement = offsetElement instanceof jQuery ? offsetElement[0] : offsetElement;
+    if (!(fn = $.positionAt.locations[location])) throw "No such location '"+location+"'";
 
-    if (typeof(locationOrOptions) == 'string' ) {
-      location = locationOrOptions;
-    } else if ($.isPlainObject(locationOrOptions)) {
-      location = locationOrOptions.location;
-      options  = locationOrOptions;
-    } 
+    ret = fn(element,offsetElement,options);
 
-    options    = options || {};
-    offsetLeft = options.offsetLeft || 0;
-    offsetTop  = options.offsetTop  || 0; 
-
-    if (location) {
-      self.css({ position:'absolute' }); // Needs to be done before we measure
-      params = $.positionAt.locations[location].call(offsetElement, element, options);
-    } else {
-    
-      scrollTop   = $(window).scrollTop(); 
-      screenWidth = $(window).width();
-
-      if (offsetElement.currentTarget) {
-        left = offsetElement.pageX;
-        top  = offsetElement.pageY;
-      } else {
-        offsetElement = $(offsetElement).offset();
-        left = offsetElement.left;
-        top  = offsetElement.top;
-      }
-
-      // Ensure we don't clip the screen
-      
-      if (left + self.outerWidth() + (offsetLeft*2) >= screenWidth){
-        left = screenWidth - self.width() - offsetLeft;
-      }
-
-      if (top + (offsetTop*2) <= scrollTop) {
-        top = scrollTop - (offsetTop*2);
-      }
-
-      params = { top: top, left: left };
-
+    if (options.offset) {
+      ret.top  = ret.top + (options.offset.left || 0);
+      ret.left = ret.left + (options.offset.top  || 0); 
     }
 
-    params.top  = params.top + offsetTop;
-    params.left = params.left + offsetLeft;
-
-    return params;
-
+    return ret;
   };
 
-  $.fn.positionAt = function(offsetElement, locationOrOptions){
-    return this.each(function(){
-      $(this).css($.positionAt(this, offsetElement, locationOrOptions));
+  /*
+   * Measure a element, regardlesss of whether or not it is hidden
+   */
+  $.positionAt.measure = function(element, fn) {
+    var originalStyles = [],
+        hiddenElements = element.parents().andSelf().filter(':hidden'),
+        ret,
+        style;
+    
+    hiddenElements.each( function() {
+      style = $(this).attr('style');
+      style = typeof style == 'undefined'? '': style;
+      originalStyles.push( style );
+      $(this).attr( 'style', style + ' display: block !important; left:-10000; position: absolute;' );
     });
+
+    ret = fn(element);
+
+    hiddenElements.each(function() {
+      $(this).attr('style', originalStyles.shift() );
+    });
+
+    return ret;
   };
 
+
+  /*
+   * Apply the styles to given element from $.positionAt
+   */
+  $.fn.positionAt = function(options){
+    return this.css($.positionAt(this,options));
+  };
 
   /*
    * Named locations for use with jQuery.positionAt
    */
   $.positionAt.locations = {
-    elementBottom: function(element,opts) {
-      var pos = getPosition(this,element);
+    elementBottom: function(element,offsetElement,options) {
+      var pos = getOffsetDimensions(element, offsetElement,options);
       return {top: pos.top + pos.height, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
     },
-    elementTop: function(element,opts) {
-      var pos = getPosition(this,element);
+    elementTop: function(element,offsetElement,options) {
+      var pos = getOffsetDimensions(element, offsetElement,options);
       return {top: pos.top - pos.elementHeight, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
     },
-    elementLeft: function(element,opts) {
-      var pos = getPosition(this,element);
+    elementLeft: function(element,offsetElement,options) {
+      var pos = getOffsetDimensions(element, offsetElement,options);
       return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left - pos.elementWidth};
     },
-    elementRight: function(element,opts) {
-      var pos = getPosition(this,element);
+    elementRight: function(element,offsetElement,options) {
+      var pos = getOffsetDimensions(element, offsetElement,options);
       return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left + pos.width};
     },
-    center: function(element,opts){
-      return centerParent.call(this,element,opts);
+    centerParent: function(element,offsetElement,options){
+      return center($(element), $(offsetElement), options);
     },
-    // Alias of position 'center'
-    centerParent: function(element,opts){
-      $.positionAt.locations.center.call(this,element,opts);
+    centerViewport: function(element,offsetElement,options){
+      return center($(element), $(window), options);
     },
-    centerViewport: function(element,opts){
-      return centerViewport.call(this,element,opts);
+    fillViewport: function(element,offsetElement) {
+      var bh     = $(window).height(),
+          bw     = $(window).width(),
+          ratio  = element.width() / element.height(),
+          h      = bh,
+          w      = bw;
+
+      // Scale it proportionally
+      if ((bw / bh) < ratio)  {
+		    w = bh * ratio;
+      } else {
+		    h = bw / ratio;
+      }
+
+      return {
+        width  : w, 
+        height : h,
+        left   : (bw - w) / 2,
+        top    : (bh - h) / 2
+      };
     }
   };
 
-  function centerViewport(element,opts){
-    return center($(element), $(window), opts);
-  }
-
-  function centerParent(element, opts) {
-    return center($(element), $(this), opts);
-  }
-
-  function center(self, parent, opts) {
-    var width  = self.width,
-        height = self.height,
-        d      = constrain(self, parent, opts);
+  /*
+   * Center an element relative to an offsetElement,
+   * generally its parent or body
+   */
+  function center(element, offsetElement,options) {
+    var dimensions = constrain(element, offsetElement, options),
+        isFixed    = element.css('position') == 'fixed';
 
     return {
-      width  : d.width,
-      height : d.height,
-      top    : Math.max(0, ((parent.height() - d.height) / 2) + (opts.useScrollTop === false ? 0 : parent.scrollTop())),
-      left   : Math.max(0, ((parent.width() - d.width) / 2) + (opts.useScrollLeft === false ? 0 : parent.scrollLeft()))
+      width  : dimensions.width,
+      height : dimensions.height,
+      top    : Math.max(0, ((offsetElement.height() - dimensions.height) / 2) + (isFixed ? 0 : offsetElement.scrollTop())),
+      left   : Math.max(0, ((offsetElement.width() - dimensions.width) / 2) + (isFixed ? 0 : offsetElement.scrollLeft()))
     };
   }
 
-  function constrain(self, parent, opts) {
-    var width  = self.width(),
-        height = self.height(),
-        margin = opts.margin || 10,
+  /*
+   * Margins can be specified in a number of ways
+   * Integer that will be used for both X,Y margins
+   * Object with X,Y margins
+   * Function that returns either an integer or an object
+   */
+  function getMargin(element,offsetElement,options) {
+    if (typeof(options.margin) == 'function') {
+      return options.margin(element,offsetElement,options);
+    } else if (typeof(options.margin) == "number") {
+      return {x: options.margin, y: options.margin};
+    } else if ($.isPlainObject(options.margin)) {
+      return options; 
+    }
+    return {x: 0, y: 0};
+  }
+
+  /*
+   * Apply margins and ensure the element stays within the parent and 
+   * is scaled proportionally
+   */
+  function constrain(element, offsetElement, options) {
+    // TODO setting the width/height in the options object is kind of a hack
+    var width  = options.width || element.width(),
+        height = options.height || element.height(),
+        margin = getMargin(element,offsetElement,options),
         adjusted;
 
     // Don't set the dimensions if we've been told not to
-    if (opts.constrain !== false) {
-      if (width > (parent.width() - margin * 2)) {
-        adjusted = parent.width() - margin * 2;
+    if (options.constrain !== false) {
+      if (width > (offsetElement.width() - margin.x * 2)) {
+        adjusted = offsetElement.width() - margin.x * 2;
         height	 = (adjusted / width) * height;
         width	   = adjusted;
       }
-      if (height > (parent.height() - margin * 2)) {
-        adjusted = parent.height() - margin * 2;
+      if (height > (offsetElement.height() - margin.y * 2)) {
+        adjusted = offsetElement.height() - margin.y * 2;
         width	   = (adjusted / height) * width;
         height   = adjusted;
       }
     }
 
-    return {height: height, width: width};
+    return { height: height, width: width };
   }
 
-  function getPosition(offsetElement,element) {
-    return $.extend({}, $(offsetElement).offset(), {
-      width         : offsetElement.offsetWidth,
-      height        : offsetElement.offsetHeight,
-      elementWidth  : element.offsetWidth,
-      elementHeight : element.offsetHeight
+  function getOffsetDimensions(element,offsetElement,options) {
+    return  $.positionAt.measure(element,function(){
+      return $.extend({}, $(offsetElement).offset(), {
+        width         : options.width  || offsetElement[0].offsetWidth,
+        height        : options.height || offsetElement[0].offsetHeight,
+        elementWidth  : element[0].offsetWidth,
+        elementHeight : element[0].offsetHeight
+      });
     });
   }
 

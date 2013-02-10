@@ -4,132 +4,163 @@
  * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/09/13 
+ * Date: 02/17/13
  *
  * @description For popups, modal windows, tooltips etc.
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0
+ * @version 2.0 BETA
  *
+ * TODO
+ * - The core of basic position should simply work with numbers
+ * - basicPosition should measure stuff?
  */
 
 (function($) {
 
-  // Convenience function for creating a popup from an existing element
-  $.fn.okPopup = function(options) {
-    return $.okPopup.create(this,options);
+  $.fn.okPopup = function(opts){
+    $.okPopup.create(this,opts);
   };
 
   $.okPopup = {
-    create: function(self,options){
-      options = $.extend({
-        openEvent    : null,                                        // Which event triggers the popup to show
-        closeEvent   : null,                                        // Which event triggers the popup to be hidden
-        openEffect   : 'show',                                      // If your effect takes options, pass an array here
-        closeEffect  : 'hide',                                      // If your effect takes options, pass an array here
-        onOpen       : function(event,popup){ popup.open(event); }, // Called when open event is triggered.
-        onClose      : function(event,popup){ popup.close(); },     // Called when close event is triggered.
-        modal        : false,                                       // Whether we should create a modal overlay, if you pass a string of an event,
-                                                                    // it will be closed when the event is triggered on the overlay.
-        parent       : "body",                                      // DOM Element, jQuery Object or selector of the parent element
-        template     : "<div class='ui-popup'></div>",              // Content container. Can be string or a function that returns a string, DOM element of jQuery object
-        overlayClass : 'ui-overlay'                                 // The overlay class
-      }, options.ui ? $.okPopup.ui[options.ui].call(self,options) : null, options);
+    create: function(element,opts){
+      opts = $.extend({
+        content    : "",   // Content of the popup - Can be a string or a function that returns a string, DOM element or jQuery object
+        ui         : null, // String name of a UI function located in jquery.okPopup.ui.js
+        openWhen   : null, // Takes a string in the format "event [,selector]". The given event will bound to the selector (if present) and when triggered, will cause the popup to open. See `bindEvents`
+        closeWhen  : null, // Takes a string in the format "event [,selector]". The given event will bound to the selector (if present) and when triggered, will cause the popup to close. See `bindEvents`
+        template   : "<div/>",  // Popup template. Can be string or a function that returns a string, DOM element or jQuery object
+        parent     : 'body', // Where the popup will be attached to
+        transition : null, // The string name of one of the transitions available in jquery.okPopup.transitions.js
+        position: {  // The final location of the popup
+          location   : 'center', // Any named location found in $.positionAt: elementBottom, elementTop, elementLeft, elementRight, centerParent, centerViewport, fillViewport
+          relativeTo : 'parent', // Can be 'element','event','parent' or regular jQuery selector. see `setOffsetElement`
+          offset     : null, // X,Y offset from the calculated position
+          margin     : {top:0,left:0} // Extra margin outside of the element that will be taken into consideration when using the 'centerViewport' location
+        },
+        onInit  : function(popup,opts){}, // Called once when creating the popup
+        onOpen  : function(popup,ui){ popup.html(ui.content); }, // Called every time the popup is opened
+        onClose : null // Called every time the popup is closed
+      }, opts.ui ? $.okPopup.ui[opts.ui].call(element,opts) : null, opts);
 
-      var popup, overlay;
+      var popup      = typeof(opts.template) == 'function' ? opts.template() : opts.template, 
+          transition = $.okPopup.transitions[opts.transition];
 
-      // Add an overlay if this is a modal popup
-      if (options.modal) {
-        overlay = $('.'+options.overlayClass);
-
-        if ( overlay.length === 0 ) {
-          overlay = $("<div id='ui-overlay' class='"+options.overlayClass+"' ></div>").appendTo("body").hide();
-        }
-      }
+      if (!transition) throw("No such transition '"+opts.transition+"'"); // Fail early since we don't know what to do
 
       // Create a new popup instance
-      popup = $(typeof(options.template) == 'function' ? options.template.call(self) : options.template)
-        .appendTo(options.parent)
-        .hide()
-        .extend({ 
-          open    : function(event,content){ return $.okPopup.open.call(this, event, content); }, 
-          close   : function(){ return $.okPopup.close.call(this); } ,
-          overlay : overlay,
-          options : expandOptions(options)
-        });
+      popup = (popup instanceof jQuery ? popup : $(popup))
+        .appendTo(opts.parent)
+        .addClass('ui-popup')
+        .hide();
 
-      // Bind open event if given
-      if (options.openEvent) {
-        $(document).on(options.openEvent, self.selector, function(e){
-          if ( popup.options.onOpen.call(this,e,popup) !== true ) {
-            e.preventDefault();
-          }
-        });
-      }
+      // Initialize UI
+      opts.onInit.call(element,popup,opts);
 
-      // Bind close event if given
-      if (options.closeEvent) {
-        $(document).on(options.closeEvent, self.selector, function(e){
-          if ( popup.options.onClose.call(this,e,popup) !== true ) {
-            e.preventDefault();
-          }
-        });
-      }
+      // Initialize transition
+      if (transition.onInit) transition.onInit.call(element,popup,opts);
+
+      // Bind Events
+      bindEvents(popup,element,opts.openWhen,this.open,opts);
+      bindEvents(popup,element,opts.closeWhen,this.close,opts);
 
       return popup;
    },
-   /*
-    * `content` can be a string or function. If a string it will just set the
-    * innerHTML to the value. If given a function, it will be called with the
-    * event and popup. This is primarily used if you call the open function
-    * manually.
-    */
-    open: function(event, content){
-      var self  = this, 
-          where = $.isArray(this.options.where) ? this.options.where : [this.options.where];
+   // Transitins are responsible for showing/hiding the popup
+   // UI is responsible for adding additional components and binding events
+   open: function(popup,event,opts){
+     var content  = typeof(opts.content) == 'function' ? opts.content(event, popup) : opts.content,
+         deferred = $.Deferred(),
+         resolve  = function(){ 
+           popup.removeClass('loading');
+           deferred.resolve($.positionAt(popup, setOffsetElement(popup,event,opts.position))); 
+         },
+         promise  = deferred.promise(),
+         preload,
+         ui;
 
-      where.unshift(this.options.modal ? $(this.options.parent) : event.currentTarget);
+     event.preventDefault();
 
-      if (this.overlay) {
-        this.overlay.show();
-        if (typeof(this.options.modal) == "string") {
-          this.overlay.one(this.options.modal,function(e){
-            self.options.onClose(e,self);
-          });
-        }
-      }
+     // Ensure we're working with a jquery object
+     if (!(content instanceof jQuery)) content = $("<div />").html(content);
 
-      if (typeof(content) == 'string') {
-        this.html(content);
-      } else if (typeof(content) == 'function') {
-        content(event, self);
-      }
+     popup.addClass('loading');
 
-      this.stop(true,true).hide();
+     // Images or Embedded Content will be preloaded. To perform work after it has been
+     if ((preload = content.find('img').andSelf().filter('img')).length > 0 && $.fn.imagesLoaded ) {
+       preload.imagesLoaded(resolve);
+     } else if ((preload = content.find('iframe object embed').andSelf().filter('iframe object embed')).length)  {
+       preload.one('load', resolve).each(function() { 
+         if(this.complete) $(this).trigger('load'); 
+       });
+     } else {
+       resolve();
+     }
 
-      return this[this.options.openEffect].apply(this, this.options.openEffectOptions).positionAt.apply(this, where);
-    },
-    close: function(){
-      var toHide = this;
+     ui = { event: event, content: content, options: opts };
+     
+     // Set content and do any UI setup
+     promise = opts.onOpen(popup,$.extend(ui,promise));
 
-      if (this.overlay) {
-        toHide = toHide.add(this.overlay);
-      }
+     if (!(promise && promise.done)) promise = deferred.promise();
 
-      toHide[this.options.closeEffect].apply(toHide, this.options.closeEffectOptions);
-    }
+     // Pass the promise object to the transition
+     $.okPopup.transitions[opts.transition].onOpen(popup,$.extend(ui,promise));
+   },
+   close: function(popup,event,opts){
+     if (opts.onClose) opts.onClose(popup,event);
+     $.okPopup.transitions[opts.transition].onClose(popup, event);
+   }
   };
 
-  // Standardize effect options into an array
-  function expandOptions(options) {
-    function expand(op,effect) {
-      effect = $.isArray(effect) ? effect : [effect];
-      options[op+'Effect'] = effect.shift();
-      options[op+'EffectOptions'] = effect;
+  /**
+   *
+   * EventMaps are in the format:
+   * event [one or more commas seperated selectors]
+   *   A special selector "element" is available which will target the element object passed into
+   *   the create method (done automatically when using the $.fn.okPopup form)
+   * event
+   */
+  function bindEvents(popup, element, eventMap, handler, opts) {
+    if (!eventMap) return;
+
+    eventMap = typeof(eventMap) == 'string' ? [eventMap] : eventMap;
+
+    $.each(eventMap,function(idx,str){
+      var chunks   = str.split(" "),
+          event    = chunks.shift(),
+          selector = $.trim(chunks.join(" "));
+
+      // Anywhere the special selector 'element' has been used, replace it with elements selector
+      if (element) selector = selector.replace(/(^|\s)element(\s|$)/g, function($0,$1,$2){ return $1 + element.selector + $2; });
+
+      // Bind events
+      $("body").on(event, $.trim(selector) === "" ? null : selector, function(e){ 
+        e.preventDefault(); 
+        handler(popup,e,opts); 
+      });
+    });
+  }
+
+  /**
+   * Given what the position object sets the relativeTo property to,
+   * we'll derive the offsetElement programmatically.
+   * If not one of the provided special selectors, it will default
+   * to 'body' unless a selector string is provided
+   */
+  function setOffsetElement(popup, event, opts) {
+    switch ( opts.relativeTo ) {
+      case 'parent':
+        opts.offsetElement = popup.parent();
+        break;
+      case 'event':
+        opts.offsetElement = event;
+        break;
+      default:
+        if (opts.relativeTo) opts.offsetElement = opts.relativeTo;
+        break;
     }
-    expand('open',options.openEffect);
-    expand('close',options.closeEffect);
-    return options;
+    return opts;
   }
 
 })(jQuery);

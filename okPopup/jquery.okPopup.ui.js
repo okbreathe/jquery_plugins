@@ -4,12 +4,12 @@
  * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/09/13
+ * Date: 02/17/13
  *
  * @description For popups, modal windows, tooltips etc.
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0
+ * @version 2.0 BETA
  *
  */
 
@@ -21,194 +21,187 @@
    * Each UI feature receives the user specified options as an argument
    */
   $.okPopup.ui = {
-
-    /**
-     * imageZoom
-     *
-     * Provides a zooming effect for images.
-     * Assumes the following markup:
-     *
-     *     <a href='/path/to/full'><img src='/path/to/thumb'/></a>
-     *
-     */
-    imageZoom: function(opts){
-
-      var target, 
-          thumb, 
-          loading;
-
-      opts = $.extend({
-        parent          : '#ui-overlay', // make the parent the overlay so clicking the element will also trigger a close
-        durationIn      : 300,
-        durationOut     : 200,
-        easingIn        : 'swing',
-        easingOut       : 'swing',
-        loadingTemplate : "<div class='ui-loading'></div>" // This should be styled via CSS
-      }, opts );
-
-      function animate(e, popup) {
-        var initialCSS, finalCSS;
-
-        popup.html("<img src='"+ target.attr('href')+"' alt=''/>");
-
-        thumb = target.children();
-
-        if (loading.is(":visible")) {
-          loading.fadeOut('fast',function(){
-            loading.remove();
-          });
-        }
-
-        popup.overlay.show(); // overlay needs to be visible before we take measurements
-
-        finalCSS = $.positionAt(popup, popup.overlay, 'center');
-
-        popup.open(e).css($.extend({ position: 'absolute' }, dimensions(thumb))).find('img').css({ width: '100%' }); // Set the initial position
-        popup.animate(finalCSS, opts.durationIn, opts.easingIn); // Animate to the final position
-      }
-
-      function preload(e,popup) {
-        e.preventDefault();
-
-        // Perform default behavior if modifier key is held down
-        if ( e.shiftKey || e.ctrlKey || e.metaKey || e.altKey ) return true;
-
-        target = $(e.currentTarget).imagesLoaded(function(){
-          loading.fadeOut('fast', function(){ loading.remove(); });
-          animate(e, popup); // Animate now that the image is loaded 
-        });
-
-        loading = $(opts.loadingTemplate).appendTo("body").positionAt(popup.overlay, 'center').fadeIn();
-      }
-
-      function close(e, popup) {
-        return popup.animate($.extend({ opacity:'hide' }, dimensions(thumb)), opts.durationOut, opts.easingOut, function(){
-          $(this).css({width:'',height:''}).hide();
-          popup.close();
-        });
-      }
-
-      function dimensions(thumb){
-        return { 
-          height : thumb.height(),
-          width  : thumb.width(),
-          top    : thumb.offset().top - $(window).scrollTop(),
-          left   : thumb.offset().left - $(window).scrollLeft()
-        };
-      }
-
+    tooltip: function(opts){
       return {
-        parent    : opts.parent,
-        openEvent : 'click',
-        modal     : 'click',
-        onOpen    : preload,
-        onClose   : close
+        onInit      : function(popup,opts){ popup.css({position:'absolute'}).addClass('tooltip'); },
+        openWhen    : 'mouseenter element',
+        closeWhen   : 'mouseleave element',
+        transition  : 'togglePuff',
+        position    : { 
+          location: 'elementTop', 
+          offsetTop: -5,
+          relativeTo: 'event'
+        },
+        content     : function(e,popup){ 
+          return $(e.currentTarget).data('content'); 
+        }
       };
     },
-    /**
-     * gallery
-     *
-     * Create a responsive modal gallery from a series of images.
-     *
-     * Dependencies - okCycle.core
-     *                okCycle.ui
-     *                okCycle.transition
-     */
-    gallery: function(opts){
-      opts = $.extend({
-        resize   : true,
-        animate  : true,
-        duration : 3000,
-        cycleOptions : ['caption','navigation'],
-        // Generate the intial markup
-        // TODO This should be agnostic to the content, and just use the href
-        // How would this account for embeds or simply content/text
-        slideshow: function(){
-          var html = "";
-          this.children().each(function(){
-            var self = $(this),
-                src  = self.find('a').attr('href');
-            html += "<li><img src='"+src+"' alt='' /></li>";
-          });
-          return html;
+    modal: function(opts) {
+      if (!opts.fitlers) opts.filters = {};
+
+      opts.filters = $.extend({
+        // If a filter matches an href then the content function will be called with `this` as the element and the href
+        // This will be used to generate the modal's content
+        video: {
+          matcher: /(vimeo|youtube)/,
+          content: function(href){
+            var width  = this.data('width') || 900,
+                height = this.data('height') || 504;
+            return '<iframe src="'+href+'?autoplay=1" width="'+width+'" height="'+height+'" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+          }
+        },
+        image: {
+          matcher: /.*\.(jpe?g|gif|png)$/,
+          content: function(href){
+            var width  = this.data('width') || '',
+                height = this.data('height') || '';
+            return "<img src='"+ href +"' width='"+width+"' height='"+height+"' alt='' />";
+          }
         }
-      }, opts );
+      }, opts.fitlers);
 
-      var slideshow, self = this;
+      function onInit(popup, opts){
+        popup.css({position: 'fixed'}).addClass('responsive modal');
 
-      function open(e,popup) {
-        var clicked = $(e.target).closest("li"),
-            index   = clicked.parent().children().index(clicked);
+        // Add an overlay if this is a modal popup. Will only ever be added once
+        // and reused for all modal popups
+        var overlay = $('#ui-overlay');
 
-        slideshow.moveTo(index);
+        if ( overlay.length === 0 ) {
+          overlay = $("<div id='ui-overlay' />").appendTo("body").hide();
+        }
 
-        popup
-          .open(e)
-          .css({ position:'fixed' })
-          .find(".close").one('click', function(e){ close(e,popup); });
+        overlay.click(function(event){
+          $.okPopup.close(popup,event,opts);
+        });
+
+        popup.overlay = overlay;
+
+        if (!$.okPopup.resizeEventBound) {
+          $(window).resize(function(){ 
+            $(".ui-popup.responsive:visible").each(function(e){
+              var popup = $(this);
+              popup.positionAt(popup.data('dimensions'));
+            });
+          });
+          $.okPopup.resizeEventBound = true;
+        }
       }
 
-      function close(e, popup) {
-        e.preventDefault();
-        return popup.add(popup.overlay).fadeOut(function(){
-          popup.close(e);
+      function onOpen(popup,ui) {
+        var content = ui.content,
+            existing;
+
+        popup.overlay.show();
+
+        if ((existing = popup.find('.ui-content')).length) existing.remove();
+
+        popup.append(content.addClass('ui-content').hide()).stop(true,true);
+
+        ui.done(function(){
+          var dimensions;
+
+          $.positionAt.measure(content,function(){
+            // For embedded videos we need to grab the explicit width/height
+            dimensions = { 
+              width  : content.attr('width')  || content.width(), 
+              height : content.attr('height') || content.height() 
+            };
+            // Store the original dimensions for scaling on resize
+            popup.data('dimensions', $.extend(dimensions, ui.options.position));
+          });
+
+          // Depending on whether the content is a image, and its aspect ratio, we'll scale differently
+          if (content.is("img")) {
+            content.css(dimensions.width <= dimensions.height ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' }); // Scale differently in portrait vs landscape
+          } else {
+            content.attr({ width: '100%', height: '100%' });
+          }
+        });
+
+        return ui.then(function(){
+          return $.positionAt(popup, popup.data('dimensions'));
         });
       }
 
-      function resize(popup, slide){
-        var clone = slide.children().clone().appendTo("body").css({ position:'absolute',left:'-9999em', width: 'auto',height: 'auto' }),
-            css   = $.positionAt(clone, 'body',{ location: 'centerViewport', constrain: true, useScrollTop: false });
+      function onClose(popup, event) {
+        popup.find('.ui-content').remove();
+        popup.overlay.fadeOut();
+      }
 
-        clone.remove();
+      function setContent(event,popup)  {
+        var content = '',
+            item    = $(event.currentTarget);
 
-        slide
-          .find("img")
-          .css(css.width >= css.height ? { height: '100%', width: 'auto' } : {height: '100%', width: 'auto'}); // Scale differently in portrait vs landscape
+        $.each(opts.filters,function(k,v){
+          if(v.matcher.test(item.attr('href'))) {
+            content = v.content.call(item,item.attr('href'));
+            return false;
+          }
+        });
 
-        popup
-          .animate({ width: css.width, height: css.height, top: css.top, left: css.left }, 500, opts.easing)
-          .find("ul.ui-slides")
-            .animate({width: css.width, height: css.height});
+        return $(content);
       }
 
       return {
-        parent      : "body",
-        openEvent   : 'click',
-        openEffect  : 'fadeIn',
-        closeEffect : 'fadeOut' ,
-        modal       : 'click',
-        where       : { location:'centerViewport', constrain: true, useScrollTop: false },
-        onOpen      : open,
-        onClose     : close,
-        template    : function(){
-          var t = $("<div class='ui-popup slideshow-container'><a class='close' href='#'>Close</a><ul class='ui-slides'>"+opts.slideshow.call(self)+"</ul></div>");
-          
-          // TODO We need to preload whatever image was clicked on, so this can't go here
-          t.find("li:first img").imagesLoaded(function(){
-
-            // popup needs to be visible before we take measurements
-            t.css({position:'absolute', left: '-9999em'}).show();
-
-            $("ul", t).okCycle({
-              effect     : 'fade',
-              duration   : opts.duration,
-              preload    : false, // we're already preloading
-              ui         : opts.cycleOptions,
-              beforeMove : function(transition) {
-                resize(t, transition.to);
-              },
-              afterSetup : function(){
-                // TODO REMOVE, FOR DEBUGGING
-                window.slideshow = slideshow = this;
-              }
-            });
-
-            t.hide().find("li").css({height: '100%'});
-          });
-
-          return t;
+        openWhen   : 'click element',
+        closeWhen  : 'click .ui-modal .ui-close',
+        content    : setContent,
+        onInit     : onInit,
+        onOpen     : onOpen,
+        onClose    : onClose,
+        template   : "<div class='ui-modal'><header><a href='#' class='ui-close'>Close</a></header></div>",
+        transition : 'grow',
+        position   : { 
+          location : 'centerViewport', 
+          constrain: true, 
+          margin   : 20
         }
       };
+    },
+
+    /**
+     * Enhances the modal UI with gallery capabilities
+     */
+    gallery: function(opts) {
+      var modalInit,
+          currentItem,
+          galleryItems = this;
+
+      opts = $.okPopup.ui.modal(opts);
+
+      modalInit = opts.onInit;
+
+      function moveTo(e, popup, backwards) {
+        if (e) e.preventDefault();
+
+        var idx = galleryItems.index(currentItem);
+
+        backwards ? idx-- : idx++;
+
+        // TODO this is a hack
+        e.currentTarget = currentItem = galleryItems.eq(idx < 0 ? galleryItems.length -1 : idx >= galleryItems.length ? 0 : idx);
+
+        $.okPopup.open(popup,e,opts);
+      }
+
+      return $.extend(opts,{
+        onInit: function(popup,opts) {
+          var next  = function(e){ moveTo(e,popup); },
+              prev  = function(e){ moveTo(e,popup,true); };
+
+          modalInit(popup,opts);
+
+          $("<nav><a class='ui-prev prev' href='#'>Previous</a><a class='ui-next next' href='#'>Next</a></nav>").appendTo(popup);
+          
+          $(".ui-prev", popup).click(prev);
+
+          $(".ui-next", popup).click(next);
+
+          popup.extend({ nextItem: next, prevItem: prev });
+        }
+      });
     }
   };
 
