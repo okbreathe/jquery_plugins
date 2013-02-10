@@ -6,7 +6,12 @@
  * and GPL (GPL-LICENSE.txt) licenses.
  * Date: 04/05/12
  *
- */
+ * @description For popups, modal windows, tooltips etc.
+ * @author Asher Van Brunt
+ * @mailto asher@okbreathe.com
+ * @version 1.0
+ *
+*/
 
 (function($) {
   $.fn.extend({

@@ -1,15 +1,15 @@
 /**
  * jquery.okCycle.effects.js
  *
- * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/15/12
+ * Date: 02/09/13 
  *
  * @description Provides transitions for okCycle
  * @author Asher Van Brunt
  * @mail asher@okbreathe.com
- * @version 0.20
+ * @version 1.2
  *
  */
 
@@ -25,7 +25,7 @@
    * `move` is called when transitioning between slides with an transition object. A transition object has everything a 
    * growing boy needs to transition between slides:
    *
-   * @param {Object} transition
+   * @param {DeferredObject} transition
    *
    * transition.from {jQuery}       slide we're moving _from_
    * transition.fromIndex {Integer} index of the slide we're moving _from_
@@ -34,38 +34,41 @@
    * transition.forward {Boolean}   whether we are moving forward or backwards
    * transition.easing {String}     Easing used for the transition
    * transition.speed {Numeric}     Transition speed
-   * transition.after {Function}    Callback function performed after moving the slides
+   * transition.resolve {Function}  Resolve this transition
    *
-   * Note that you MUST call `transition.after();` at the end of your animation in order for autoplay to work
+   * The transition object is an enhanced Deferred Object with the additional above properties/methods.
+   *
+   * You MUST resolve the transition by calling `transition.resolve()` at the end of your animation in order for autoplay to work
    *
    * A transition should do two things:
    *   * Move the slide (duh)
-   *   * Give the active slide a class of 'active'. This is useful for the UI as we often can't depend on
-   *     getting slides in the order that they were originally added in.
+   *   * Give the active slide an active class of (I've chosen to use 'active',
+   *     but this is entirely up to your implementation, okCycle doesn't
+   *     internally use this). This is useful for the UI as we often can't depend
+   *     on getting slides in the order that they were originally added in.
    */
 
   $.extend($.okCycle, {
+    // Bog-Standard Fade Transition
     fade: {
       init: function(opts){
-        this
-          .css({ position:'relative', overflow: 'hidden', width: this.children().width(), height: this.children().height() })
-          .children()
-            .css({position:"absolute",top:0,left:0}).eq(this.data('activeSlide')).css({zIndex:3});
+        this.children().css({position:"absolute",top:0,left:0}).eq(this.data('activeSlide')).css({zIndex:3});
+        this.css({ position:'relative', overflow: 'hidden', width: this.children(':first').width(), height: this.children(':first').height() });
       },
       move: function(transition){
         transition.from.css({zIndex : 2}).removeClass('active');    
         transition.to.addClass('active').css({opacity : 0, zIndex : 3}).animate({ opacity : 1}, transition.speed, transition.easing, function(){
           transition.from.css({zIndex:1}); 
-          transition.after();
+          transition.resolve();
         });
       }
     },
     // Slide one slide on top of the other
     slide: {
       init: function(opts){
+        this.children().css({ position:"absolute", top:0, left:0 }).eq(this.data('activeSlide')).css({zIndex:3});
         this.wrap("<div class='okCycle-container' />")
           .parent().css({ position:'relative', overflow: 'hidden', width: this.children().width(), height: this.children().height() });
-        this.children().css({ position:"absolute", top:0, left:0 }).eq(this.data('activeSlide')).css({zIndex:3});
       },
       move: function(transition){
         transition.from.css({zIndex : 2}).removeClass('active');
@@ -74,7 +77,7 @@
           .css({left: transition.forward ? this.width() : -this.width(), zIndex : 3})
           .animate({left : 0}, transition.speed, transition.easing, function(){
             transition.from.css({zIndex:1}); 
-            transition.after();
+            transition.resolve();
           });
       }
     },
@@ -104,10 +107,43 @@
         this.children().removeClass('active').eq(diff).addClass('active');
 
         if (transition.forward) {
-          self.animate({ left: pos }, function(){ self.append(child).css({left:0}); transition.after(); });
+          self.animate({ left: pos }, function(){ self.append(child).css({left:0}); transition.resolve(); });
         } else {
-          self.prepend(child).css({ left: pos }).animate({left: "0px"}, transition.after );
+          self.prepend(child).css({ left: pos }).animate({left: "0px"}, transition.resolve );
         }
+      }
+    },
+    // Same effect as scroll, but can be used in full-screen slideshows and responsive layouts
+    flexScroll: {
+      init: function(opts){
+        this.wrap("<div class='okCycle-container' />")
+          .css({position:'relative','width':'200%',left:0})
+          .parent()
+            .css({position:'relative',width: '100%', 'minHeight': '100%', overflow: 'hidden'});
+
+        this.children()
+          .css({ position: 'relative', 'float': 'left', width: '50%', height: 'auto' }).slice(2).hide();
+      },
+      move: function(transition) {
+        var container = this;
+
+        container.children().removeClass('active').not(transition.from,transition.to).hide();
+
+        // If we're going backwards we need to set the initial offset
+        if (!transition.forward ) container.css({left: "-100%"});
+
+        // Show the section we're about to transition to
+        transition.to.addClass('active').show();
+
+        container.animate({
+          left: transition.forward ? '-100%' : '0%' }, 
+          transition.speed, 
+          transition.easing, 
+          function(){ 
+            container.css({left: 0}); 
+            transition.from.hide(); 
+            transition.resolve();
+          });
       }
     }
   });

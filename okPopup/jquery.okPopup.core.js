@@ -1,10 +1,15 @@
 /**
  * jquery.okPopup.js
  *
- * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 04/05/12
+ * Date: 02/09/13 
+ *
+ * @description For popups, modal windows, tooltips etc.
+ * @author Asher Van Brunt
+ * @mailto asher@okbreathe.com
+ * @version 1.0
  *
  */
 
@@ -26,8 +31,8 @@
         onClose      : function(event,popup){ popup.close(); },     // Called when close event is triggered.
         modal        : false,                                       // Whether we should create a modal overlay, if you pass a string of an event,
                                                                     // it will be closed when the event is triggered on the overlay.
-        parent       : "body",                                      // element or selector of the parent element
-        template     : "<div class='ui-popup'></div>",              // Content container
+        parent       : "body",                                      // DOM Element, jQuery Object or selector of the parent element
+        template     : "<div class='ui-popup'></div>",              // Content container. Can be string or a function that returns a string, DOM element of jQuery object
         overlayClass : 'ui-overlay'                                 // The overlay class
       }, options.ui ? $.okPopup.ui[options.ui].call(self,options) : null, options);
 

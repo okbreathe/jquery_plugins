@@ -16,6 +16,8 @@
         self   = $(element),
         params = {};
 
+    if (typeof(offsetElement) == "string") offsetElement = $(offsetElement);
+
     offsetElement = offsetElement instanceof jQuery ? offsetElement[0] : offsetElement;
 
     if (typeof(locationOrOptions) == 'string' ) {
@@ -97,9 +99,9 @@
     center: function(element,opts){
       return centerParent.call(this,element,opts);
     },
-    // Same as position 'center'
+    // Alias of position 'center'
     centerParent: function(element,opts){
-      return centerParent.call(this,element,opts);
+      $.positionAt.locations.center.call(this,element,opts);
     },
     centerViewport: function(element,opts){
       return centerViewport.call(this,element,opts);
@@ -115,40 +117,39 @@
   }
 
   function center(self, parent, opts) {
-    var d = constrain(self, parent, opts);
+    var width  = self.width,
+        height = self.height,
+        d      = constrain(self, parent, opts);
 
     return {
       width  : d.width,
       height : d.height,
-      top    : Math.max(0, ((parent.height() - d.height) / 2) + parent.scrollTop()),
-      left   : Math.max(0, ((parent.width() - d.width) / 2) + parent.scrollLeft())
+      top    : Math.max(0, ((parent.height() - d.height) / 2) + (opts.useScrollTop === false ? 0 : parent.scrollTop())),
+      left   : Math.max(0, ((parent.width() - d.width) / 2) + (opts.useScrollLeft === false ? 0 : parent.scrollLeft()))
     };
   }
 
   function constrain(self, parent, opts) {
-    var selfDimensions   = getDimensions(self),
-        parentDimensions = getDimensions(parent),
-        margin           = opts.margin || 10,
-        height           = selfDimensions.height,
-        width            = selfDimensions.width,
+    var width  = self.width(),
+        height = self.height(),
+        margin = opts.margin || 10,
         adjusted;
 
     // Don't set the dimensions if we've been told not to
     if (opts.constrain !== false) {
-      if (selfDimensions.width > (parentDimensions.width - margin * 2)) {
-        adjusted = parentDimensions.width - margin * 2;
-        height	 = (adjusted / selfDimensions.width) * selfDimensions.height;
+      if (width > (parent.width() - margin * 2)) {
+        adjusted = parent.width() - margin * 2;
+        height	 = (adjusted / width) * height;
         width	   = adjusted;
       }
-      if (selfDimensions.height > (parentDimensions.height - margin * 2)) {
-        adjusted = parentDimensions.height - margin * 2;
-        width	   = (adjusted / selfDimensions.height) * selfDimensions.width;
+      if (height > (parent.height() - margin * 2)) {
+        adjusted = parent.height() - margin * 2;
+        width	   = (adjusted / height) * width;
         height   = adjusted;
       }
     }
-    console.log(width,height);
 
-    return { height: height, width: width };
+    return {height: height, width: width};
   }
 
   function getPosition(offsetElement,element) {
@@ -160,23 +161,4 @@
     });
   }
 
-  function getDimensions(el) {
-    var tempStyle = el.attr("style"),
-        ret;
-    
-    el.css({
-      position   : "absolute",
-      visibility : "hidden",
-      display    : "block"
-    });
-    
-    ret = {
-      width: el.width(),
-      height: el.height()
-    };
-    
-    el.removeAttr("style").attr("style", tempStyle);
-    
-    return ret;
-  }
 })(jQuery);

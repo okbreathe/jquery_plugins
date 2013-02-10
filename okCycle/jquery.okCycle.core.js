@@ -1,15 +1,15 @@
 /**
  * jquery.okCycle.js
  *
- * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/15/12
+ * Date: 02/09/13
  *
  * @description Tiny, modular, flexible slideshow
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.00
+ * @version 1.2
  *
  */
 
@@ -35,7 +35,8 @@
         (ui || slideshow).hover(function(){ slideshow.pause(); }, function(){ slideshow.play(); });
       },
       afterSetup    : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
-      afterMove     : function(transition){} // Called after we move to another slide
+      beforeMove    : function(transition){},// Called before we move to another slide, with the slideshow as 'this'
+      afterMove     : function(transition){} // Called after we move to another slide, with the slideshow as 'this'
     },opts);
 
     var setup = $.okCycle[opts.effect], plugins = [], animating = 'animating', autoplaying = 'autoplaying', active = 'activeSlide', interval = 'interval', unloaded = 'unloaded';
@@ -96,24 +97,27 @@
           });
         }
 
-        var fn, data = { 
+        var fn, data = $.extend($.Deferred(),{ 
           from      : self.children().eq(prev),
           to        : self.children().eq(cur),
           fromIndex : prev,
           toIndex   : cur,
           forward   : forward,
           easing    : opts.easing,
-          speed     : opts.speed,
-          after     : function(){
-            self.data(animating, false);
+          speed     : opts.speed
+        });
 
-            opts.afterMove.call(self, this);
+        opts.beforeMove.call(self, data);
 
-            if (self.data(autoplaying)) { 
-              play.call(self); 
-            }
+        data.done(function(){
+          self.data(animating, false);
+
+          opts.afterMove.call(self, data);
+
+          if (self.data(autoplaying)) { 
+            play.call(self); 
           }
-        };
+        });
 
         setup.move.call(self.data(active, cur), data);
 

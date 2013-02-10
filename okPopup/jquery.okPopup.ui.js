@@ -1,20 +1,25 @@
 /**
  * jquery.okPopup.ui.js
  *
- * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/08/13
+ * Date: 02/09/13
  *
- * Each UI feature is a function that returns an options object that will be merged
- * into okPopup's options. 
- * 
- * Each UI feature receives the user specified options as an argument
+ * @description For popups, modal windows, tooltips etc.
+ * @author Asher Van Brunt
+ * @mailto asher@okbreathe.com
+ * @version 1.0
  *
  */
 
 (function($) {
 
+  /*
+   * Each UI feature is a function that returns an options object that will be merged
+   * into okPopup's options. 
+   * Each UI feature receives the user specified options as an argument
+   */
   $.okPopup.ui = {
 
     /**
@@ -66,9 +71,7 @@
         e.preventDefault();
 
         // Perform default behavior if modifier key is held down
-        if ( e.shiftKey || e.ctrlKey || e.metaKey || e.altKey ) {
-          return true; // Don't prevent default
-        }
+        if ( e.shiftKey || e.ctrlKey || e.metaKey || e.altKey ) return true;
 
         target = $(e.currentTarget).imagesLoaded(function(){
           loading.fadeOut('fast', function(){ loading.remove(); });
@@ -85,13 +88,22 @@
         });
       }
 
+      function dimensions(thumb){
+        return { 
+          height : thumb.height(),
+          width  : thumb.width(),
+          top    : thumb.offset().top - $(window).scrollTop(),
+          left   : thumb.offset().left - $(window).scrollLeft()
+        };
+      }
+
       return {
         parent    : opts.parent,
         openEvent : 'click',
         modal     : 'click',
         onOpen    : preload,
         onClose   : close
-      }
+      };
     },
     /**
      * gallery
@@ -107,19 +119,34 @@
         resize   : true,
         animate  : true,
         duration : 3000,
-        cycleOptions : ['caption','navigation']
+        cycleOptions : ['caption','navigation'],
+        // Generate the intial markup
+        // TODO This should be agnostic to the content, and just use the href
+        // How would this account for embeds or simply content/text
+        slideshow: function(){
+          var html = "";
+          this.children().each(function(){
+            var self = $(this),
+                src  = self.find('a').attr('href');
+            html += "<li><img src='"+src+"' alt='' /></li>";
+          });
+          return html;
+        }
       }, opts );
 
-      var html = "";
+      var slideshow, self = this;
 
-      // Generate the intial markup
-      this.children().each(function(){
-        var self = $(this),
-            src  = self.find('a').attr('href');
-        html += "<li><img src='"+src+"' alt='' /></li>";
-      });
+      function open(e,popup) {
+        var clicked = $(e.target).closest("li"),
+            index   = clicked.parent().children().index(clicked);
 
-      html = "<ul>"+html+"</ul>";
+        slideshow.moveTo(index);
+
+        popup
+          .open(e)
+          .css({ position:'fixed' })
+          .find(".close").one('click', function(e){ close(e,popup); });
+      }
 
       function close(e, popup) {
         e.preventDefault();
@@ -128,43 +155,61 @@
         });
       }
 
+      function resize(popup, slide){
+        var clone = slide.children().clone().appendTo("body").css({ position:'absolute',left:'-9999em', width: 'auto',height: 'auto' }),
+            css   = $.positionAt(clone, 'body',{ location: 'centerViewport', constrain: true, useScrollTop: false });
+
+        clone.remove();
+
+        slide
+          .find("img")
+          .css(css.width >= css.height ? { height: '100%', width: 'auto' } : {height: '100%', width: 'auto'}); // Scale differently in portrait vs landscape
+
+        popup
+          .animate({ width: css.width, height: css.height, top: css.top, left: css.left }, 500, opts.easing)
+          .find("ul.ui-slides")
+            .animate({width: css.width, height: css.height});
+      }
+
       return {
+        parent      : "body",
         openEvent   : 'click',
         openEffect  : 'fadeIn',
-        parent      : "body",
         closeEffect : 'fadeOut' ,
         modal       : 'click',
+        where       : { location:'centerViewport', constrain: true, useScrollTop: false },
+        onOpen      : open,
+        onClose     : close,
         template    : function(){
-          var t = $("<div class='ui-popup slideshow-container'><header><a class='close' href='#'>Close</a></header><div class='content'>"+html+"</div></div>");
-
+          var t = $("<div class='ui-popup slideshow-container'><a class='close' href='#'>Close</a><ul class='ui-slides'>"+opts.slideshow.call(self)+"</ul></div>");
+          
+          // TODO We need to preload whatever image was clicked on, so this can't go here
           t.find("li:first img").imagesLoaded(function(){
 
-            t.show().css({position:'absolute', left: '-9999em'});
+            // popup needs to be visible before we take measurements
+            t.css({position:'absolute', left: '-9999em'}).show();
 
             $("ul", t).okCycle({
-              effect: 'fade',
-              duration: opts.duration,
-              preload: false, // we're already preloading
-              ui: opts.cycleOptions
+              effect     : 'fade',
+              duration   : opts.duration,
+              preload    : false, // we're already preloading
+              ui         : opts.cycleOptions,
+              beforeMove : function(transition) {
+                resize(t, transition.to);
+              },
+              afterSetup : function(){
+                // TODO REMOVE, FOR DEBUGGING
+                window.slideshow = slideshow = this;
+              }
             });
-            t.hide();
+
+            t.hide().find("li").css({height: '100%'});
           });
+
           return t;
-        },
-        // TODO Should have option to center within the window
-        where       : { location:'center', constrain: false },
-        onClose     : close
+        }
       };
     }
   };
-
-  function dimensions(thumb){
-    return { 
-      height : thumb.height(),
-      width  : thumb.width(),
-      top    : thumb.offset().top - $(window).scrollTop(),
-      left   : thumb.offset().left - $(window).scrollLeft()
-    };
-  }
 
 })(jQuery);

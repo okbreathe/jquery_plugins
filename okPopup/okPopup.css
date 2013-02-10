@@ -75,3 +75,28 @@
 #example-5 li {
   float: left;
 }
+
+.ui-popup ul {
+  margin-bottom: 0;
+}
+
+.ui-popup .close ,
+.ui-popup .navigation {
+  position: absolute;
+  z-index: 100;
+}
+
+.ui-popup .navigation {
+  bottom: 0;
+  left: 0;
+}
+
+.ui-popup .navigation li{
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.ui-popup .close {
+  top: 0;
+  right: 0;
+}

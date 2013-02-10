@@ -1,34 +1,40 @@
 /**
  * jquery.okCycle.ui.js
  *
- * Copyright (c) 2012 Asher Van Brunt | http://www.okbreathe.com
+ * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/15/12
+ * Date: 02/09/13
  *
  * @description Provides UI elements for okCycle
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 0.20
+ * @version 1.2
  *
  */
 
 (function($){
 
-  /*
-   * This follows the basic pattern set forth by the effects package. Init is
-   * called on setup, this on move `move` is called. The only difference is
-   * that the first argument to UI functions is the UI container element
-   * itself.  `this` is still set to the slideshow itself. See
-   * okCycle.transitions for an explanation of the transition object.
+  /**
+   * This follows the basic pattern set forth by the transitions package. `init` is
+   * called on setup, this on move `move` is called. 
+   * 
+   * The only difference is that the first argument to UI functions is the UI
+   * container element itself.  
    *
-   * Note that both `init` and `move` are optional, only add them if you need
-   * them
+   * `this` is still set to the slideshow itself. See okCycle.transitions for
+   * an explanation of the transition object.
+   *
+   * Note that both `init` and `move` are optional, only each one them if you need
+   * them, respectively.
    *
    */
 
   $.okCycle.ui = {
-    // Pull the data-caption attribute or a specific element to provide a caption
+    // Pull the data-caption attribute. 
+    // If the data-caption attribute begins with an octothorpe, we will assume
+    // it is referring to the id of another element somewhere on page,
+    // otherwise we'll use the content directly
     caption: {
       init: function(ui,opts){
         $.okCycle.ui.caption.setCaption(this.children().eq(this.data('activeSlide')),$("<div class='caption'></div>").appendTo(ui).hide());
@@ -49,7 +55,7 @@
         }
       }
     },
-    // Construct forward/back buttons
+    // Forward/back buttons
     navigation: {
       init: function(ui,opts){
         var self = this,
@@ -58,7 +64,7 @@
         nav.find(".next a").click(function(e){ e.preventDefault(); self.next(); });
       }
     },
-    // Construct pagination for jumping to specific slides
+    // Pagination for jumping to specific slides
     pagination: {
       init: function(ui,opts){
         var self = this, html = "<ul class='pagination'>";
@@ -89,7 +95,7 @@
         $("li.current", ui).html(transition.toIndex+1);
       }
     },
-		// mousewheel support
+		// Enable mousewheel support
     mouseWheel: {
       init: function(ui,opts) {
         var self = this;
@@ -99,7 +105,7 @@
         });			
       }
     },
-    // Add touch control the slideshow
+    // Enable touch support
     touch: {
       init: function(ui,opts) {
         opts = $.extend({
