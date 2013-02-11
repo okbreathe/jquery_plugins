@@ -3,12 +3,16 @@
     return s.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1'); 
   }
 
+  function render(idx,html) {
+    return "<li data-index='"+idx+"'>"+ html +"</li>"; 
+  }
+
   function generate(ls,data) {
     var rows="", classNames = ["liveSearch"];
-    if (ls.className) { classNames.push(ls.className); }
+    if (ls.className) classNames.push(ls.className);
     for ( var i = 0; i < data.length; i++ ) {
       if (data[i] !== "") {
-        rows += "<li data-index='"+i+"'>"+data[i]+"</li>"; // TODO Combine with render
+        rows += render(i,data[i]);
         data[i] = data[i].toLowerCase();
       }
     }
@@ -48,7 +52,7 @@
             scores.push([score, i, self._data[i]]);
           }
         }
-        scores = scores.sort(function(a, b){return b[0] - a[0];});
+        scores = scores.sort(function(a, b){ return b[0] - a[0]; });
         ul.html(self.render(str,scores));
       }
     },
@@ -64,8 +68,8 @@
         return str.replace(regex, function(a,b,c){ return '<strong>' + a + '</strong>'; });
       };
       for ( var i = 0; i < len; i++ ) {
-        if (i === this.maxResults) { break; }
-        ret += "<li data-index='"+scores[i][1]+"'>"+ highlight( scores[i][2] ) +"</li>"; 
+        if (i === this.maxResults) break;
+        ret += render(scores[i][1],highlight( scores[i][2] )); 
       }
       return ret.replace(/>/, ' class="ui-selected">');
     }

@@ -29,10 +29,12 @@
         <pre>
           <code>
 var liveSearch = $.liveSearch.create(COUNTRIES);
+
 $("#countries") 
-  .keyup(function(){ liveSearch.filter(this.value, function(str,term){ return str.score(term); }); })
-  .after(liveSearch.contents());
-          </code>
+  .keyup(function(){ 
+    liveSearch.filter(this.value, function(str,term){ return str.score(term); }); 
+  })
+  .after(liveSearch.contents());</code>
         </pre>
         <form action="" method="post" accept-charset="utf-8">
           <label>Type to Select a Country</label>
