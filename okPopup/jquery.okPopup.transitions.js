@@ -14,17 +14,12 @@
  */
 
 (function($) {
-  // TODO
-  // There's a couple variables here
-  // 1) We might want to show 'loading' in various different ways
-  //    Perhaps show it separately, perhaps just set it as the elements BG
-  // 2) The core should handle content loading - all things need to deal with that
-  // 3) Ready should probably be the default for most plugins, and open left empty
-  // 
-  // init - called once during plugin initialization
-  // onOpen - called when the openWhen event is triggered, or $.okPopup.open is called
-  //        We could also pass in the deferred here.
-  // onClose - called when the closeWhen event is triggered, or $.okPopup.close is called
+  /*
+   * onInit  - called once during plugin initialization (optional)
+   * onOpen  - called when the openWhen event is triggered, or $.okPopup.open is called
+   *           We could also pass in the deferred here.
+   * onClose - called when the closeWhen event is triggered, or $.okPopup.close is called
+   */
   $.okPopup.transitions = {
     togglePuff: {
       onInit: function(){
@@ -61,17 +56,17 @@
         popup.stop(true,true).togglePuff();
       }
     },
-    // Additional position options:
+    // Additional location options:
     //   scaleFrom: 'center' | 'element'
     //     If center popup will scale from the center of the screen
     //     If element it will scale from the triggering element
     grow: {
       // Called when openWhen is triggered
       onOpen: function(popup,ui){
-        var thumb = $(ui.event.currentTarget);
+        var thumb = $(ui.element);
 
         if (!popup.is(":visible")) {
-          if (ui.options.position.scaleFrom == 'element') {
+          if (ui.options.location.scaleFrom == 'element') {
             popup.show().css({ 
               height : thumb.height(),
               width  : thumb.width(),
@@ -79,40 +74,42 @@
               left   : thumb.offset().left - $(window).scrollLeft()
             });
           } else {
-            popup.show().positionAt(ui.options.position);
+            popup.show().positionAt(ui.options.location);
           }
         }
 
         ui.done(function(dimensions){
-          popup.stop().animate(dimensions, 'fast', function(){ 
+          popup.stop(true,true).animate(dimensions, 'fast', function(){ 
             ui.content.fadeIn();
           });
         });
       },
       // Called when closeWhen is triggered
       onClose: function(popup){
-        popup.fadeOut();
+        popup.stop(true,true).fadeOut();
       }
     },
     fade: {
-      onOpen: function(popup,dimensions){
-        popup.css(dimensions).fadeIn();
+      onOpen: function(popup,ui){
+        ui.done(function(dimensions){
+          popup.stop(true,true).css(dimensions).fadeIn();
+        });
       },
       onClose: function(popup){
-        popup.fadeOut();
+        popup.stop(true,true).fadeOut();
       }
     },
     dropdown: {
       onOpen: function(popup,ui){
         ui.done(function(dimensions){
           popup.css($.extend({},dimensions,{ top: -dimensions.top - dimensions.height })).show();
-          popup.stop().animate(dimensions, 'fast', function(){ 
+          popup.stop(true,true).animate(dimensions, 'fast', function(){ 
             ui.content.fadeIn(); 
           });
         });
       },
       onClose: function(popup){
-        popup.stop().animate({top: -popup.offset().top - popup.height()}, 'fast', function(){ 
+        popup.stop(true,true).animate({top: -popup.offset().top - popup.height()}, 'fast', function(){ 
           popup.hide(); 
         });
       }

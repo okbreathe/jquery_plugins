@@ -27,13 +27,14 @@
         openWhen    : 'mouseenter element',
         closeWhen   : 'mouseleave element',
         transition  : 'togglePuff',
-        position    : { 
-          location: 'elementTop', 
-          offsetTop: -5,
-          relativeTo: 'event'
+        location    : { 
+          position     : { y: 'top',    x: 'center' }, 
+          registration : { y: 'bottom', x: 'center' },
+          offset       : { top: -5 },
+          relativeTo   : 'element'
         },
-        content     : function(e,popup){ 
-          return $(e.currentTarget).data('content'); 
+        content     : function(popup,element){ 
+          return element.data('content'); 
         }
       };
     },
@@ -69,12 +70,10 @@
         var overlay = $('#ui-overlay');
 
         if ( overlay.length === 0 ) {
-          overlay = $("<div id='ui-overlay' />").appendTo("body").hide();
+          overlay = $("<div id='ui-overlay' class='ui-overlay' />").appendTo("body").hide();
         }
 
-        overlay.click(function(event){
-          $.okPopup.close(popup,event,opts);
-        });
+        overlay.click(function(e){ popup.close(); });
 
         popup.overlay = overlay;
 
@@ -82,14 +81,14 @@
           $(window).resize(function(){ 
             $(".ui-popup.responsive:visible").each(function(e){
               var popup = $(this);
-              popup.positionAt(popup.data('dimensions'));
+              popup.positionAt($.extend(opts.location,popup.data('dimensions')));
             });
           });
           $.okPopup.resizeEventBound = true;
         }
       }
 
-      function onOpen(popup,ui) {
+      function onOpen(popup, ui) {
         var content = ui.content,
             existing;
 
@@ -102,14 +101,14 @@
         ui.done(function(){
           var dimensions;
 
-          $.positionAt.measure(content,function(){
+          $.measure(content,function(){
             // For embedded videos we need to grab the explicit width/height
             dimensions = { 
               width  : content.attr('width')  || content.width(), 
               height : content.attr('height') || content.height() 
             };
             // Store the original dimensions for scaling on resize
-            popup.data('dimensions', $.extend(dimensions, ui.options.position));
+            popup.data('dimensions', dimensions);
           });
 
           // Depending on whether the content is a image, and its aspect ratio, we'll scale differently
@@ -120,19 +119,20 @@
           }
         });
 
+        // Pass the calculated dimensions to the transition
         return ui.then(function(){
-          return $.positionAt(popup, popup.data('dimensions'));
+          return $.positionAt(popup,$.extend(popup.data('dimensions'),ui.options.location));
         });
       }
 
-      function onClose(popup, event) {
+      function onClose(popup, element) {
         popup.find('.ui-content').remove();
         popup.overlay.fadeOut();
       }
 
-      function setContent(event,popup)  {
+      function setContent(popup, element)  {
         var content = '',
-            item    = $(event.currentTarget);
+            item    = element;
 
         $.each(opts.filters,function(k,v){
           if(v.matcher.test(item.attr('href'))) {
@@ -153,10 +153,10 @@
         onClose    : onClose,
         template   : "<div class='ui-modal'><header><a href='#' class='ui-close'>Close</a></header></div>",
         transition : 'grow',
-        position   : { 
-          location : 'centerViewport', 
-          constrain: true, 
-          margin   : 20
+        location   : { 
+          relativeTo : window,
+          constrain  : true, 
+          margin     : 10
         }
       };
     },
@@ -173,17 +173,18 @@
 
       modalInit = opts.onInit;
 
-      function moveTo(e, popup, backwards) {
-        if (e) e.preventDefault();
+      function moveTo(event, popup, backwards) {
+        event.preventDefault();
 
         var idx = galleryItems.index(currentItem);
 
         backwards ? idx-- : idx++;
 
-        // TODO this is a hack
-        e.currentTarget = currentItem = galleryItems.eq(idx < 0 ? galleryItems.length -1 : idx >= galleryItems.length ? 0 : idx);
+        // TODO this is kind of hackish
+        event.currentTarget = currentItem = galleryItems.eq(idx < 0 ? galleryItems.length -1 : idx >= galleryItems.length ? 0 : idx);
 
-        $.okPopup.open(popup,e,opts);
+        // Call open manually
+        popup.open(event);
       }
 
       return $.extend(opts,{

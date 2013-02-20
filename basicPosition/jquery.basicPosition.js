@@ -1,71 +1,119 @@
 /**
  *
- * jquery.positionAt.js
+ * jquery.basicPosition.js
  *
  * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  * Date: 02/17/13
  *
- * @description Assists positioning DOM elements relative to other elements
+ * @description Utilities for retrieving and setting dimensions on DOM elements
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.0
+ * @version 2.0 BETA
  *
- * TODO maybe rename to measureing tools or something
- *
+ * * TODO
+ * - The core should simply work with numbers
+
  */
 (function($){
 
-  /**
-   * jQuery.positionAt     
-   *
-   * Given an element, and an offsetElement,
-   * return dimensions for adjusting the element's size/position.
-   *
-   * offsetElement - Selector, Event, DOM Element or jQuery object. If given an event the offsetElement will become the event's currentTarget
-   * @param element {DOMElement} - An element to position
-   * @param options {String|Object} - A string of a named location, or an options object with the following properties
-   * location - Named location
-   * margin   -  String, Object or Function
-   */
   $.positionAt = function(element, options) {
-    var offsetElement, location, css, fn, ret;
-
-    // Standardize our element into a jQuery object
-    if (!(element instanceof jQuery)) element = $(element);
-
-    if (typeof(options) == "string") options = { location : options };
-
     options = $.extend({
-      location      :  'centerParent',
-      offsetElement :  element.parent()
+      position: { x: 'center', y: 'center' },    // Where this element will be positioned (x can be one of: 'left', 'right' or 'center'; y can be one of: 'top','center','bottom')
+      relativeTo: $("body"),                     // Relative to what element
+      constrain: false,                          // Should we constrain the final size based on the relativeTo element
+      margin: { x: 0, y: 0 },                    // If constraining, add additional padding to the final dimensions
+      offset: { top: 0, left: 0 },               // Adjust the offset of the final calculated position
+      registration: { x: 'center', y: 'center' } // Where we are positioning from. Same options as position.
     }, options);
 
-    location      = options.location;
-    offsetElement = options.offsetElement;
+    // If the parent of the element has its position set, it'll be set relative to its parent
 
-    // Standardize our offsetElement into a jQuery Object
-    if (typeof(offsetElement) == "string") offsetElement = $(offsetElement);
-    if (offsetElement.target) offsetElement = $(offsetElement.currentTarget);
-    if (offsetElement.tagName) offsetElement = $(offsetElement);
+    var css              = {},
+        offsetElement    = $(options.relativeTo),
+        offsetDimensions = getOffsetDimensions(element,offsetElement);
 
-    if (!(fn = $.positionAt.locations[location])) throw "No such location '"+location+"'";
+    function get(position,registration,offsetSize,offsetPos,elementSize){
+      var ret,
+          // If its not a direct child, we need to account for the element's offset position
+          push = options.relativeTo[0] == element.parent()[0] ? 0 : offsetPos,
+          map = {top: 'topOrLeft', left: 'topOrLeft', center: 'center', right: 'bottomOrRight', bottom: 'bottomOrRight'};
 
-    ret = fn(element,offsetElement,options);
+      position     = map[position];
+      registration = map[registration];
 
-    if (options.offset) {
-      ret.top  = ret.top + (options.offset.left || 0);
-      ret.left = ret.left + (options.offset.top  || 0); 
+      switch ( registration ) {
+        case 'topOrLeft' :
+          ret = {
+            topOrLeft     : push,
+            center        : push + offsetSize / 2,
+            bottomOrRight : push + offsetSize
+          }; 
+          break;
+        case 'center' :
+          ret = {
+            topOrLeft     : push - elementSize / 2,
+            center        : push + offsetSize / 2 - elementSize / 2,
+            bottomOrRight : push + offsetSize - elementSize / 2
+          }; 
+          break;
+        case 'bottomOrRight' :
+          ret = {
+            topOrLeft     : push - elementSize,
+            center        : push + offsetSize / 2 - elementSize,
+            bottomOrRight : push + offsetSize - elementSize
+          }; 
+          break;
+      }
+      return ret[position];
     }
 
-    return ret;
+    /*
+     * Apply margins and ensure the element stays within the parent and 
+     * is scaled proportionally
+     */
+    function constrain() {
+      var width  = options.width || element.outerWidth(),
+          height = options.height || element.outerHeight(),
+          margin = getMargin(element,offsetElement,options),
+          adjusted;
+
+        if (width > (offsetElement.outerWidth() - margin.x * 2)) {
+          adjusted = offsetElement.outerWidth() - margin.x * 2;
+          height	 = (adjusted / width) * height;
+          width	   = adjusted;
+        }
+        if (height > (offsetElement.outerHeight() - margin.y * 2)) {
+          adjusted = offsetElement.outerHeight() - margin.y * 2;
+          width	   = (adjusted / height) * width;
+          height   = adjusted;
+        }
+
+      return { height: height, width: width };
+    }
+
+    if (options.constrain !== false) css = constrain();
+
+    return  $.extend(css,{
+      left : get(options.position.x, options.registration.x, offsetDimensions.width, offsetDimensions.left, css.width || element.outerWidth()) + (options.offset.left || 0),
+      top  : get(options.position.y, options.registration.y, offsetDimensions.height, offsetDimensions.top, css.height || element.outerHeight()) + (options.offset.top || 0)
+    });
+  };
+
+  /*
+   * Apply the styles to given element from $.positionAt
+   */
+  $.fn.positionAt = function(options){
+    // Unless it's a direct child of the relativeTo element, append to the body
+    if (options.relativeTo[0] != this.parent()[0]) this.css({position: this.css('position') == 'fixed' ? 'fixed' : 'absolute'}).appendTo("body");
+    return this.css($.positionAt(this,options));
   };
 
   /*
    * Measure a element, regardlesss of whether or not it is hidden
    */
-  $.positionAt.measure = function(element, fn) {
+  $.measure = function(element, fn) {
     var originalStyles = [],
         hiddenElements = element.parents().andSelf().filter(':hidden'),
         ret,
@@ -87,77 +135,18 @@
     return ret;
   };
 
+  function getOffsetDimensions(element,offsetElement) {
+    var isFixed = element.css('position') == 'fixed';
 
-  /*
-   * Apply the styles to given element from $.positionAt
-   */
-  $.fn.positionAt = function(options){
-    return this.css($.positionAt(this,options));
-  };
-
-  /*
-   * Named locations for use with jQuery.positionAt
-   */
-  $.positionAt.locations = {
-    elementBottom: function(element,offsetElement,options) {
-      var pos = getOffsetDimensions(element, offsetElement,options);
-      return {top: pos.top + pos.height, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
-    },
-    elementTop: function(element,offsetElement,options) {
-      var pos = getOffsetDimensions(element, offsetElement,options);
-      return {top: pos.top - pos.elementHeight, left: pos.left + pos.width / 2 - pos.elementWidth / 2};
-    },
-    elementLeft: function(element,offsetElement,options) {
-      var pos = getOffsetDimensions(element, offsetElement,options);
-      return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left - pos.elementWidth};
-    },
-    elementRight: function(element,offsetElement,options) {
-      var pos = getOffsetDimensions(element, offsetElement,options);
-      return {top: pos.top + pos.height / 2 - pos.elementHeight / 2, left: pos.left + pos.width};
-    },
-    centerParent: function(element,offsetElement,options){
-      return center($(element), $(offsetElement), options);
-    },
-    centerViewport: function(element,offsetElement,options){
-      return center($(element), $(window), options);
-    },
-    fillViewport: function(element,offsetElement) {
-      var bh     = $(window).height(),
-          bw     = $(window).width(),
-          ratio  = element.width() / element.height(),
-          h      = bh,
-          w      = bw;
-
-      // Scale it proportionally
-      if ((bw / bh) < ratio)  {
-		    w = bh * ratio;
-      } else {
-		    h = bw / ratio;
-      }
-
-      return {
-        width  : w, 
-        height : h,
-        left   : (bw - w) / 2,
-        top    : (bh - h) / 2
-      };
-    }
-  };
-
-  /*
-   * Center an element relative to an offsetElement,
-   * generally its parent or body
-   */
-  function center(element, offsetElement,options) {
-    var dimensions = constrain(element, offsetElement, options),
-        isFixed    = element.css('position') == 'fixed';
-
-    return {
-      width  : dimensions.width,
-      height : dimensions.height,
-      top    : Math.max(0, ((offsetElement.height() - dimensions.height) / 2) + (isFixed ? 0 : offsetElement.scrollTop())),
-      left   : Math.max(0, ((offsetElement.width() - dimensions.width) / 2) + (isFixed ? 0 : offsetElement.scrollLeft()))
-    };
+    return  $.measure(offsetElement,function(){
+      return  $.extend($(offsetElement).offset(), {
+        width  : offsetElement.outerWidth(),
+        height : offsetElement.outerHeight()
+      }, offsetElement[0] == window ? {
+        top  : isFixed ? 0 : offsetElement.scrollTop(),
+        left : isFixed ? 0 : offsetElement.scrollLeft()
+      } : null);
+    });
   }
 
   /*
@@ -167,53 +156,20 @@
    * Function that returns either an integer or an object
    */
   function getMargin(element,offsetElement,options) {
+    var margin;
+
     if (typeof(options.margin) == 'function') {
-      return options.margin(element,offsetElement,options);
+      margin = options.margin(element,offsetElement);
     } else if (typeof(options.margin) == "number") {
-      return {x: options.margin, y: options.margin};
+      margin = {x: options.margin, y: options.margin};
     } else if ($.isPlainObject(options.margin)) {
-      return options; 
-    }
-    return {x: 0, y: 0};
-  }
-
-  /*
-   * Apply margins and ensure the element stays within the parent and 
-   * is scaled proportionally
-   */
-  function constrain(element, offsetElement, options) {
-    // TODO setting the width/height in the options object is kind of a hack
-    var width  = options.width || element.width(),
-        height = options.height || element.height(),
-        margin = getMargin(element,offsetElement,options),
-        adjusted;
-
-    // Don't set the dimensions if we've been told not to
-    if (options.constrain !== false) {
-      if (width > (offsetElement.width() - margin.x * 2)) {
-        adjusted = offsetElement.width() - margin.x * 2;
-        height	 = (adjusted / width) * height;
-        width	   = adjusted;
-      }
-      if (height > (offsetElement.height() - margin.y * 2)) {
-        adjusted = offsetElement.height() - margin.y * 2;
-        width	   = (adjusted / height) * width;
-        height   = adjusted;
-      }
+      margin = options.margin; 
     }
 
-    return { height: height, width: width };
-  }
+    if (!margin.x) margin.x = 0;
+    if (!margin.y) margin.y = 0;
 
-  function getOffsetDimensions(element,offsetElement,options) {
-    return  $.positionAt.measure(element,function(){
-      return $.extend({}, $(offsetElement).offset(), {
-        width         : options.width  || offsetElement[0].offsetWidth,
-        height        : options.height || offsetElement[0].offsetHeight,
-        elementWidth  : element[0].offsetWidth,
-        elementHeight : element[0].offsetHeight
-      });
-    });
+    return margin;
   }
 
 })(jQuery);
