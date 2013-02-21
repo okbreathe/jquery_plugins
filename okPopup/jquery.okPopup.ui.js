@@ -26,7 +26,7 @@
         onInit      : function(popup,opts){ popup.css({position:'absolute'}).addClass('tooltip'); },
         openWhen    : 'mouseenter element',
         closeWhen   : 'mouseleave element',
-        transition  : 'togglePuff',
+        transition  : 'bubblePuff',
         location    : { 
           position     : { y: 'top',    x: 'center' }, 
           registration : { y: 'bottom', x: 'center' },

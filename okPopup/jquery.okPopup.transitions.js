@@ -21,7 +21,7 @@
    * onClose - called when the closeWhen event is triggered, or $.okPopup.close is called
    */
   $.okPopup.transitions = {
-    togglePuff: {
+    bubblePuff: {
       onInit: function(){
         if ($.fn.togglePuff) return;
 
