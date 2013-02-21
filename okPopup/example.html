@@ -15,6 +15,7 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->  
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="../lib/rainbow-custom.min.js"></script>
   <script src="../lib/jquery.imagesloaded.js"></script>
   <script src="jquery.basicPosition.js"></script>
   <script src="jquery.okPopup.core.js"></script>
@@ -57,7 +58,7 @@
         $('a.tip').okPopup({ ui: 'tooltip' });
         </script>
           <pre>
-            <code>
+            <code data-language='javascript'>
 $('a.tip').okPopup({ ui: 'tooltip' });</code>
           </pre>
       </section>
@@ -73,12 +74,12 @@ $('a.tip').okPopup({ ui: 'tooltip' });</code>
           <br/>
         </p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $(".fade").okPopup({ ui: 'modal' });</code>
         </pre>
         <p><a class='dropdown' href='../shared/images/giant.png'>Modal image using the 'dropdown' transition</a></p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $(".dropdown").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
         </pre>
         <script>
@@ -103,7 +104,7 @@ $(".dropdown").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
           var gallery = $("#gallery-example a").okPopup({ ui: 'gallery' });
         </script>
           <pre>
-            <code>
+            <code data-language='javascript'>
 $("#gallery-example a").okPopup({ ui: 'gallery' });</code>
           </pre>
       </section>
@@ -131,7 +132,7 @@ $("#gallery-example a").okPopup({ ui: 'gallery' });</code>
           });
         </script>
           <pre>
-            <code>
+            <code data-language='javascript'>
 $("&lt;div id='notification-queue'/&gt;").appendTo("body");
 
 $("#notification-example").okPopup({
@@ -152,9 +153,9 @@ $("#notification-example").okPopup({
       </section>
       <section class='twelve'>
         <h2 id='usage'>Usage</h2>
-        <p>okPopup has quite a few options, but unless you want to dig into the internals yourself, you only need to concern yourself with a few of them: <code>content, ui, and template</code></p>
+        <p>okPopup has quite a few options, but unless you want to dig into the internals yourself, you only need to concern yourself with a few of them: <code data-language='javascript'>content, ui, and template</code></p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $("#example").okPopup({
   content: "",          // String or Function that returns the content for the popup
   ui: null,             // String name of a UI function located in jquery.okPopup.ui.js
@@ -190,10 +191,10 @@ $("#example").okPopup({
             <p>
               Event binding is handled by providing a eventMap in a string as the value of openWhen and closeWhen.
               <br />
-              The format is <code>"event [,selectors]"</code>
+              The format is <code data-language='javascript'>"event [,selectors]"</code>
             </p>
               <pre>
-                <code>
+                <code data-language='javascript'>
 $(selector).okPopup({
   openWhen: "click selector3, selector2, selector1",
   closeWhen: "customEvent"
@@ -209,7 +210,7 @@ $(selector).okPopup({
               simply binds to the original jQuery object's selector.
             </p>
             <pre>
-              <code>
+              <code data-language='javascript'>
 // Clicking on &lt;a class='foo-selector' &gt;&lt;a&gt; will trigger the popup to open
 
 $(a.foo-selector).okPopup({
@@ -221,10 +222,10 @@ $(a.foo-selector).okPopup({
             <strong>allowMultiple</strong>
             <p>
               By default, okPopup only creates one instance of a popup per
-              initialization and the popup is reused every time <code>open</code>
+              initialization and the popup is reused every time <code data-language='javascript'>open</code>
               is called. When the allowMultiple option is set to true, instead, if
-              an existing popup is visible, when <code>onOpen</code> is called it
-              creates a new instance. When <code>onClose</code> is called, after
+              an existing popup is visible, when <code data-language='javascript'>onOpen</code> is called it
+              creates a new instance. When <code data-language='javascript'>onClose</code> is called, after
               the transition is finished, any non visible clone-popups are
               removed from the DOM.
             </p>
@@ -254,9 +255,9 @@ $(a.foo-selector).okPopup({
           </li>
           <li>
             <strong>location</strong>
-            <p>The <code>location</code> option object defines where the popup will appear</p>
+            <p>The <code data-language='javascript'>location</code> option object defines where the popup will appear</p>
             <pre>
-              <code>
+              <code data-language='javascript'>
 location: {  
   position     : { x: 'center', y: 'center' }, // x can be one of 'left,center,right'. y can be one of 'top,center,bottom'
   relativeTo   : "body",
@@ -268,7 +269,7 @@ location: {
             </pre>
             <ul class='square'>
               <li><strong>position</strong> 
-                <p>The position of the popup relative to the element specified by <code>relativeTo</code>.</p>
+                <p>The position of the popup relative to the element specified by <code data-language='javascript'>relativeTo</code>.</p>
               </li>
               <li><strong>relativeTo</strong> 
                 <p>
@@ -277,7 +278,7 @@ location: {
                   two special selectors: 'parent' or 'element'.  'parent' sets
                   the relativeTo element to the popup's parent, whereas 'element'
                   sets it to the element the popup was originally bound to (e.g.
-                  <code>$(selector).okPopup()</code>) If omitted, it default's to
+                  <code data-language='javascript'>$(selector).okPopup()</code>) If omitted, it default's to
                   'body'.
                 </p> 
               </li>
@@ -319,20 +320,20 @@ location: {
 
         <strong>On Creation</strong>
         <ol>
-          <li>Initialize the selected UI and selected transition by calling their <code>onInit</code> functions</li>
+          <li>Initialize the selected UI and selected transition by calling their <code data-language='javascript'>onInit</code> functions</li>
           <li>Attach the popup to the DOM</li>
           <li>Bind Open/Close Events based on the given eventMaps</li>
         </ol>
         <strong>On Open</strong>
         <ol>
-          <li>Retrieve the content by calling the <code>content</code> function (if it's a function) or just use it directly if it is a string</li>
+          <li>Retrieve the content by calling the <code data-language='javascript'>content</code> function (if it's a function) or just use it directly if it is a string</li>
           <li>Preload Content</li>
-          <li>Call the UI's <code>onOpen</code> function</li>
-          <li>Call the transition's <code>onOpen</code> function</li>
+          <li>Call the UI's <code data-language='javascript'>onOpen</code> function</li>
+          <li>Call the transition's <code data-language='javascript'>onOpen</code> function</li>
         </ol>
         <strong>On Close</strong>
         <ol>
-          <li>Call the transition's <code>onClose</code> function</li>
+          <li>Call the transition's <code data-language='javascript'>onClose</code> function</li>
         </ol>
 
         <h3 id='ui'>UI</h3>
@@ -358,7 +359,7 @@ location: {
           pass in another transition:
         </p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $("#example").okPopup({ ui: 'modal' });
 
 $("#example").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
@@ -371,16 +372,16 @@ $("#example").okPopup({ ui: 'modal', transition: 'dropdown' });</code>
           <li><strong>onOpen(popup,uiPromise)</strong>
             <p>
               The UI object is an enhanced promise object with the additional properties: event, content and options. 
-              Event is the triggering event, content is the result of calling the <code>content</code> function (or a String if its a string), options are the original plugin options.
-              If the modal is going to be used to show content that needs to be preloaded (images, embeds etc.) you should attach that code to the uiPromise's <code>done</code> method.
+              Event is the triggering event, content is the result of calling the <code data-language='javascript'>content</code> function (or a String if its a string), options are the original plugin options.
+              If the modal is going to be used to show content that needs to be preloaded (images, embeds etc.) you should attach that code to the uiPromise's <code data-language='javascript'>done</code> method.
             </p>
             <p>
-              Finally, by default transition's <code>onOpen</code> method will called with the measured dimensions of the popup after the content has been loaded. The transition will
-              use these dimensions to transition the popup to its final position. If you need to set explicit dimensions, you need to use the UI promises' <code>then</code> method,
-              and return the new promise created by the <code>then</code> method.
+              Finally, by default transition's <code data-language='javascript'>onOpen</code> method will called with the measured dimensions of the popup after the content has been loaded. The transition will
+              use these dimensions to transition the popup to its final position. If you need to set explicit dimensions, you need to use the UI promises' <code data-language='javascript'>then</code> method,
+              and return the new promise created by the <code data-language='javascript'>then</code> method.
             </p>
 <pre>
-  <code>
+  <code data-language='javascript'>
 $("#example").okPopup({
   // ...Other options
   onOpen: function(popup,ui){
@@ -406,9 +407,9 @@ $("#example").okPopup({
         <h3>Transitions</h3>
 
         <p>
-          Like the UI, transitions have an <code>onOpen</code>, <code>onClose</code> and (optionally) and
-          <code>onInit</code> methods. Transitions should only concern themselves with showing/hiding the
-          popup, and nothing else. Unlike the UI, these options are not specified in the <code>okPopup</code> initialization method,
+          Like the UI, transitions have an <code data-language='javascript'>onOpen</code>, <code data-language='javascript'>onClose</code> and (optionally) and
+          <code data-language='javascript'>onInit</code> methods. Transitions should only concern themselves with showing/hiding the
+          popup, and nothing else. Unlike the UI, these options are not specified in the <code data-language='javascript'>okPopup</code> initialization method,
           but instead live in the jquery.okPopup.transitions.js file.
         </p>
         <ul>
@@ -423,7 +424,7 @@ $("#example").okPopup({
               dimensions from the UI.
             </p>
 <pre>
-  <code>
+  <code data-language='javascript'>
 onOpen:function(popup,uiPromise){
   uiPromise.done(function(dimensions){
     // Do what you need to do here with dimensions
@@ -435,12 +436,12 @@ onOpen:function(popup,uiPromise){
             <strong>onClose(popup,transitionDeferred)</strong>
             <p>
               Logically enough, this method is for hiding the popup and is
-              called during the event specified by <code>closeWhen</code>.
+              called during the event specified by <code data-language='javascript'>closeWhen</code>.
               The onClose function receives the popup and a deferred object
               with two additional properties: element (the element that
               triggered the close event), and options (this instance of
               okPopup's options). When the transition is complete, the transition
-              should <code>resolve</code> the deferred object.
+              should <code data-language='javascript'>resolve</code> the deferred object.
             </p>
           </li>
         </ul>

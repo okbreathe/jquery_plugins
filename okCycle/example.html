@@ -12,9 +12,9 @@
   <link href="screen.css" rel="stylesheet" type="text/css" media="screen">
   <link href="okCycle.css" rel="stylesheet" type="text/css" media="screen">
   <!--[if lt IE 9]>
-    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->  
+  <script src="../lib/rainbow-custom.min.js"></script>
 </head>
 <body>
 
@@ -43,7 +43,7 @@
           Stop the autoplay by hovering the slideshow
         </p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $("#example_one").okCycle({
   autoplay: true,
   effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
@@ -72,7 +72,7 @@ $("#example_one").okCycle({
           </ul>
           <p>Try using your mousewheel</p>
           <pre>
-            <code>
+            <code data-language='javascript'>
 $("#example_two").okCycle({
   effect:'scroll',
   ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']
@@ -111,7 +111,7 @@ $("#example_two").okCycle({
           Image loading is deferred until scrolled to (You might have troubling seeing this if you're viewing this locally)
         </p>
         <pre>
-          <code>
+          <code data-language='javascript'>
 $("#example_three").okCycle({
   effect:'slide', 
   ui: ['caption','navigation','pagination','currentPage']
