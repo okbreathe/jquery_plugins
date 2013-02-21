@@ -14,11 +14,27 @@
  */
 
 (function($) {
-  /*
-   * onInit  - called once during plugin initialization (optional)
-   * onOpen  - called when the openWhen event is triggered, or $.okPopup.open is called
-   *           We could also pass in the deferred here.
-   * onClose - called when the closeWhen event is triggered, or $.okPopup.close is called
+  "use strict";
+  /**
+   * @method onInit  (optional) called once during plugin initialization
+   * @param {Object} options Plugin Options
+   *
+   * @method onOpen  called when the openWhen event is triggered, or popup.open is called
+   *                 You can attach callbacks to the ui promise to trigger them
+   *                 after the content is loaded. It receives the final dimensions as an
+   *                 argument
+   * @param {jQuery}  popup
+   * @param {Promise} ui           Enhanced Promise Object
+   * @param {jQuery}  [ui.element] The element that triggered the event
+   * @param {jQuery}  [ui.content] The content for this popup
+   * @param {Object}  [ui.options] The original plugin options for this instance
+   *
+   * @method onClose called when the closeWhen event is triggered, or popup.close is called
+   *                 The transition should be resolved when the onClose method is done.
+   * @param {jQuery}   popup
+   * @param {Deferred} transition           Enhanced Deferred Object
+   * @param {jQuery}   [transition.element] The element that triggered the event
+   * @param {Object}   [transition.options] The original plugin options for this instance
    */
   $.okPopup.transitions = {
     bubblePuff: {
@@ -56,10 +72,12 @@
         popup.stop(true,true).togglePuff(transition.resolve);
       }
     },
-    // Additional location options:
-    //   scaleFrom: 'center' | 'element'
-    //     If center popup will scale from the center of the screen
-    //     If element it will scale from the triggering element
+    /**
+     * This transition takes additional location options
+     * 
+     * @param {String} [options.location.scaleFrom] Can be either 'center' or 'element'. If 'center', 
+     * scales from the center of the screen, if 'element' scales from the triggering element
+     */
     grow: {
       // Called when openWhen is triggered
       onOpen: function(popup,ui){

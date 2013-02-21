@@ -14,16 +14,23 @@
  */
 
 (function($) {
-
+  "use strict";
   /*
-   * Each UI feature is a function that returns an options object that will be merged
-   * into okPopup's options. 
+   * Each UI feature is a function that returns an options object that will be
+   * merged into okPopup's options. 
+   *
    * Each UI feature receives the user specified options as an argument
    */
   $.okPopup.ui = {
-    tooltip: function(opts){
+    /**
+     * Create a responsive modal popup window
+     *
+     * @method tooltip
+     * @param {Object} options Plugin Options
+     */
+    tooltip: function(options){
       return {
-        onInit      : function(popup,opts){ popup.css({position:'absolute'}).addClass('tooltip'); },
+        onInit      : function(popup,options){ popup.css({position:'absolute'}).addClass('tooltip'); },
         openWhen    : 'mouseenter element',
         closeWhen   : 'mouseleave element',
         transition  : 'bubblePuff',
@@ -38,12 +45,21 @@
         }
       };
     },
-    modal: function(opts) {
-      if (!opts.fitlers) opts.filters = {};
+    /**
+     * Create a responsive modal popup window. This UI takes additional options
+     * 
+     * @method modal
+     * @param {Object} options           Plugin options
+     * @param {String} [options.filters] Given an link's href, generate plugin content differently. See method body.
+     *
+     */
+    modal: function(options) {
+      if (!options.fitlers) options.filters = {};
 
-      opts.filters = $.extend({
-        // If a filter matches an href then the content function will be called with `this` as the element and the href
-        // This will be used to generate the modal's content
+      options.filters = $.extend({
+        // If a filter matches an href then the content function will be called
+        // with `this` as the element and the href This will be used to
+        // generate the modal's content
         video: {
           matcher: /(vimeo|youtube)/,
           content: function(href){
@@ -60,9 +76,9 @@
             return "<img src='"+ href +"' width='"+width+"' height='"+height+"' alt='' />";
           }
         }
-      }, opts.fitlers);
+      }, options.fitlers);
 
-      function onInit(popup, opts){
+      function onInit(popup, options){
         popup.css({position: 'fixed'}).addClass('responsive modal');
 
         // Add an overlay if this is a modal popup. Will only ever be added once
@@ -81,7 +97,7 @@
           $(window).resize(function(){ 
             $(".ui-popup.responsive:visible").each(function(e){
               var popup = $(this);
-              popup.positionAt($.extend(opts.location,popup.data('dimensions')));
+              popup.positionAt($.extend(options.location,popup.data('dimensions')));
             });
           });
           $.okPopup.resizeEventBound = true;
@@ -134,7 +150,7 @@
         var content = '',
             item    = element;
 
-        $.each(opts.filters,function(k,v){
+        $.each(options.filters,function(k,v){
           if(v.matcher.test(item.attr('href'))) {
             content = v.content.call(item,item.attr('href'));
             return false;
@@ -163,15 +179,18 @@
 
     /**
      * Enhances the modal UI with gallery capabilities
+     *
+     * @method gallery
+     * @param {Object} options Plugin Options
      */
-    gallery: function(opts) {
+    gallery: function(options) {
       var modalInit,
           currentItem,
           galleryItems = this;
 
-      opts = $.okPopup.ui.modal(opts);
+      options = $.okPopup.ui.modal(options);
 
-      modalInit = opts.onInit;
+      modalInit = options.onInit;
 
       function moveTo(event, popup, backwards) {
         event.preventDefault();
@@ -187,12 +206,12 @@
         popup.open(event);
       }
 
-      return $.extend(opts,{
-        onInit: function(popup,opts) {
+      return $.extend(options,{
+        onInit: function(popup,options) {
           var next  = function(e){ moveTo(e,popup); },
               prev  = function(e){ moveTo(e,popup,true); };
 
-          modalInit(popup,opts);
+          modalInit(popup,options);
 
           $("<nav><a class='ui-prev prev' href='#'>Previous</a><a class='ui-next next' href='#'>Next</a></nav>").appendTo(popup);
           

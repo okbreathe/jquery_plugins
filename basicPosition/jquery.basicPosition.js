@@ -18,6 +18,14 @@
  */
 (function($){
 
+   /**
+    * Return the CSS necessary to position an element relative to another element
+    *
+    * @method $.positionAt
+    * @param {JQuery} element The element that we need to position
+    * @param {Object} options Plugin Options
+    * @return {Object} css dimensions need to position the element at the desired position
+    */
   $.positionAt = function(element, options) {
     options = $.extend({
       position: { x: 'center', y: 'center' },    // Where this element will be positioned (x can be one of: 'left', 'right' or 'center'; y can be one of: 'top','center','bottom')
@@ -100,9 +108,14 @@
       top  : get(options.position.y, options.registration.y, offsetDimensions.height, offsetDimensions.top, css.height || element.outerHeight()) + (options.offset.top || 0)
     });
   };
-
-  /*
-   * Apply the styles to given element from $.positionAt
+ 
+  /**
+   * Position an element relative to another element
+   *
+   * @method $.fn.positionAt
+   * @param {JQuery} element The element that we need to position
+   * @param {Object} options Plugin Options
+   * @return {Object} css dimensions need to position the element at the desired position
    */
   $.fn.positionAt = function(options){
     // Unless it's a direct child of the relativeTo element, append to the body
@@ -110,8 +123,12 @@
     return this.css($.positionAt(this,options));
   };
 
-  /*
+  /**
    * Measure a element, regardlesss of whether or not it is hidden
+   *
+   * @method $.measure
+   * @param {JQuery} element Element that we need to measure
+   * @param {Function} callback Perform measurements within this callback
    */
   $.measure = function(element, fn) {
     var originalStyles = [],

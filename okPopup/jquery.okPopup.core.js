@@ -14,12 +14,21 @@
  */
 
 (function($) {
+  "use strict";
 
   $.fn.okPopup = function(options){
     return $.okPopup.create(this, options);
   };
 
   $.okPopup = {
+   /**
+    * Setup a new popup instance
+    *
+    * @method create
+    * @param {jQuery} element Element that may be potentially bound to open/close Events
+    * @param {Object} options Plugin Options
+    * @return {jQuery}
+    */
     create: function(element, options){
       options = $.extend({
         content       : "",
@@ -51,6 +60,13 @@
 
       return popup;
    },
+   /**
+    * Generate a new popup
+    *
+    * @method generate
+    * @param {Object} options Plugin Options
+    * @return {jQuery}
+    */
    generate: function(options){
      var popup = typeof(options.template) == 'function' ? options.template() : options.template;
 
@@ -68,6 +84,14 @@
        close : function(el){ $.okPopup.close(popup,getEl(el),options); return popup; }
      });
    },
+   /**
+    * Called when the openWhen event is triggered, or popup.open is called
+    *
+    * @method open
+    * @param {jQuery} popup
+    * @param {JQuery} element The element that triggered the event
+    * @param {Object} options Plugin Options
+    */
    open: function(popup, element, options){
      var content  = typeof(options.content) == 'function' ? options.content(popup, element) : options.content,
          deferred = $.Deferred(),
@@ -110,6 +134,14 @@
      // Pass the promise object to the transition
      $.okPopup.transitions[options.transition].onOpen(popup,$.extend(ui,promise));
    },
+   /**
+    * called when the closeWhen event is triggered, or popup.close is called
+    *
+    * @method close
+    * @param {jQuery} popup
+    * @param {JQuery} element The element that triggered the event
+    * @param {Object} options Plugin Options
+    */
    close: function(popup, element, options){
      var transition = $.extend($.Deferred(), { element: element, options: options});
 
@@ -127,10 +159,10 @@
   /**
    *
    * EventMaps are in the format:
-   * event [one or more commas seperated selectors]
-   *   A special selector "element" is available which will target the element object passed into
-   *   the create method (done automatically when using the $.fn.okPopup form)
-   * event
+   *   event [one or more commas seperated selectors]
+   *     A special selector "element" is available which will target the element object passed into
+   *     the create method (done automatically when using the $.fn.okPopup form)
+   *   event
    */
   function bindEvents(popup, element, eventMap, handler, options) {
     if (!eventMap) return;
