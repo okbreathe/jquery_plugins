@@ -22,26 +22,22 @@
   $.okPopup = {
     create: function(element, options){
       options = $.extend({
-        content  : "",
-        template : "<div/>",  
-        parent   : 'body', 
-        location : {  relativeTo : 'parent' },
-        onInit   : function(popup, options){}, // Called once when creating the popup
-        onOpen   : function(popup, ui){ popup.html(ui.content); }, // Called every time the popup is opened
-        onClose  : null // Called every time the popup is closed
+        content       : "",
+        template      : "<div/>",  
+        parent        : 'body', 
+        location      : {  relativeTo : 'parent' },
+        allowMultiple : false,
+        onInit        : function(popup, options){}, // Called once when creating the popup
+        onOpen        : function(popup, ui){ popup.html(ui.content); }, // Called every time the popup is opened
+        onClose       : null // Called every time the popup is closed
       }, 
       options && options.ui ? $.okPopup.ui[options.ui].call(element,options) : null, options);
 
-      var popup      = typeof(options.template) == 'function' ? options.template() : options.template, 
-          transition = $.okPopup.transitions[options.transition];
+      var transition = $.okPopup.transitions[options.transition], popup;
 
       if (!transition) throw("No such transition '"+options.transition+"'"); // Fail early since we don't know what to do
 
-      // Create a new popup instance
-      popup = (popup instanceof jQuery ? popup : $(popup))
-        .appendTo(options.parent)
-        .addClass('ui-popup')
-        .hide();
+      popup = this.generate(options);
 
       // Initialize UI
       options.onInit.call(element,popup,options);
@@ -50,16 +46,27 @@
       if (transition.onInit) transition.onInit.call(element,popup,options);
 
       // Bind Events
-      bindEvents(popup,element,options.openWhen,this.open,options);
-      bindEvents(popup,element,options.closeWhen,this.close,options);
+      bindEvents(popup, element, options.openWhen, this.open, options);
+      bindEvents(popup, element, options.closeWhen, this.close, options);
 
-      // Add shortcut methods for calling open/close
-      function getEl(e){ return e && e.currentTarget ? $(e.currentTarget) : e; }
+      return popup;
+   },
+   generate: function(options){
+     var popup = typeof(options.template) == 'function' ? options.template() : options.template;
 
-      return popup.extend({
-        open  : function(el){ $.okPopup.open(popup,getEl(el),options);  return popup; },
-        close : function(el){ $.okPopup.close(popup,getEl(el),options); return popup; }
-      });
+     // Create a new popup instance
+     popup = (popup instanceof jQuery ? popup : $(popup))
+       .appendTo(options.parent)
+       .addClass('ui-popup')
+       .hide()
+
+     // Add shortcut methods for calling open/close
+     function getEl(e){ return e && e.currentTarget ? $(e.currentTarget) : e; }
+
+     return popup.extend({
+       open  : function(el){ $.okPopup.open(popup,getEl(el),options);  return popup; },
+       close : function(el){ $.okPopup.close(popup,getEl(el),options); return popup; }
+     });
    },
    open: function(popup, element, options){
      var content  = typeof(options.content) == 'function' ? options.content(popup, element) : options.content,
@@ -71,6 +78,11 @@
          promise  = deferred.promise(),
          preload,
          ui;
+
+     // If there's an existing visible popup and we're allowed to create multiples, generate a new popup
+     if (popup.is(":visible") && options.allowMultiple) {
+       popup = $.okPopup.generate(options).addClass('ui-clone');
+     }
 
      // Ensure we're working with a jquery object
      if (!(content instanceof jQuery)) content = $("<div />").html(content);
@@ -99,9 +111,16 @@
      $.okPopup.transitions[options.transition].onOpen(popup,$.extend(ui,promise));
    },
    close: function(popup, element, options){
+     var transition = $.extend($.Deferred(), { element: element, options: options});
+
      if (options.onClose) options.onClose(popup, element);
 
-     $.okPopup.transitions[options.transition].onClose(popup, element);
+     // Remove all the popup clones from the DOM when the popup is closed
+     transition.done(function(){
+       if (popup.is('.ui-clone')) popup.remove();
+     });
+
+     $.okPopup.transitions[options.transition].onClose(popup, transition);
    }
   };
 

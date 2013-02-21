@@ -121,7 +121,7 @@ $("#gallery-example a").okPopup({ ui: 'gallery' });</code>
             transition: 'fade',
             openWhen: "click element",
             allowMultiple: true,
-            template: "<div class='notifiction'/>",
+            template: "<div class='notification'/>",
             content: function(popup,element){ return element.data('content'); },
             parent: "#notification-queue",
             onOpen: function(popup,ui){
@@ -137,7 +137,7 @@ $("&lt;div id='notification-queue'/&gt;").appendTo("body");
 $("#notification-example").okPopup({
   transition: 'fade',
   openWhen: "click element",
-  // Pass allow multiple to allow multiple instances of this popup to exist
+  // Set allowMultiple to allow multiple instances of this popup to exist at once
   allowMultiple: true,
   template: "&lt;div class='notifiction'/&gt;",
   content: function(popup,element){ return element.data('content'); },
@@ -225,8 +225,8 @@ $(a.foo-selector).okPopup({
               is called. When the allowMultiple option is set to true, instead, if
               an existing popup is visible, when <code>onOpen</code> is called it
               creates a new instance. When <code>onClose</code> is called, after
-              the transition is finished, any non visible popups (except for
-              the remaining popup), are removed from the DOM.
+              the transition is finished, any non visible clone-popups are
+              removed from the DOM.
             </p>
           </li>
           <li>
@@ -407,7 +407,7 @@ $("#example").okPopup({
 
         <p>
           Like the UI, transitions have an <code>onOpen</code>, <code>onClose</code> and (optionally) and
-          <code>onInit</code> methods.  Transitions should only concern themselves with showing/hiding the
+          <code>onInit</code> methods. Transitions should only concern themselves with showing/hiding the
           popup, and nothing else. Unlike the UI, these options are not specified in the <code>okPopup</code> initialization method,
           but instead live in the jquery.okPopup.transitions.js file.
         </p>
@@ -432,9 +432,15 @@ onOpen:function(popup,uiPromise){
 </pre>
           </li>
           <li>
-            <strong>onClose(popup,element)</strong>
+            <strong>onClose(popup,transitionDeferred)</strong>
             <p>
-              Logically enough, this method is for hiding the popup and is called during the event specified by <code>onWhen</code>.
+              Logically enough, this method is for hiding the popup and is
+              called during the event specified by <code>closeWhen</code>.
+              The onClose function receives the popup and a deferred object
+              with two additional properties: element (the element that
+              triggered the close event), and options (this instance of
+              okPopup's options). When the transition is complete, the transition
+              should <code>resolve</code> the deferred object.
             </p>
           </li>
         </ul>

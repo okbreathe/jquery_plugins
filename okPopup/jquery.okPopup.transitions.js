@@ -47,13 +47,13 @@
           }
         });
       },
-      onOpen: function(popup,ui){
+      onOpen: function(popup, ui){
         ui.done(function(dimensions){
           popup.stop(true,true).css(dimensions).togglePuff();
         });
       },
-      onClose: function(popup){
-        popup.stop(true,true).togglePuff();
+      onClose: function(popup, transition){
+        popup.stop(true,true).togglePuff(transition.resolve);
       }
     },
     // Additional location options:
@@ -85,8 +85,8 @@
         });
       },
       // Called when closeWhen is triggered
-      onClose: function(popup){
-        popup.stop(true,true).fadeOut();
+      onClose: function(popup,transition){
+        popup.stop(true,true).fadeOut(transition.resolve);
       }
     },
     fade: {
@@ -95,8 +95,8 @@
           popup.stop(true,true).css(dimensions).fadeIn();
         });
       },
-      onClose: function(popup){
-        popup.stop(true,true).fadeOut();
+      onClose: function(popup,transition){
+        popup.stop(true,true).fadeOut(transition.resolve);
       }
     },
     dropdown: {
@@ -108,9 +108,10 @@
           });
         });
       },
-      onClose: function(popup){
+      onClose: function(popup,transition){
         popup.stop(true,true).animate({top: -popup.offset().top - popup.height()}, 'fast', function(){ 
           popup.hide(); 
+          transition.resolve();
         });
       }
     }
