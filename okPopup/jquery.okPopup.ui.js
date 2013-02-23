@@ -54,9 +54,9 @@
      *
      */
     modal: function(options) {
-      if (!options.fitlers) options.filters = {};
+      if (!options.filters) options.filters = {};
 
-      options.filters = $.extend({
+      options.filters = $.extend(true,{
         // If a filter matches an href then the content function will be called
         // with `this` as the element and the href This will be used to
         // generate the modal's content
@@ -76,7 +76,7 @@
             return "<img src='"+ href +"' width='"+width+"' height='"+height+"' alt='' />";
           }
         }
-      }, options.fitlers);
+      }, options.filters);
 
       function onInit(popup, options){
         popup.css({position: 'fixed'}).addClass('responsive modal');
@@ -151,7 +151,7 @@
             item    = element;
 
         $.each(options.filters,function(k,v){
-          if(v.matcher.test(item.attr('href'))) {
+          if (typeof(v.matcher) == 'function' ? v.matcher.call(item) : v.matcher.test(item.attr('href'))) {
             content = v.content.call(item,item.attr('href'));
             return false;
           }
