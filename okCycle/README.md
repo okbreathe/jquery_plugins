@@ -2,12 +2,11 @@
 
 *Tiny, modular, flexible slideshow* 
 
-If you're looking for a drop-in solution that does all the styling and other
-work for you, you're in the wrong place. While I hate to reinvent the wheel for
-the Nth time, I tired of all the bloated, spaghetti-code slideshows that
-worked well enough until you stepped off their "golden path" and tried to change
-anything. What I needed was a small plugin, with sensible defaults, that was
-easy customize. 
+okCYcle is an slideshow UI focused on modularity and ease of customization.
+While I hate to reinvent the wheel for the Nth time, there are too many
+bloated, spaghetti-code (but pretty!) slideshows that worked well enough until
+you stepped off their "golden path" and tried to change anything. What I needed
+was a small plugin, with sensible defaults, that was easy customize. 
 
 This is that.
 
@@ -81,20 +80,15 @@ hoverBehavior    | function(){}           | During autoplay, we'll generally wan
   I suggest using the (jquery.transit plugin)[https://github.com/rstacruz/jquery.transit]. 
   In the okCycle.transitions file, replace the calls to animate with transit.
 
-* Why doesn't slides.play(),slideshow.next() etc. work? 
+* I want to control slideshows manuallyo
 
-  In order to support binding multiple slideshows on a given page, we must
-  return each slideshow separately so that they can be controlled
-  independently. Each individual slideshow is available in the afterSetup
-  function, where they can be exposed to external functions.
+  Since okCycle can potentially be bound to multiple DOM elements, you need to pass in the
+  jQuery extended DOM element that you want to control. If the element is omitted it
+  will default to the first bound element (which may suffice if one only exists).
 
-    var slideshow;
+    var slideshows = $(".slideshows").okCycle();
 
-    $(selector).okCycle({
-      afterSetup: function(){
-        slideshow = this;
-      }
-    });
+    slideshow.next(slideshows.eq(0));
 
 ## Notes
 

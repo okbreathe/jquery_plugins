@@ -30,7 +30,7 @@
       </div>
       <section class='eight'>
         <h3>Fading</h3>
-        <ul id='example_one' class='slideshow'>
+        <ul id='example-1' class='slideshow'>
           <li data-caption='caption for one'><img src='images/one.png' alt='' /></li>
           <li data-caption='caption for two'><img src='images/two.png' alt='' /></li>
           <li><img src='images/three.png' alt='' /></li>
@@ -44,16 +44,10 @@
         </p>
         <pre>
           <code data-language='javascript'>
-$("#example_one").okCycle({
+$("#example-1").okCycle({
   autoplay: true,
-  effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
-  afterSetup:function(){
-    // Because the controls can exist anywhere on page, it is necessary to define
-    // hover behavior manually
-    var slideshow = this,
-        ui        = this.data('ui');
-    ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
-  }
+  effect:'fade', 
+  ui: ['caption','navigation','pagination','currentPage']
 });</code>
         </pre>
       </section>
@@ -61,7 +55,7 @@ $("#example_one").okCycle({
       <section class='twelve'>
         <h3>Scrolling</h3>
         <div class='eight alpha'>
-          <ul id='example_two' class='slideshow'>
+          <ul id='example-2' class='slideshow'>
             <li data-caption='#html-caption-1'><img src='images/one.png' alt='' /></li>
             <li data-caption='#html-caption-2'><img src='images/two.png' alt='' /></li>
             <li data-caption='#html-caption-3'><img src='images/three.png' alt='' /></li>
@@ -73,7 +67,7 @@ $("#example_one").okCycle({
           <p>Try using your mousewheel</p>
           <pre>
             <code data-language='javascript'>
-$("#example_two").okCycle({
+$("#example-2").okCycle({
   effect:'scroll',
   ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']
 });</code>
@@ -98,7 +92,7 @@ $("#example_two").okCycle({
 
       <section class='eight'>
         <h3>Sliding</h3>
-        <ul id='example_three' class='slideshow'>
+        <ul id='example-3' class='slideshow'>
           <li data-caption='one'><img src='images/one.png' alt='' /></li>
           <li data-caption='two'><img src='images/two.png' alt='' /></li>
           <li data-caption='three'><img src='images/three.png' alt='' /></li>
@@ -112,8 +106,9 @@ $("#example_two").okCycle({
         </p>
         <pre>
           <code data-language='javascript'>
-$("#example_three").okCycle({
+$("#example-3").okCycle({
   effect:'slide', 
+  loadOnShow:true,
   ui: ['caption','navigation','pagination','currentPage']
 });</code>
         </pre>
@@ -137,18 +132,21 @@ $("#example_three").okCycle({
   <script src="jquery.okCycle.transitions.js"></script>
   <script src="jquery.okCycle.ui.js"></script>
   <script>
-    // ui elements are appended in the order that they are defined
-  $("#example_one").okCycle({
+    $("#example-1").okCycle({
       autoplay: true,
-      effect:'fade', ui: ['caption','navigation','pagination','currentPage'],
-      afterSetup:function(){
-        var slideshow = this,
-            ui        = this.data('ui');
-        ui.hover(function(){ slideshow.pause(); },function(){ slideshow.play(); });
-      }
+      effect:'fade', ui: ['caption','navigation','pagination','currentPage']
     });
-    $("#example_two").okCycle({effect:'scroll', ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']});
-    $("#example_three").okCycle({effect:'slide', loadOnShow: true, ui: ['caption','navigation','pagination','currentPage']});
+
+    $("#example-2").okCycle({
+      effect:'scroll', 
+      ui: ['caption','navigation','pagination','currentPage', 'mouseWheel']
+    });
+
+    $("#example-3").okCycle({
+      effect:'slide', 
+      loadOnShow: true, 
+      ui: ['caption','navigation','pagination','currentPage']
+    });
   </script>
 
 </body>

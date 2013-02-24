@@ -4,12 +4,12 @@
  * Copyright (c) 2013 Asher Van Brunt | http://www.okbreathe.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * Date: 02/09/13
+ * Date: 02/23/13
  *
  * @description Provides UI elements for okCycle
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.2
+ * @version 1.3
  *
  */
 
@@ -25,8 +25,8 @@
    * `this` is still set to the slideshow itself. See okCycle.transitions for
    * an explanation of the transition object.
    *
-   * Note that both `init` and `move` are optional, only each one them if you need
-   * them, respectively.
+   * Note that both `init` and `move` are optional, you only need to specify
+   * them if you actually need to use them
    *
    */
 
@@ -37,7 +37,7 @@
     // otherwise we'll use the content directly
     caption: {
       init: function(ui,opts){
-        $.okCycle.ui.caption.setCaption(this.children().eq(this.data('activeSlide')),$("<div class='caption'></div>").appendTo(ui).hide());
+        $.okCycle.ui.caption.setCaption(this.children().eq(this.data('activeSlide')),$("<div class='caption' style='z-index:4' />").appendTo(ui).hide());
       },
       // If a caption begins with a octothorpe we'll consider it an id attribute of an element containing the caption
       move: function(ui,transition){
@@ -75,7 +75,7 @@
 
         pagination.children().eq(this.data('activeSlide')).addClass('active');
 
-        $("a", pagination).click(function(e){
+        pagination.on('click', 'a', function(e){
           e.preventDefault();
           var li = $(this).parent();
           self.moveTo(li.siblings().andSelf().index(li));
