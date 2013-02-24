@@ -22,8 +22,8 @@ template      | "<div/>"                                     | String or Functio
 parent        | 'body'                                       | Element the popup will be attached to
 transition    | null                                         | String name of a transitions located in jquery.okPopup.transitions.js
 location      | Object                                       | Determines final location of the popup. See 'Positioning Popups'
-onInit        | Function(popup,opts){}                       | Called once when creating the popup
-onOpen        | Function(popup,ui){}                         | Called every time the popup is opened
+onInit        | Function(popup,opts)                         | Called once when creating the popup
+onOpen        | Function(popup,ui)                           | Called every time the popup is opened
 onClose       | null                                         | Called every time the popup is closed
 
 ## Notes

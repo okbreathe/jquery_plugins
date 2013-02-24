@@ -2,11 +2,11 @@
 
 *Tiny, modular, flexible slideshow* 
 
-okCYcle is an slideshow UI focused on modularity and ease of customization.
-While I hate to reinvent the wheel for the Nth time, there are too many
-bloated, spaghetti-code (but pretty!) slideshows that worked well enough until
-you stepped off their "golden path" and tried to change anything. What I needed
-was a small plugin, with sensible defaults, that was easy customize. 
+okCycle is an slideshow UI focused on modularity and ease of customization.
+While I hate to reinvent the wheel for the Nth time, there are too many bloated
+(but pretty!), spaghetti-code slideshows that only work well enough until you
+step off their "golden path" and actually try to adapt it to your needs. What I
+needed was a small plugin, with sensible defaults, that was easy customize. 
 
 This is that.
 
@@ -67,28 +67,27 @@ preload          | 1                      | Number of images to load (Use 0 for 
 loadOnShow       | false                  | If true, successive images will not be loaded until they become visible
 inGroupsOf       | 1                      | How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
 autoplay         | false,                 | Whether to start cycling immediately
-afterSetup       | function(){},          | Called with the slideshow as 'this' immediately after setup is performed
-beforeMove       | function(transition){} | Called before moving to another slide, with the slideshow as 'this'
-afterMove        | function(transition){} | Called after moving to another slide, with the slideshow as 'this'
-hoverBehavior    | function(){}           | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering 
-                                          | over the slideshow element or the ui container (".okCycle-ui") if it exists
+afterSetup       | Function               | Called with the slideshow as 'this' immediately after setup is performed
+beforeMove       | Function(transition)   | Called before moving to another slide, with the slideshow as 'this'
+afterMove        | Function(transition)   | Called after moving to another slide, with the slideshow as 'this'
+hoverBehavior    | Function               | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering over the slideshow element or the ui container (".okCycle-ui") if it exists
 
 ## FAQ
 
 * I want to use native CSS3 transitions rather than animation. 
 
-  I suggest using the (jquery.transit plugin)[https://github.com/rstacruz/jquery.transit]. 
+  I suggest using the [jquery.transit plugin](https://github.com/rstacruz/jquery.transit). 
   In the okCycle.transitions file, replace the calls to animate with transit.
 
-* I want to control slideshows manuallyo
+* I want to control slideshows manually
 
   Since okCycle can potentially be bound to multiple DOM elements, you need to pass in the
   jQuery extended DOM element that you want to control. If the element is omitted it
   will default to the first bound element (which may suffice if one only exists).
 
-    var slideshows = $(".slideshows").okCycle();
+      var slideshows = $(".slideshows").okCycle();
 
-    slideshow.next(slideshows.eq(0));
+      slideshow.next(slideshows.eq(0));
 
 ## Notes
 
