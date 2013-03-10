@@ -9,7 +9,7 @@
  * @description For popups, modal windows, tooltips etc.
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 2.0 BETA
+ * @version 2.01 BETA
  *
  */
 
@@ -62,16 +62,18 @@
         // generate the modal's content
         video: {
           matcher: /(vimeo|youtube)/,
-          content: function(href){
-            var width  = this.data('width') || 900,
+          content: function(){
+            var href   = this.attr('href'),
+                width  = this.data('width') || 900,
                 height = this.data('height') || 504;
             return '<iframe src="'+href+'?autoplay=1" width="'+width+'" height="'+height+'" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
           }
         },
         image: {
           matcher: /.*\.(jpe?g|gif|png)$/,
-          content: function(href){
-            var width  = this.data('width') || '',
+          content: function(){
+            var href   = this.attr('href'),
+                width  = this.data('width') || '',
                 height = this.data('height') || '';
             return "<img src='"+ href +"' width='"+width+"' height='"+height+"' alt='' />";
           }
@@ -152,7 +154,7 @@
 
         $.each(options.filters,function(k,v){
           if (typeof(v.matcher) == 'function' ? v.matcher.call(item) : v.matcher.test(item.attr('href'))) {
-            content = v.content.call(item,item.attr('href'));
+            content = v.content.call(item, popup);
             return false;
           }
         });
@@ -182,38 +184,54 @@
      *
      * @method gallery
      * @param {Object} options Plugin Options
+     *
+     * By default a 'gallery' is inferred to be any item that matches the original selector
+     * e.g. $("a.gallery-item"), all '.gallery-item' elements will be used to generate the items
+     * for the current gallery. If you want to use a different set of items, provide an `items`
+     * function option, which returns a jQuery object of gallery items
      */
     gallery: function(options) {
-      var modalInit,
-          currentItem,
-          galleryItems = this;
+      var modalInit;
 
-      options = $.okPopup.ui.modal(options);
+      options = $.okPopup.ui.modal.call(this,options);
 
+      // Store the original init function to call later
       modalInit = options.onInit;
 
       function moveTo(event, popup, backwards) {
         event.preventDefault();
 
-        var idx = galleryItems.index(currentItem);
+        var idx = popup.currentIndex || 0;
 
         backwards ? idx-- : idx++;
 
-        // TODO this is kind of hackish
-        event.currentTarget = currentItem = galleryItems.eq(idx < 0 ? galleryItems.length -1 : idx >= galleryItems.length ? 0 : idx);
+        idx = idx < 0 ? popup.galleryItems.length -1 : idx >= popup.galleryItems.length ? 0 : idx;
+
+        popup.currentIndex = idx;
 
         // Call open manually
-        popup.open(event);
+        popup.open(popup.galleryItems.eq(idx));
+
+        // Callback
+        options.afterMove(popup, idx);
       }
 
       return $.extend(options,{
+        // The collection of items
+        items: function(){ return this; },
+        // Called after transitioning to another item
+        afterMove: function(popup, index){},
+        // Our Controls
+        navTemplate: "<nav><a class='ui-prev prev' href='#'>Previous</a><a class='ui-next next' href='#'>Next</a></nav>",
         onInit: function(popup,options) {
           var next  = function(e){ moveTo(e,popup); },
               prev  = function(e){ moveTo(e,popup,true); };
 
-          modalInit(popup,options);
+          modalInit.call(this,popup,options);
 
-          $("<nav><a class='ui-prev prev' href='#'>Previous</a><a class='ui-next next' href='#'>Next</a></nav>").appendTo(popup);
+          popup.galleryItems = options.items.call(this);
+
+          $(options.navTemplate).appendTo(popup);
           
           $(".ui-prev", popup).click(prev);
 
