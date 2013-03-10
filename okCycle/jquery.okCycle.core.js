@@ -227,7 +227,7 @@
       // move requires and idx, so we need to determine 
       // whether we were passed an element to work with
       moveTo: function(){ 
-        var el, idx;
+        var el, idx = arguments[0];
         if (arguments.length == 2) {
           el  = arguments[0];
           idx = arguments[1];
