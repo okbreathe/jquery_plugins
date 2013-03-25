@@ -48,9 +48,8 @@
    *
    *   * Move the slide (duh)
    *
-   *   * Give the active slide an active class of (I've chosen to use 'active',
-   *     but this is entirely up to your implementation, okCycle doesn't
-   *     internally use this). Useful for styling etc.
+   *   * Give the active slide an active class.  Although okCycle.core doesn't
+   *   internally use this, some of the transitions do.
    */
 
   $.extend($.okCycle, {
@@ -104,7 +103,7 @@
         this
           .css({position:'relative', width:iw, 'float':'left'})
           .children()
-            .css({'float':'left', display:'inline', position: 'relative'});
+            .css({'float':'left', display:'inline', position: 'relative'}).first().addClass('active');
       },
       move: function(transition){
         var self   = this, 
@@ -132,31 +131,42 @@
           .parent()
             .css({position:'relative',width: '100%', 'minHeight': '100%', overflow: 'hidden'});
 
-        this.children()
-          .css({ position: 'relative', 'float': 'left', width: '50%', height: 'auto' }).slice(2).hide();
-      },
-      move: function(transition) {
-        var container = this;
+        this.children().each(function(i,v){
+          $(this).addClass("item-"+i);
+        });
 
-        container.children().removeClass('active').not(transition.from,transition.to).hide();
+        this.children().first().addClass('active');
+
+        this.children()
+          .css({ position: 'relative', 'float': 'left', width: '50%' }).slice(2).hide();
+      },
+      // To/From may not be calculated correctly due to rearranging the order of the slides in the DOM,
+      // therefore we get the two active slides, hide the rest, and show the 'next' slide depending on
+      // whether we're moving forwards or backwards
+      move: function(transition) {
+        var self   = this,
+            diff   = transition.toIndex - transition.fromIndex, 
+            prev   = this.children('.active').removeClass('active'),
+            active = this.children().eq(diff).addClass('active').show();
 
         // If we're going backwards we need to set the initial offset
-        if (!transition.forward ) container.css({left: "-100%"});
+        if (!transition.forward ) {
+          self.css({left: "-100%"});
+          active.prependTo(self);
+        }
 
-        // Show the section we're about to transition to
-        transition.to.addClass('active').show();
-
-        container.animate({
+        self.animate({
           left: transition.forward ? '-100%' : '0%' }, 
           transition.speed, 
-          transition.easing, 
-          function(){ 
-            container.css({left: 0}); 
-            transition.from.hide(); 
+          transition.easing, function(){
+            self.css({left: 0}); 
+            prev.hide();
+            if (transition.forward) { prev.appendTo(self); }
+            active.next().show();
             transition.resolve();
           });
 
-        return transition.to;
+        return active;
       }
     }
   });
