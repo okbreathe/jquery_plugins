@@ -39,3 +39,11 @@ Plugins which are uncommonly used or haven't received enough testing.
  * okSlide:: UI for linear/branching choices via panels.
  * okTreemap:: a framework for creating a treemap-like UI components
  * okDrag:: Simple, lightweight drag and drop list sorting
+
+### Pivotal
+
+We're going to use Pivotal Tracker to manage this project. Here're
+simple instructions, from Pivotal's Help "Your commit message should have square brackets
+containing a hash mark followed by the story ID. If a story was not
+already started (it was in the "not started" state), a commit message
+will automatically start it."
