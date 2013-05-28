@@ -28,7 +28,7 @@ onClose       | null                                         | Called every time
 
 ## Notes
 
-Requires jQuery 1.7.0 or greater
+Requires jQuery 1.8.0 or greater
 
 Using the imagesloaded is HIGHLY recommended, and probably required for modals to work correctly
 

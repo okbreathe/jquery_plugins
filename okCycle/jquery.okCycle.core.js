@@ -45,7 +45,7 @@
         interval    = 'interval',
         unloaded    = 'unloaded';
 
-    if (!transition) throw("No such transition '"+options.effect+"'"); // Fail early since we don't know what to do
+    if (!transition) throw("No such transition '"+opts.effect+"'"); // Fail early since we don't know what to do
 
     // Load an image if it has been previously unloaded
     function loadImage(img){ 
