@@ -30,30 +30,6 @@ See each file for information on how to extend and write your own transitions/us
 
 The image load event is an unreliable, and tricky beast. imagesLoaded paves over some of the quirks.
 
-If you find the plugin too large for your tastes (although its less than 1KB minified), you can try replacing it with this snippet, which
-is not quite as cross-browser compatible, but significantly smaller.
-
-      $.event.special.imagesloaded = {
-        
-        add: function (obj) {
-          var self = $(this);
-          if ( this.tagName == 'IMG' && this.src !== '' ) {
-            if ( this.complete || this.readyState == 4 ) {
-              obj.handler.apply(this, arguments);
-            } else {
-              self.bind('load.imagesloaded', function(){
-                obj.handler.apply(self[0], arguments);
-                self.unbind('load.imagesloaded');
-              });
-            }
-          }
-        },
-        
-        teardown: function (namespaces) {
-          $(this).unbind('.imagesloaded');
-        }
-      };
-
 ## Options
 
 option           | default                | description

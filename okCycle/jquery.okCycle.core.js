@@ -38,10 +38,9 @@
       beforeMove    : function(transition){},// Called before we move to another slide, with the slideshow as 'this'
       afterMove     : function(transition){},// Called after we move to another slide, with the slideshow as 'this'
       onDone        : function(){},          // Called when all items are loaded
-      onProgress    : function(data, img){   // Called when an item is loaded
-        $(img).fadeIn(); 
-      },
-      onFail        : function(){}           // Called when there is an error loading an item
+      onProgress    : function(data, image){ // Called when an item is loaded
+        $(image.img).fadeIn(); 
+      }
     }, opts);
 
     // Store keys as variables to improve minification
@@ -55,23 +54,23 @@
 
     if (!transition) throw("No such transition '"+opts.effect+"'"); // Fail early since we don't know what to do
 
-    // Load an image if it has been previously unloaded
+    // Load image if it has been previously unloaded
     function loadItem(self,img){ 
       var idx  = $.inArray(img[0], self.data(unloaded)),
-          data = self.data(images);
+          data = self.data(images),
+          image;
 
       if (idx > -1) {
         img[0].src = img[0]._src; 
 
-        img.imagesLoaded(function(images, proper, broken){
-          self.data(unloaded).splice(idx,1);
-
-          data.loaded++;
-
-          broken.length ? opts.onFail.call(self, data, broken[0]) : opts.onProgress.call(self, data, proper[0]);
-
-          if (data.loaded === data.total) opts.onDone.call(self, data);
-        });
+        // This will only ever load one image at a time
+        img.imagesLoaded()
+          .progress(function(instance,image) { 
+            data.loaded++;
+            if (!image.isLoaded) data.broken++;
+            opts.onProgress.call(self, data, image); 
+            if (data.loaded === data.total) opts.onDone.call(self, data);
+          });
       }
     }
 
@@ -215,23 +214,18 @@
       }
 
       // Initialize transition effect after all images have loaded
-      imgs.imagesLoaded({
-        done : function(imgs) { 
+      imgs.imagesLoaded()
+        .done(function(instance) { 
           // We may or may not have actually loaded all images here depending
           // on whether or not the user has elected to loadOnShow
-          if (data.loaded == data.total) opts.onDone(imgs); 
+          if (data.loaded == data.total) opts.onDone.call(self, data); 
           transition.init.call(self, opts); 
-        },
-        fail : function(imgs, proper, broken) { 
-          data.broken++;
-          opts.onFail.call(self, data, broken[broken.length-1]); 
-
-        },
-        progress : function(isBroken, imgs, proper, broken) { 
+        })
+        .progress(function(instance,image) { 
           data.loaded++;
-          opts.onProgress.call(self, data, proper[proper.length-1]); 
-        }
-      });
+          if (!image.isLoaded) data.broken++;
+          opts.onProgress.call(self, data, image); 
+        });
 
       // Expose API for each element in the set
       self.extend({ pause: pause, play: play, next: next, prev: prev, moveTo: moveTo });
