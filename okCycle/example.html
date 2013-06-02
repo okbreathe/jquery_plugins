@@ -100,10 +100,11 @@ $("#example-2").okCycle({
           <li data-caption='ten'><img src='images/ten.png' alt='' /></li>
         </ul>
         <p>
-          Image loading can be deferred until a given item becomes visible.
+          Image loading can be deferred until a given item becomes visible by using this <code>loadOnShow</code> option.
         </p>
         <p>
-          Additionally we are making use of image loading callbacks in order to show
+          Additionally we are making use of image loading callbacks,
+          <code>onProgress</code> and <code>onDone</code>, in order to show
           loading progress
         </p>
         <pre>
@@ -111,7 +112,7 @@ $("#example-2").okCycle({
 $("#example-3").okCycle({
   effect:'slide', 
   loadOnShow: true, 
-  ui: ['navigation','pagination'],
+  ui: ['caption','navigation','pagination','currentPage'],
   onProgress: function(data, image){
     var width = (data.loaded / data.total) * 100;
 

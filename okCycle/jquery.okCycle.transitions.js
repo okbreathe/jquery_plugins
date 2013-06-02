@@ -9,7 +9,7 @@
  * @description Provides transitions for okCycle
  * @author Asher Van Brunt
  * @mail asher@okbreathe.com
- * @version 1.3
+ * @version 1.4
  *
  */
 
