@@ -33,32 +33,45 @@
         var slideshow = this;                // over the slideshow element or the ui container (".okCycle-ui") if it exists
         (this.data('ui') || slideshow).hover(function(){ slideshow.pause(); }, function(){ slideshow.play(); });
       },
+      // Events
       afterSetup    : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
       beforeMove    : function(transition){},// Called before we move to another slide, with the slideshow as 'this'
-      afterMove     : function(transition){} // Called after we move to another slide, with the slideshow as 'this'
-    },opts);
+      afterMove     : function(transition){},// Called after we move to another slide, with the slideshow as 'this'
+      onDone        : function(){},          // Called when all items are loaded
+      onProgress    : function(data, img){   // Called when an item is loaded
+        $(img).fadeIn(); 
+      },
+      onFail        : function(){}           // Called when there is an error loading an item
+    }, opts);
 
+    // Store keys as variables to improve minification
     var transition  = $.okCycle[opts.effect],
         animating   = 'animating',
         autoplaying = 'autoplaying',
         active      = 'activeSlide',
         interval    = 'interval',
+        images      = 'images',
         unloaded    = 'unloaded';
 
     if (!transition) throw("No such transition '"+opts.effect+"'"); // Fail early since we don't know what to do
 
     // Load an image if it has been previously unloaded
-    function loadImage(img){ 
-      var idx = $.inArray(img[0], this.data(unloaded));
+    function loadItem(self,img){ 
+      var idx  = $.inArray(img[0], self.data(unloaded)),
+          data = self.data(images);
 
       if (idx > -1) {
-        img.imagesLoaded(function(){
-          $(this).fadeIn(); 
-        });
-
         img[0].src = img[0]._src; 
 
-        delete this.data(unloaded)[idx];
+        img.imagesLoaded(function(images, proper, broken){
+          self.data(unloaded).splice(idx,1);
+
+          data.loaded++;
+
+          broken.length ? opts.onFail.call(self, data, broken[0]) : opts.onProgress.call(self, data, proper[0]);
+
+          if (data.loaded === data.total) opts.onDone.call(self, data);
+        });
       }
     }
 
@@ -142,7 +155,7 @@
         // order, so load whatever the transition returns as the active items
         if (opts.preload > 0 && opts.loadOnShow) {
           (activeItems || transition.to).find("img").each(function(){
-            loadImage.call(self, $(this)); // Load the next image
+            loadItem(self, $(this)); // Load the next image
           });
         }
 
@@ -159,22 +172,28 @@
     }
 
     return this.each(function(){
-      var self      = $(this),
-          imgs      = opts.preload === false ? $('') : $('img', self),
-          loaded    = 0,
+      var self = $(this),
+          imgs = opts.preload === false ? $('') : $('img', self),
+          data,  
           initFn;
+
+      self.data(images, { loaded: 0, broken: 0, total : imgs.length });
+
+      data = self.data(images);
 
       // If we've elected to load on show we need to clear the src attribute to
       // prevent the browser from loading the image
       if (opts.preload && opts.preload > 0) {
         if (opts.loadOnShow) {
-          self.data(unloaded,[]);
+          self.data(unloaded, []);
+
           imgs.slice(opts.preload).each(function(){
             this._src = this.src;
             this.src = '';
             self.data(unloaded).push($(this).hide()[0]);
           });
         }
+
         // Store the images we need to preload
         imgs = imgs.slice(0, opts.preload);
       }
@@ -196,8 +215,22 @@
       }
 
       // Initialize transition effect after all images have loaded
-      imgs.imagesLoaded(function(){
-        transition.init.call(self,opts);
+      imgs.imagesLoaded({
+        done : function(imgs) { 
+          // We may or may not have actually loaded all images here depending
+          // on whether or not the user has elected to loadOnShow
+          if (data.loaded == data.total) opts.onDone(imgs); 
+          transition.init.call(self, opts); 
+        },
+        fail : function(imgs, proper, broken) { 
+          data.broken++;
+          opts.onFail.call(self, data, broken[broken.length-1]); 
+
+        },
+        progress : function(isBroken, imgs, proper, broken) { 
+          data.loaded++;
+          opts.onProgress.call(self, data, proper[proper.length-1]); 
+        }
       });
 
       // Expose API for each element in the set
