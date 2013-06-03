@@ -30,30 +30,6 @@ See each file for information on how to extend and write your own transitions/us
 
 The image load event is an unreliable, and tricky beast. imagesLoaded paves over some of the quirks.
 
-If you find the plugin too large for your tastes (although its less than 1KB minified), you can try replacing it with this snippet, which
-is not quite as cross-browser compatible, but significantly smaller.
-
-      $.event.special.imagesloaded = {
-        
-        add: function (obj) {
-          var self = $(this);
-          if ( this.tagName == 'IMG' && this.src !== '' ) {
-            if ( this.complete || this.readyState == 4 ) {
-              obj.handler.apply(this, arguments);
-            } else {
-              self.bind('load.imagesloaded', function(){
-                obj.handler.apply(self[0], arguments);
-                self.unbind('load.imagesloaded');
-              });
-            }
-          }
-        },
-        
-        teardown: function (namespaces) {
-          $(this).unbind('.imagesloaded');
-        }
-      };
-
 ## Options
 
 option           | default                | description
@@ -67,10 +43,12 @@ preload          | 1                      | Number of images to load (Use 0 for 
 loadOnShow       | false                  | If true, successive images will not be loaded until they become visible
 inGroupsOf       | 1                      | How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
 autoplay         | false,                 | Whether to start cycling immediately
+hoverBehavior    | Function               | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering over the slideshow element or the ui container (".okCycle-ui") if it exists
 afterSetup       | Function               | Called with the slideshow as 'this' immediately after setup is performed
 beforeMove       | Function(transition)   | Called before moving to another slide, with the slideshow as 'this'
 afterMove        | Function(transition)   | Called after moving to another slide, with the slideshow as 'this'
-hoverBehavior    | Function               | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering over the slideshow element or the ui container (".okCycle-ui") if it exists
+onDone           | Function               | Called when all items are loaded
+onProgress       | Function(data, image){ | Called when an item is loaded
 
 ## FAQ
 

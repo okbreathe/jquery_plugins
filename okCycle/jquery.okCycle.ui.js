@@ -9,7 +9,7 @@
  * @description Provides UI elements for okCycle
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.3
+ * @version 1.4
  *
  */
 

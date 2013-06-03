@@ -29,7 +29,7 @@
         <h2>Demonstration</h2>
       </div>
       <section class='eight'>
-        <h3>Fading</h3>
+        <h3>Fading Transition with Autoplay UI</h3>
         <ul id='example-1' class='slideshow'>
           <li data-caption='caption for one'><img src='images/one.png' alt='' /></li>
           <li data-caption='caption for two'><img src='images/two.png' alt='' /></li>
@@ -40,7 +40,8 @@
           <li data-caption=''><img src='images/seven.png' alt='' /></li>
         </ul>
         <p>
-          Stop the autoplay by hovering the slideshow
+          Stop the autoplay by hovering the slideshow. This example (and others) also show
+          the 'caption', 'navigation'(prev/next buttons), 'pagination' and 'currentPage' UI.
         </p>
         <pre>
           <code data-language='javascript'>
@@ -53,7 +54,7 @@ $("#example-1").okCycle({
       </section>
 
       <section class='twelve'>
-        <h3>Scrolling</h3>
+        <h3>Scrolling Transition with Caption UI</h3>
         <div class='eight alpha'>
           <ul id='example-2' class='slideshow'>
             <li data-caption='#html-caption-1'><img src='images/one.png' alt='' /></li>
@@ -64,7 +65,7 @@ $("#example-1").okCycle({
             <li data-caption='#html-caption-6'><img src='images/six.png' alt='' /></li>
             <li data-caption='#html-caption-7'><img src='images/seven.png' alt='' /></li>
           </ul>
-          <p>Try using your mousewheel</p>
+          <p>You can also use your mousewheel on this example</p>
           <pre>
             <code data-language='javascript'>
 $("#example-2").okCycle({
@@ -91,25 +92,39 @@ $("#example-2").okCycle({
       </section>
 
       <section class='eight'>
-        <h3>Sliding</h3>
+        <h3>Sliding Transition with Deferred Loading</h3>
+        <div id='progress'><div></div></div>
         <ul id='example-3' class='slideshow'>
-          <li data-caption='one'><img src='images/one.png' alt='' /></li>
-          <li data-caption='two'><img src='images/two.png' alt='' /></li>
-          <li data-caption='three'><img src='images/three.png' alt='' /></li>
-          <li data-caption='four'><img src='images/four.png' alt='' /></li>
-          <li data-caption='five'><img src='images/five.png' alt='' /></li>
-          <li data-caption='six'><img src='images/six.png' alt='' /></li>
-          <li data-caption='seven'><img src='images/seven.png' alt='' /></li>
+          <li data-caption='eight'><img src='images/eight.png' alt='' /></li>
+          <li data-caption='nine'><img src='images/nine.png' alt='' /></li>
+          <li data-caption='ten'><img src='images/ten.png' alt='' /></li>
         </ul>
         <p>
-          Image loading is deferred until scrolled to (You might have troubling seeing this if you're viewing this locally)
+          Image loading can be deferred until a given item becomes visible by using this <code>loadOnShow</code> option.
+        </p>
+        <p>
+          Additionally we are making use of image loading callbacks,
+          <code>onProgress</code> and <code>onDone</code>, in order to show
+          loading progress
         </p>
         <pre>
           <code data-language='javascript'>
 $("#example-3").okCycle({
   effect:'slide', 
-  loadOnShow:true,
-  ui: ['caption','navigation','pagination','currentPage']
+  loadOnShow: true, 
+  ui: ['caption','navigation','pagination','currentPage'],
+  onProgress: function(data, image){
+    var width = (data.loaded / data.total) * 100;
+
+    $(image.img).fadeIn();
+
+    $("#progress &gt; div").css({width: width + '%'});
+  },
+  onDone: function(options){
+    setTimeout(function(){
+      $("#progress &gt; div").css({backgroundColor: '#fff'}).html("All loaded");
+    },500);
+  }
 });</code>
         </pre>
       </section>
@@ -124,8 +139,8 @@ $("#example-3").okCycle({
     </footer>
   </div> <!-- #doc -->
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="jquery.imagesloaded.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="imagesloaded.js"></script>
   <!-- Only required for mousewheel functionality -->
   <script src="jquery.mousewheel.js"></script>
   <script src="jquery.okCycle.core.js"></script>
@@ -134,7 +149,8 @@ $("#example-3").okCycle({
   <script>
     $("#example-1").okCycle({
       autoplay: true,
-      effect:'fade', ui: ['caption','navigation','pagination','currentPage']
+      effect:'fade', 
+      ui: ['caption','navigation','pagination','currentPage']
     });
 
     $("#example-2").okCycle({
@@ -145,7 +161,19 @@ $("#example-3").okCycle({
     $("#example-3").okCycle({
       effect:'slide', 
       loadOnShow: true, 
-      ui: ['caption','navigation','pagination','currentPage']
+      ui: ['caption','navigation','pagination','currentPage'],
+      onProgress: function(data, image){
+        var width = (data.loaded / data.total) * 100;
+
+        $(image.img).fadeIn();
+
+        $("#progress > div").css({width: width + '%'});
+      },
+      onDone: function(){
+        setTimeout(function(){
+          $("#progress > div").css({backgroundColor: '#fff'}).html("All loaded");
+        },500);
+      }
     });
   </script>
 
