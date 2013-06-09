@@ -1,3 +1,19 @@
+/* Required for Responsive Images */
+
+.okCycle-ui,
+.okCycle,
+.okCycle li {
+  position: relative;
+  width:100%;
+}
+
+.okCycle li img {
+  max-width: 100%; 
+  height: auto; 
+}
+
+/* Visual Styles */
+
 li {
   margin:0;
   float:left;
@@ -48,9 +64,7 @@ section {
 }
 
 .okCycle-ui {
-  position: relative;
   margin-bottom:3em;
-  width:620px;
 }
 
 .okCycle-ui .caption{
@@ -71,8 +85,6 @@ section {
 }
 
 .slideshow li {
-  width: 620px;
-  height: 400px;
   background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGElEQVQYlWNgYGCQwoKxgqGgcJA5h3yFAAs8BRWVSwooAAAAAElFTkSuQmCC);
 }
 
@@ -84,6 +96,7 @@ section {
 }
 
 #progress div {
+  overflow: hidden;
   background-color: #dd0;
   background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADklEQVQIW2NgQAXGZHAAGioAza6+Hk0AAAAASUVORK5CYII=);
   height: 100%;

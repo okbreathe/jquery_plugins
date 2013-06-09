@@ -9,7 +9,7 @@
  * @description Tiny, modular, flexible slideshow
  * @author Asher Van Brunt
  * @mailto asher@okbreathe.com
- * @version 1.4
+ * @version 1.5
  *
  */
 
@@ -18,6 +18,7 @@
   // Hold meta-plugin settings
   $.okCycle = {};
 
+  // Default options
   $.fn.okCycle = function(opts){
     opts = $.extend({
       effect        : 'scroll',              // Transition effect used to cycle elements
@@ -27,11 +28,13 @@
       speed         : 300,                   // Speed the slides are transitioned between
       preload       : 1,                     // Number of images to load (Use 0 for all, false for none) before the plugin is initialized
       loadOnShow    : false,                 // If true, successive images will not be loaded until they become visible
-      inGroupsOf    : 1,                     // How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
       autoplay      : false,                 // Whether to start playing immediately. Provide a number (in seconds) to delay the inital start to the slideshow
       hoverBehavior : function(){            // During autoplay, we'll generally want to pause the slideshow at some point. The default behavior is to pause when hovering 
         var slideshow = this;                // over the slideshow element or the ui container (".okCycle-ui") if it exists
-        (this.data('ui') || slideshow).hover(function(){ slideshow.pause(); }, function(){ slideshow.play(); });
+        (this.data('ui') || slideshow).hover(
+          function(){ slideshow.pause(); }, 
+          function(){ slideshow.play();  }
+        );
       },
       // Events
       afterSetup    : function(){},          // Called with the slideshow as 'this' immediately after setup is performed
@@ -66,6 +69,7 @@
         // This will only ever load one image at a time
         img.imagesLoaded()
           .progress(function(instance,image) { 
+            self.data(unloaded).splice(idx,1);
             data.loaded++;
             if (!image.isLoaded) data.broken++;
             opts.onProgress.call(self, data, image); 
@@ -204,7 +208,7 @@
       // Initialize UI
       if (opts.ui.length){
         // Ensure that the UI is contained in a parent element
-        self.data('ui',self.wrap("<div class='okCycle-ui'/>").parent());
+        self.data('ui',self.addClass('okCycle').wrap("<div class='okCycle-ui'/>").parent());
 
         $.each(opts.ui, function(i,v){ 
           if ((initFn = $.okCycle.ui[v].init)) {

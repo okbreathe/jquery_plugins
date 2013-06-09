@@ -41,7 +41,6 @@ duration         | 2000,                  | Time between animations
 speed            | 500,                   | Speed the slides are transitioned between
 preload          | 1                      | Number of images to load (Use 0 for all) before the plugin is initialized
 loadOnShow       | false                  | If true, successive images will not be loaded until they become visible
-inGroupsOf       | 1                      | How manu items should we page through at a time. Currently only applicable to the 'scroll' transition
 autoplay         | false,                 | Whether to start cycling immediately
 hoverBehavior    | Function               | During autoplay, we'll generally want to pause the slideshow. Default behavior is to pause when hovering over the slideshow element or the ui container (".okCycle-ui") if it exists
 afterSetup       | Function               | Called with the slideshow as 'this' immediately after setup is performed
@@ -68,6 +67,8 @@ onProgress       | Function(data, image){ | Called when an item is loaded
       slideshow.next(slideshows.eq(0));
 
 ## Notes
+
+* As of v1.5, all built-in transitions work with responsive layouts
 
 * Has been tested on jQuery 1.6.2 and higher
 
