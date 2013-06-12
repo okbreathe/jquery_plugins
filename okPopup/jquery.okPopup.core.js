@@ -74,7 +74,7 @@
      popup = (popup instanceof jQuery ? popup : $(popup))
        .appendTo(options.parent)
        .addClass('ui-popup')
-       .hide()
+       .hide();
 
      // Add shortcut methods for calling open/close
      function getEl(e){ return e && e.currentTarget ? $(e.currentTarget) : e; }
