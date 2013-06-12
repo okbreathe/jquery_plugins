@@ -74,7 +74,7 @@
 
 /* Modals */
 
-.ui-popup.modal {
+.ui-modal {
   padding: 5px;
   background: #fff url(../shared/spinner.gif) center center no-repeat;
   border-radius: 4px;
@@ -87,48 +87,32 @@
   color: #222;
 }
 
-.ui-popup ul {
+.ui-modal ul {
   margin-bottom: 0;
 }
 
-.ui-popup .close ,
-.ui-popup .navigation {
-  position: absolute;
-  z-index: 100;
-}
-
-.ui-popup .navigation {
-  bottom: 0;
-  left: 0;
-}
-
-.ui-popup .navigation li{
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.ui-popup .close {
-  top: 0;
-  right: 0;
-}
-
-.ui-popup nav,
-.ui-popup header{
+.ui-modal nav,
+.ui-modal header{
   background: rgba(0,0,0,0.7);
   position: absolute;
 }
 
-.ui-popup header{
+.ui-modal header{
   top: 0;
   right: 0;
 }
 
-.ui-popup nav {
+.ui-modal nav {
   bottom: 0;
   left: 0;
   width: 100%;
 }
 
-.ui-popup nav a{
+.ui-modal nav a{
   margin-right: 10px;
+}
+
+.ui-modal.loading nav,
+.ui-modal.loading header {
+  display: none;
 }
