@@ -43,9 +43,7 @@
 
         if (opts.useHashNavigation) {
           // Restore scrollTop
-          setTimeout(function(){
-            $('html,body').css( { scrollTop: st });  
-          }, 10);
+          setTimeout(function(){ $(window).scrollTop(st); }, 10);
         } else if (e){ 
           e.preventDefault(); 
         }
